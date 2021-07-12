@@ -11,4 +11,13 @@
     <string name="remove">Remove</string>
     <string name="example_feed_url">www.example.com/rss</string>
     <string name="rss_sources">Rss sources</string>
+    <string name="splash_message">Automated customization</string>
+    <string name="permissions">Permissions</string>
+    <string name="permission_storage">Storage</string>
+    <string name="permission_storage_explanation">Cinta needs storage access, to read the wallpaper, to adjust it\'s colors to look better</string>
+    <string name="permission_contacts">Contacts</string>
+    <string name="permission_contacts_explanation">Contacts can be displayed in the search screen</string>
+    <string name="permission_notifications">Notifications</string>
+    <string name="permission_notifications_explanation">For displaying notifications in your feed, and also a media player when you\'re listening to something</string>
+    <string name="grant_permissions">Grant permissions</string>
 </resources>

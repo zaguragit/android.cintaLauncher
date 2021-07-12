@@ -14,7 +14,6 @@ class DuckDuckGoProvider(searcher: Searcher) : AsyncSearchProvider(searcher) {
     override fun loadResults(query: SearchQuery) {
         if (query.length >= 3) {
             DuckInstantAnswer.load(query.toString(), "cintalauncher") {
-                println(it.title + "\n" + it.sourceUrl)
                 update(query, listOf(
                     InstantAnswerResult(
                         query,

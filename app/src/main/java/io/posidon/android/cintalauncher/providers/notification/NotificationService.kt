@@ -14,6 +14,7 @@ import android.os.UserHandle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import io.posidon.android.cintalauncher.BuildConfig
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
@@ -32,9 +33,13 @@ class NotificationService : NotificationListenerService() {
 
     override fun onCreate() {
         StackTraceActivity.init(applicationContext)
-        val msm = getSystemService(MediaSessionManager::class.java)
-        msm.addOnActiveSessionsChangedListener(::onMediaControllersUpdated, componentName)
-        onMediaControllersUpdated(msm.getActiveSessions(componentName))
+        if (!NotificationManagerCompat.getEnabledListenerPackages(applicationContext).contains(applicationContext.packageName)) {
+            stopSelf()
+        } else {
+            val msm = getSystemService(MediaSessionManager::class.java)
+            msm.addOnActiveSessionsChangedListener(::onMediaControllersUpdated, componentName)
+            onMediaControllersUpdated(msm.getActiveSessions(componentName))
+        }
     }
 
     override fun onDestroy() {
@@ -140,7 +145,9 @@ class NotificationService : NotificationListenerService() {
 
     companion object {
         fun init(context: Context) {
-            context.startService(Intent(context, NotificationService::class.java))
+            if (NotificationManagerCompat.getEnabledListenerPackages(context).contains(context.packageName)) {
+                context.startService(Intent(context, NotificationService::class.java))
+            }
         }
 
         var notifications = ArrayList<FeedItem>()

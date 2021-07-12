@@ -78,11 +78,13 @@ interface ColorTheme {
         
         fun <A : Activity> loadWallColorTheme(activity: A, onFinished: (A, ColorTheme) -> Unit) {
             if (ActivityCompat.checkSelfPermission(
-                    activity,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED) {
-                activity.requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 0)
-                if (colorThemeInstance !is DefaultColorTheme) colorThemeInstance = DefaultColorTheme(activity)
+                activity,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED) {
+                if (colorThemeInstance !is DefaultColorTheme) {
+                    colorThemeInstance = DefaultColorTheme(activity)
+                    onFinished(activity, colorThemeInstance)
+                }
                 return
             }
             val wp = activity.getSystemService(WallpaperManager::class.java)
@@ -106,16 +108,15 @@ interface ColorTheme {
             onFinished: (A, ColorTheme) -> Unit,
             colors: WallpaperColors
         ) {
-            loadDefaultColorTheme(activity) { a, c ->
-                val newColorTheme = AndroidOMR1WallColorTheme(a, c, colors)
-                colorThemeInstance = newColorTheme
-                onFinished(a, newColorTheme)
-            }
+            colorThemeInstance = AndroidOMR1WallColorTheme(activity, colors)
+            onFinished(activity, colorThemeInstance)
         }
 
         private fun <A : Activity> loadDefaultColorTheme(activity: A, onFinished: (A, ColorTheme) -> Unit) {
-            colorThemeInstance = DefaultColorTheme(activity)
-            onFinished(activity, colorThemeInstance)
+            if (colorThemeInstance !is DefaultColorTheme) {
+                colorThemeInstance = DefaultColorTheme(activity)
+                onFinished(activity, colorThemeInstance)
+            }
         }
 
         @RequiresApi(Build.VERSION_CODES.O_MR1)

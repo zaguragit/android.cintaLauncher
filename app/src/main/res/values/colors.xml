@@ -9,7 +9,7 @@
     <color name="feed_card_text_light_title">#ffe2e2e2</color>
     <color name="feed_card_text_light_description">#dde2e2e2</color>
     <color name="feed_card_text_light_hint">#88e2e2e2</color>
-    <color name="accent">#1ABFF1</color>
+    <color name="accent">#ff9249</color>
     <color name="feed_bg">#88000000</color>
 
     <color name="drawer_bg">@color/card_bg_dark</color>

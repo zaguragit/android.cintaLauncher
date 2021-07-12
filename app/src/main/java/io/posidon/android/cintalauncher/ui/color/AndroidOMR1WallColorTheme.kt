@@ -15,15 +15,14 @@ import kotlin.math.pow
 @RequiresApi(Build.VERSION_CODES.O_MR1)
 class AndroidOMR1WallColorTheme(
     context: Context,
-    baseTheme: ColorTheme,
     colors: WallpaperColors
 ): TintedColorTheme {
 
-    private val primary = colors.primaryColor.also { println("PRI: $it") }
-    private val secondary = colors.secondaryColor.also { println("SEC: $it") }
-    private val tertiary = colors.tertiaryColor.also { println("TER: $it") }
+    private val primary = colors.primaryColor
+    private val secondary = colors.secondaryColor
+    private val tertiary = colors.tertiaryColor
 
-    override val accentColor = (tertiary ?: secondary)?.toArgb() ?: baseTheme.accentColor
+    override val accentColor = (tertiary ?: secondary ?: primary).toArgb()
     override val feedBG = primary.toArgb() and 0xffffff or (context.getColor(R.color.feed_bg) and 0xff000000.toInt())
 
     override val feedCardBG = run {

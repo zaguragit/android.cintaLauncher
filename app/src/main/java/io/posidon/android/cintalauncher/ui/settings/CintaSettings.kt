@@ -44,23 +44,21 @@ class CintaSettings : FragmentActivity() {
             val settings: Settings
         ) : PreferenceDataStore() {
 
-            override fun putString(key: String?, value: String?) =
+            override fun putString(key: String, value: String?) =
                 settings.edit(context) {
-                    key!! set value
-                    println("$key = $value")
+                    key set value
                 }
 
-            override fun putInt(key: String?, value: Int) =
+            override fun putInt(key: String, value: Int) =
                 settings.edit(context) {
-                    key!! set value
-                    println("$key = $value")
+                    key set value
                 }
 
-            override fun getString(key: String?, defValue: String?) =
-                settings.getStringOr(key!!) { println("$key -> $defValue"); defValue!! }
+            override fun getString(key: String, defValue: String?) =
+                settings.getString(key) ?: defValue
 
-            override fun getInt(key: String?, defValue: Int) =
-                settings.getIntOr(key!!) { println("$key -> $defValue"); defValue }
+            override fun getInt(key: String, defValue: Int) =
+                settings.getIntOr(key) { defValue }
         }
     }
 }

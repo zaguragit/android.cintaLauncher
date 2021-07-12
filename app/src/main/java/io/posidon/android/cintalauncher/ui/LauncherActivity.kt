@@ -92,6 +92,7 @@ class LauncherActivity : FragmentActivity() {
         launcherApps.registerCallback(AppCallback(::loadApps))
 
         loadApps()
+        updateColorTheme(this, ColorTheme)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             wallpaperManager.addOnColorsChangedListener(::onColorsChangedListener, feedRecycler.handler)
@@ -135,7 +136,6 @@ class LauncherActivity : FragmentActivity() {
             ColorTheme.onResumePreOMR1(this, settings.colorTheme, ::updateColorTheme)
             onWallpaperChanged()
         } else if (shouldUpdate) {
-            println("UPDATE!!")
             ColorTheme.onColorsChanged(this, settings.colorTheme, ::updateColorTheme) { wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM) }
         }
         val current = System.currentTimeMillis()

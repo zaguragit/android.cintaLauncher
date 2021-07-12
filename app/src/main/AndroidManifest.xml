@@ -33,7 +33,8 @@
             android:name=".ui.LauncherActivity"
             android:excludeFromRecents="true"
             android:allowEmbedded="false"
-            android:configChanges="navigation|density|screenSize|smallestScreenSize">
+            android:configChanges="navigation|density|screenSize|smallestScreenSize"
+            android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
@@ -80,5 +81,32 @@
 
         <activity android:name=".util.StackTraceActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"/>
+
+        <activity-alias
+            android:name=".ui.intro.IntroActivityAlias"
+            android:targetActivity=".ui.intro.IntroActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity
+            android:name=".ui.intro.IntroActivity"
+            android:excludeFromRecents="true"
+            android:allowEmbedded="false"
+            android:configChanges="navigation|density|screenSize|smallestScreenSize"
+            android:launchMode="singleInstance">
+        </activity>
+
+        <activity android:name=".util.FakeLauncherActivity" android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
