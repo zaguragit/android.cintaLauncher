@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    android:focusable="true"
+    android:clickable="true"
+    android:id="@+id/app_drawer_container"
+    style="@style/Theme.CintaLauncher.Drawer.Container">
+    <androidx.recyclerview.widget.RecyclerView
+        style="@style/Theme.CintaLauncher.Drawer.Recycler"
+        android:id="@+id/app_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"/>
+    <FrameLayout
+        style="@style/Theme.CintaLauncher.Drawer.BottomBar"
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:focusable="true"
+        android:clickable="true">
+        <ImageView
+            style="@style/Theme.CintaLauncher.Drawer.ExitButton"
+            android:id="@+id/back_button"
+            android:layout_width="128dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_close_app_drawer"/>
+    </FrameLayout>
+</FrameLayout>

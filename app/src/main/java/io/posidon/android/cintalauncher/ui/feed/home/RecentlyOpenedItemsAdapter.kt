@@ -1,0 +1,31 @@
+package io.posidon.android.cintalauncher.ui.feed.home
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
+import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.data.items.LauncherItem
+import io.posidon.android.cintalauncher.ui.drawer.viewHolders.*
+
+class RecentlyOpenedItemsAdapter : RecyclerView.Adapter<AppViewHolder>() {
+
+    private var items: Array<LauncherItem> = emptyArray()
+
+    override fun getItemCount(): Int = items.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
+        return AppViewHolder(LayoutInflater.from(parent.context)
+            .inflate(R.layout.app_drawer_item, parent, false) as CardView)
+    }
+
+    override fun onBindViewHolder(holder: AppViewHolder, i: Int) {
+        val item = items[i]
+        bindAppViewHolder(holder, item, null)
+    }
+
+    fun updateItems(items: Array<LauncherItem>) {
+        this.items = items
+        notifyDataSetChanged()
+    }
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:id="@+id/vertical">
+    <TextClock
+        style="@style/Theme.CintaLauncher.WeekDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:format24Hour="cccc"
+        android:format12Hour="cccc"/>
+    <TextClock
+        style="@style/Theme.CintaLauncher.Time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:format24Hour="H:mm"
+        android:format12Hour="h:mm"/>
+    <TextClock
+        style="@style/Theme.CintaLauncher.Date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:format24Hour="d MMMM"
+        android:format12Hour="d MMMM"/>
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <!-- swipe up indicator -->
+
+    <LinearLayout
+        style="@style/Theme.CintaLauncher.Summary"
+        android:id="@+id/summary_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/summary_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <include layout="@layout/feed_home_search_bar"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recents_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>

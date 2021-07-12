@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="feed_card_padding">12dp</dimen>
+    <dimen name="feed_card_spacing">6dp</dimen>
+    <dimen name="feed_card_radius">20dp</dimen>
+
+    <dimen name="dock_corner_radius">32dp</dimen>
+
+    <dimen name="item_card_radius">12dp</dimen>
+    <dimen name="item_card_margin">6dp</dimen>
+
+    <dimen name="search_bar_height">48dp</dimen>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.CintaLauncher.ItemPopup.Container" parent="Theme.CintaLauncher">
+        <item name="cardBackgroundColor">@color/drawer_bottom_bar</item>
+        <item name="cardCornerRadius">@dimen/item_card_radius</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.ItemPopup.Shortcut.Icon" parent="Theme.CintaLauncher">
+        <item name="android:padding">8dp</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.ItemPopup.Shortcut.Label" parent="Theme.CintaLauncher">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginStart">2dp</item>
+        <item name="android:layout_marginEnd">18dp</item>
+    </style>
+</resources>

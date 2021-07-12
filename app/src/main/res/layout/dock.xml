@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:clickable="true"
+    android:id="@+id/dock_container"
+    style="@style/Theme.CintaLauncher.Dock.Container">
+    <io.posidon.android.cintalauncher.ui.view.AlphabetScrollbar
+        style="@style/Theme.CintaLauncher.Dock.Scrollbar"
+        android:id="@+id/scroll_bar"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"/>
+</LinearLayout>

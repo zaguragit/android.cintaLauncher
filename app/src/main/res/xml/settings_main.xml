@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ListPreference
+        app:key="color_theme"
+        app:title="@string/color_theme_gen"
+        app:entries="@array/color_theme_gens"
+        android:entryValues="@array/color_theme_gens_data"
+        app:defaultValue="1"/>
+    <Preference
+        app:title="@string/rss_sources">
+        <intent
+            android:targetPackage="io.posidon.android.cintalauncher"
+            android:targetClass="io.posidon.android.cintalauncher.ui.settings.feedChooser.FeedSourcesChooser"/>
+    </Preference>
+</PreferenceScreen>

@@ -1,0 +1,119 @@
+package io.posidon.android.cintalauncher.ui.drawer
+
+import android.content.res.ColorStateList
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.widget.*
+import androidx.cardview.widget.CardView
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.data.items.App
+import io.posidon.android.cintalauncher.ui.LauncherActivity
+import io.posidon.android.cintalauncher.ui.color.ColorTheme
+import io.posidon.android.cintalauncher.ui.view.AlphabetScrollbar
+import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
+import posidon.android.conveniencelib.*
+
+class AppDrawer(val activity: LauncherActivity, val scrollBar: AlphabetScrollbar) {
+
+    val view = activity.findViewById<View>(R.id.app_drawer_container)
+
+    private val adapter = AppDrawerAdapter()
+
+    private val bottomBar = view.findViewById<View>(R.id.bottom_bar)
+
+    private val recycler = view.findViewById<RecyclerView>(R.id.app_recycler)
+    private val closeButton = view.findViewById<ImageView>(R.id.back_button).apply {
+        setOnClickListener(::close)
+    }
+
+    fun init() {
+        recycler.layoutManager = GridLayoutManager(view.context, 3, RecyclerView.VERTICAL, false).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(i: Int): Int {
+                    return when (adapter.getItemViewType(i)) {
+                        AppDrawerAdapter.APP_ITEM -> 1
+                        AppDrawerAdapter.SECTION_HEADER -> 3
+                        else -> -1
+                    }
+                }
+            }
+        }
+        recycler.adapter = adapter
+        scrollBar.recycler = recycler
+        scrollBar.apply {
+            updateAdapter()
+            updateTheme()
+            textColor = 0x88ffffff.toInt()
+        }
+        scrollBar.onStartScroll = ::open
+    }
+
+    var appSections: List<List<App>>? = null
+
+    fun update(appSections: List<List<App>>) {
+        this.appSections = appSections
+        adapter.updateAppSections(appSections, activity)
+        scrollBar.updateAdapter()
+        scrollBar.postInvalidate()
+        view.postInvalidate()
+    }
+
+    fun open(v: View) {
+        val sbh = v.context.getStatusBarHeight()
+        recycler.setPadding(recycler.paddingLeft, sbh, recycler.paddingRight, recycler.paddingBottom)
+        view.isVisible = true
+        activity.feedRecycler.stopScroll()
+        scrollBar.showVisibleLetter = true
+        activity.feedRecycler.animate()
+            .alpha(0f)
+            .scaleX(1.1f)
+            .scaleY(1.1f)
+            .setStartDelay(0)
+            .setDuration(100)
+            .setInterpolator(AccelerateInterpolator())
+            .onEnd { activity.feedRecycler.isInvisible = true }
+        view.animate()
+            .alpha(1f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setStartDelay(0)
+            .setDuration(100)
+            .setInterpolator(DecelerateInterpolator())
+            .onEnd {}
+    }
+
+    fun updateColorTheme() {
+        view.setBackgroundColor(ColorTheme.appDrawerColor and 0xffffff or 0xdd000000.toInt())
+        bottomBar.setBackgroundColor(ColorTheme.appDrawerBottomBarColor)
+        closeButton.backgroundTintList = ColorStateList.valueOf(ColorTheme.appDrawerButtonColor)
+        closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.appDrawerButtonColor))
+        scrollBar.highlightColor = ColorTheme.accentColor
+    }
+
+    fun close(v: View? = null) {
+        scrollBar.showVisibleLetter = false
+        activity.feedRecycler.isInvisible = false
+        activity.feedRecycler.animate()
+            .alpha(1f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setStartDelay(0)
+            .setDuration(100)
+            .setInterpolator(DecelerateInterpolator())
+            .onEnd {}
+        view.animate()
+            .alpha(0f)
+            .scaleX(1.1f)
+            .scaleY(1.1f)
+            .setStartDelay(0)
+            .setDuration(100)
+            .setInterpolator(AccelerateInterpolator())
+            .onEnd { view.isVisible = false }
+    }
+}

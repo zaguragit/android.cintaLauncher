@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.CintaLauncher.Summary" parent="Theme.CintaLauncher">
+        <item name="cardBackgroundColor">@color/default_card_bg</item>
+        <item name="cardCornerRadius">@dimen/feed_card_radius</item>
+        <item name="android:paddingHorizontal">8dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.SummaryItem.Container" parent="Theme.CintaLauncher">
+        <item name="android:padding">@dimen/feed_card_padding</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.SummaryItem.Source" parent="Theme.CintaLauncher">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.SummaryItem.SourceIcon" parent="Theme.CintaLauncher">
+        <item name="android:tint">#ffffff</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.SummaryItem.Description" parent="Theme.CintaLauncher">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:padding">@dimen/feed_card_spacing</item>
+    </style>
+
+
+    <style name="Theme.CintaLauncher.MediaSummaryItem.Container" parent="Theme.CintaLauncher">
+        <item name="cardCornerRadius">@dimen/item_card_radius</item>
+        <item name="android:layout_margin">@dimen/item_card_margin</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.MediaSummaryItem.Title" parent="Theme.CintaLauncher">
+        <item name="android:padding">@dimen/feed_card_spacing</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#ff000000</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowRadius">15</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.MediaSummaryItem.Description" parent="Theme.CintaLauncher">
+        <item name="android:paddingHorizontal">@dimen/feed_card_spacing</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:shadowColor">#ff000000</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowRadius">12</item>
+    </style>
+</resources>

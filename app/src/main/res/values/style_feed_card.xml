@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.CintaLauncher.FeedCard.Card" parent="Theme.CintaLauncher">
+        <item name="cardCornerRadius">@dimen/feed_card_radius</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardPreventCornerOverlap">true</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardBackgroundColor">@color/default_card_bg</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.FeedCard.CardBehind" parent="Theme.CintaLauncher">
+        <item name="android:paddingHorizontal">8dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.FeedCard.Source" parent="Theme.CintaLauncher">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/feed_card_text_dark_description</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.FeedCard.SourceIcon" parent="Theme.CintaLauncher">
+        <item name="android:tint">@color/feed_card_text_dark_title</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.FeedCard.Title" parent="Theme.CintaLauncher">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/feed_card_text_dark_title</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingHorizontal">@dimen/feed_card_spacing</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.FeedCard.Description" parent="Theme.CintaLauncher">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/feed_card_text_dark_description</item>
+        <item name="android:padding">@dimen/feed_card_spacing</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.FeedCard.Action.Container" parent="Theme.CintaLauncher">
+        <item name="android:paddingVertical">6dp</item>
+        <item name="android:paddingHorizontal">12dp</item>
+        <item name="android:layout_marginHorizontal">6dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.FeedCard.Action.Text" parent="Theme.CintaLauncher">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/accent</item>
+    </style>
+</resources>

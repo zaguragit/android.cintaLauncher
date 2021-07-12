@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.CintaLauncher.Drawer.Container" parent="Theme.CintaLauncher">
+        <item name="android:padding">0dp</item>
+        <item name="android:background">#88000000</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Drawer.Recycler" parent="Theme.CintaLauncher">
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingHorizontal">10dp</item>
+        <item name="android:paddingBottom">96dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Drawer.BottomBar" parent="Theme.CintaLauncher">
+        <item name="android:background">@color/drawer_bottom_bar</item>
+        <item name="android:layout_height">64dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Drawer.ExitButton" parent="Theme.CintaLauncher">
+        <item name="android:background">@drawable/button_bg_round</item>
+        <item name="tint">#ffffff</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Drawer.Item.Container" parent="Theme.CintaLauncher">
+        <item name="cardBackgroundColor">@color/drawer_bottom_bar</item>
+        <item name="cardCornerRadius">@dimen/item_card_radius</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:layout_margin">@dimen/item_card_margin</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Drawer.Item.Label" parent="Theme.CintaLauncher">
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">@color/feed_card_text_light_title</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Drawer.Item.Icon" parent="Theme.CintaLauncher">
+        <item name="android:padding">8dp</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Drawer.SectionHeader" parent="Theme.CintaLauncher">
+        <item name="android:paddingVertical">6dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/jet_brains_mono</item>
+    </style>
+</resources>

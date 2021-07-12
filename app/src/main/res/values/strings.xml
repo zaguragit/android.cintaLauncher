@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Cinta</string>
+    <string name="launcher_settings">Cinta settings</string>
+    <string name="cinta_launcher_crashed">Cinta launcher crashed</string>
+    <string name="send_bug_report">Send bug report</string>
+    <string name="search">Search</string>
+    <string name="properties">Properties</string>
+    <string name="search_in_duckduckgo">Look up on DuckDuckGo</string>
+    <string name="color_theme_gen">Color theme generator</string>
+    <string name="done">Done</string>
+    <string name="remove">Remove</string>
+    <string name="example_feed_url">www.example.com/rss</string>
+    <string name="rss_sources">Rss sources</string>
+</resources>

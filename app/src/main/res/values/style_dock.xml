@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.CintaLauncher.Dock.Container" parent="Theme.CintaLauncher">
+        <item name="android:padding">12dp</item>
+        <item name="android:background">#000000</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Dock.Grid" parent="Theme.CintaLauncher">
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Dock.Scrollbar" parent="Theme.CintaLauncher">
+        <item name="android:padding">12dp</item>
+        <item name="android:fontFamily">@font/jet_brains_mono</item>
+    </style>
+</resources>

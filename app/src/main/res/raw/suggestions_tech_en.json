@@ -1,0 +1,30 @@
+[
+  {
+    "name": "It's FOSS",
+    "url": "https://itsfoss.com/atom"
+  },
+  {
+    "name": "OMG! Ubuntu!",
+    "url": "https://www.omgubuntu.co.uk/feed/atom"
+  },
+  {
+    "name": "GameFromScratch",
+    "url": "https://gamefromscratch.com/atom"
+  },
+  {
+    "name": "CNet News",
+    "url": "https://www.cnet.com/rss/news/"
+  },
+  {
+    "name": "Android Police",
+    "url": "https://www.androidpolice.com/rss"
+  },
+  {
+    "name": "Android Authority",
+    "url": "https://www.androidauthority.com/feed/"
+  },
+  {
+    "name": "Engadget",
+    "url": "https://www.engadget.com/rss.xml"
+  }
+]
