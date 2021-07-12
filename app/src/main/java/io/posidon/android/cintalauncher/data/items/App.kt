@@ -3,7 +3,6 @@ package io.posidon.android.cintalauncher.data.items
 import android.app.ActivityOptions
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.content.pm.LauncherApps
 import android.content.pm.LauncherApps.ShortcutQuery
 import android.content.pm.PackageManager
@@ -14,11 +13,9 @@ import android.os.Process
 import android.os.UserHandle
 import android.view.View
 import androidx.palette.graphics.Palette
-import posidon.android.conveniencelib.Colors
 import posidon.android.conveniencelib.isInstalled
 import posidon.android.conveniencelib.toBitmap
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 class App(
     val packageName: String,

@@ -1,7 +1,6 @@
 package io.posidon.android.lookerupper.data.providers
 
 import android.app.Activity
-import android.content.Context
 import io.posidon.android.lookerupper.data.SearchQuery
 import io.posidon.android.lookerupper.data.results.SearchResult
 

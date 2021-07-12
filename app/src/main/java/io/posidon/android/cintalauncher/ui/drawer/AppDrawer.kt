@@ -2,11 +2,9 @@ package io.posidon.android.cintalauncher.ui.drawer
 
 import android.content.res.ColorStateList
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.*
-import androidx.cardview.widget.CardView
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,12 +14,14 @@ import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.view.AlphabetScrollbar
-import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import posidon.android.conveniencelib.*
 
-class AppDrawer(val activity: LauncherActivity, val scrollBar: AlphabetScrollbar) {
+class AppDrawer(
+    private val activity: LauncherActivity,
+    private val scrollBar: AlphabetScrollbar
+) {
 
-    val view = activity.findViewById<View>(R.id.app_drawer_container)
+    val view = activity.findViewById<View>(R.id.app_drawer_container)!!
 
     private val adapter = AppDrawerAdapter()
 

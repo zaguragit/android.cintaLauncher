@@ -1,13 +1,9 @@
 package io.posidon.android.cintalauncher.ui.settings.feedChooser
 
 import android.content.Context
-import android.os.Bundle
-import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.storage.Settings
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
-import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Build
+import android.os.Bundle
 import android.text.Editable
 import android.view.View
 import android.view.WindowManager
@@ -21,7 +17,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import posidon.android.conveniencelib.*
+import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.storage.Settings
+import io.posidon.android.cintalauncher.ui.color.ColorTheme
+import posidon.android.conveniencelib.dp
+import posidon.android.conveniencelib.getNavigationBarHeight
+import posidon.android.conveniencelib.getStatusBarHeight
+import posidon.android.conveniencelib.vibrate
 
 class FeedSourcesChooser : AppCompatActivity() {
 

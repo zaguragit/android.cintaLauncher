@@ -2,8 +2,6 @@ package io.posidon.android.cintalauncher.ui.color
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Parcel
-import android.os.Parcelable
 import io.posidon.android.cintalauncher.R
 
 class DefaultColorTheme(context: Context) : ColorTheme {

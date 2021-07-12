@@ -1,21 +1,14 @@
 package io.posidon.android.cintalauncher.providers.summary
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
-import android.media.AudioManager
 import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.PlaybackState
-import android.service.notification.StatusBarNotification
-import android.view.KeyEvent
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toDrawable
 import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.feed.summary.media.MediaSummary
-import io.posidon.android.cintalauncher.providers.notification.NotificationCreator
-import io.posidon.android.launcherutils.GestureNavContract
 import posidon.android.conveniencelib.toBitmap
 import java.time.Instant
 

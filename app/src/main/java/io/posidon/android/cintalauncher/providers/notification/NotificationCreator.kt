@@ -9,11 +9,8 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.service.notification.StatusBarNotification
 import android.view.View
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.data.feed.items.*
-import posidon.android.conveniencelib.toBitmap
 import java.time.Instant
 
 object NotificationCreator {
@@ -155,7 +152,7 @@ object NotificationCreator {
 
         if (bigPic != null) {
             return object : FeedItemWithBigImage {
-                override val image = bigPic!!
+                override val image: Drawable = bigPic
                 override val color = color
                 override val title = title.toString()
                 override val sourceIcon = icon

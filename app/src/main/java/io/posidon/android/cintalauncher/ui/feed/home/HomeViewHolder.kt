@@ -22,35 +22,34 @@ import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.lookerupper.ui.SearchActivity
 import posidon.android.conveniencelib.Device
 import posidon.android.conveniencelib.dp
-import posidon.android.conveniencelib.getNavigationBarHeight
 import posidon.android.conveniencelib.getStatusBarHeight
 
 class HomeViewHolder(
-    val scrollIndicator: ImageView,
+    scrollIndicator: ImageView,
     val dockContainer: ViewGroup,
     itemView: View,
 ) : RecyclerView.ViewHolder(itemView) {
 
-    val summaryCard = itemView.findViewById<View>(R.id.summary_card)
+    val summaryCard = itemView.findViewById<View>(R.id.summary_card)!!
     val summaryAdapter = SummaryAdapter()
-    val summaryRecycler = summaryCard.findViewById<RecyclerView>(R.id.summary_recycler).apply {
+    val summaryRecycler = summaryCard.findViewById<RecyclerView>(R.id.summary_recycler)!!.apply {
         layoutManager = LinearLayoutManager(itemView.context, RecyclerView.VERTICAL, false)
         adapter = summaryAdapter
     }
     val recentlyOpenedAdapter = RecentlyOpenedItemsAdapter()
-    val recentlyOpenedRecycler = summaryCard.findViewById<RecyclerView>(R.id.recents_recycler).apply {
+    val recentlyOpenedRecycler = summaryCard.findViewById<RecyclerView>(R.id.recents_recycler)!!.apply {
         layoutManager = GridLayoutManager(itemView.context, 3, RecyclerView.VERTICAL, false)
         adapter = recentlyOpenedAdapter
     }
 
-    val searchCard = itemView.findViewById<CardView>(R.id.search_bar_container).apply {
+    val searchCard = itemView.findViewById<CardView>(R.id.search_bar_container)!!.apply {
         setOnClickListener {
             val context = it.context
             context.startActivity(Intent(context, SearchActivity::class.java))
         }
     }
-    val searchIcon = itemView.findViewById<ImageView>(R.id.search_bar_icon)
-    val searchText = itemView.findViewById<TextView>(R.id.search_bar_text)
+    val searchIcon = itemView.findViewById<ImageView>(R.id.search_bar_icon)!!
+    val searchText = itemView.findViewById<TextView>(R.id.search_bar_text)!!
 
     init {
         NotificationSummariesProvider.init(itemView.context) {

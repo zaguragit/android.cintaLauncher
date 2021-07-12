@@ -1,11 +1,8 @@
 package io.posidon.android.lookerupper.data
 
 import android.app.Activity
-import android.content.Context
-import io.posidon.android.lookerupper.data.providers.AsyncSearchProvider
 import io.posidon.android.lookerupper.data.providers.SearchProvider
 import io.posidon.android.lookerupper.data.results.SearchResult
-import io.posidon.android.lookerupper.ui.SearchAdapter
 import java.util.*
 
 class Searcher(

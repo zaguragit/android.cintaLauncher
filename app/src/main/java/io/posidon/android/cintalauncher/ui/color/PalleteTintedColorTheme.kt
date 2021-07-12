@@ -1,7 +1,6 @@
 package io.posidon.android.cintalauncher.ui.color
 
 import android.content.Context
-import android.graphics.Color
 import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.R

@@ -1,7 +1,6 @@
 package io.posidon.android.cintalauncher.ui.drawer.viewHolders
 
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
@@ -12,7 +11,7 @@ import io.posidon.android.cintalauncher.ui.view.HighlightSectionIndexer
 
 class SectionHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    val textView = itemView.findViewById<TextView>(R.id.text)
+    val textView = itemView.findViewById<TextView>(R.id.text)!!
 
     val highlightDrawable = HighlightSectionIndexer.createHighlightDrawable(
         itemView.context,

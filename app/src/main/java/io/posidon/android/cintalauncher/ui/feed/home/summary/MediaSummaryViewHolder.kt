@@ -1,7 +1,6 @@
 package io.posidon.android.cintalauncher.ui.feed.home.summary
 
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.opengl.GLES30
 import android.view.View
@@ -11,8 +10,8 @@ import androidx.cardview.widget.CardView
 import com.appspell.shaderview.ShaderView
 import com.appspell.shaderview.gl.params.ShaderParamsBuilder
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.data.feed.summary.media.MediaSummary
 import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
+import io.posidon.android.cintalauncher.data.feed.summary.media.MediaSummary
 import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import posidon.android.conveniencelib.Colors
 import posidon.android.conveniencelib.toBitmap
@@ -22,17 +21,17 @@ class MediaSummaryViewHolder(
     itemView: View
 ) : SummaryViewHolder(itemView) {
 
-    val card = itemView.findViewById<CardView>(R.id.card)
-    val title = card.findViewById<TextView>(R.id.title)
-    val description = card.findViewById<TextView>(R.id.description)
+    val card = itemView.findViewById<CardView>(R.id.card)!!
+    val title = card.findViewById<TextView>(R.id.title)!!
+    val description = card.findViewById<TextView>(R.id.description)!!
 
-    val cover = card.findViewById<ImageView>(R.id.cover)
+    val cover = card.findViewById<ImageView>(R.id.cover)!!
 
-    val previous = card.findViewById<ImageView>(R.id.button_previous)
-    val play = card.findViewById<ImageView>(R.id.button_play)
-    val next = card.findViewById<ImageView>(R.id.button_next)
+    val previous = card.findViewById<ImageView>(R.id.button_previous)!!
+    val play = card.findViewById<ImageView>(R.id.button_play)!!
+    val next = card.findViewById<ImageView>(R.id.button_next)!!
 
-    val shaderView = card.findViewById<ShaderView>(R.id.shader_view)
+    val shaderView = card.findViewById<ShaderView>(R.id.shader_view)!!
 
     init {
         shaderView.shaderParams = ShaderParamsBuilder()

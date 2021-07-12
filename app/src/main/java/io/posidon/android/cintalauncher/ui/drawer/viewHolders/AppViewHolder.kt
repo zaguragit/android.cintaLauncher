@@ -10,12 +10,13 @@ import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter.Companion.APP_ITEM
 import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
-import posidon.android.conveniencelib.Colors
 
-class AppViewHolder(val card: CardView) : RecyclerView.ViewHolder(card) {
+class AppViewHolder(
+    val card: CardView
+) : RecyclerView.ViewHolder(card) {
 
-    val icon = itemView.findViewById<ImageView>(R.id.icon_image)
-    val label = itemView.findViewById<TextView>(R.id.icon_text)
+    val icon = itemView.findViewById<ImageView>(R.id.icon_image)!!
+    val label = itemView.findViewById<TextView>(R.id.icon_text)!!
 }
 
 class AppItem(val item: LauncherItem) : AppDrawerAdapter.DrawerItem {

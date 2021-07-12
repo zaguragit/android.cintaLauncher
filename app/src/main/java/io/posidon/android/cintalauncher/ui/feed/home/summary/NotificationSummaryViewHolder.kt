@@ -11,9 +11,9 @@ class NotificationSummaryViewHolder(
     itemView: View
 ) : SummaryViewHolder(itemView) {
 
-    val source = itemView.findViewById<TextView>(R.id.source)
-    val description = itemView.findViewById<TextView>(R.id.description)
-    val icon = itemView.findViewById<ImageView>(R.id.icon)
+    val source = itemView.findViewById<TextView>(R.id.source)!!
+    val description = itemView.findViewById<TextView>(R.id.description)!!
+    val icon = itemView.findViewById<ImageView>(R.id.icon)!!
 
     override fun onBind(summary: SummaryItem) {
         summary as NotificationSummary

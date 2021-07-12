@@ -37,6 +37,7 @@ open class AlphabetScrollbar : View {
         boldTypeface = Typeface.create(paint.typeface, Typeface.BOLD)
     }
 
+    @Orientation
     var orientation: Int = HORIZONTAL
 
     var recycler: RecyclerView? = null
@@ -134,6 +135,11 @@ open class AlphabetScrollbar : View {
 
     private var currentScrolledSectionStart = -1
     private var currentScrolledSectionEnd = -1
+
+    override fun performClick(): Boolean {
+        onStartScroll(this)
+        return super.performClick()
+    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {

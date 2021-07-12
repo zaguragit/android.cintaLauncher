@@ -4,10 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
 import io.posidon.android.cintalauncher.data.feed.summary.media.MediaSummary
 import io.posidon.android.cintalauncher.data.feed.summary.notification.NotificationSummary
-import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
-import java.util.ArrayList
 
 class SummaryAdapter : RecyclerView.Adapter<SummaryViewHolder>() {
 

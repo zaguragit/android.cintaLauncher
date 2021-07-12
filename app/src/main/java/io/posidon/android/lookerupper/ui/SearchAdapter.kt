@@ -12,8 +12,6 @@ import io.posidon.android.lookerupper.ui.viewHolders.AnswerSearchViewHolder
 import io.posidon.android.lookerupper.ui.viewHolders.ContactSearchViewHolder
 import io.posidon.android.lookerupper.ui.viewHolders.SearchViewHolder
 import io.posidon.android.lookerupper.ui.viewHolders.SimpleSearchViewHolder
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.withLock
 
 class SearchAdapter : RecyclerView.Adapter<SearchViewHolder>() {
     private var results = emptyList<SearchResult>()

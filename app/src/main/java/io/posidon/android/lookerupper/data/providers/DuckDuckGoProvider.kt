@@ -1,18 +1,10 @@
 package io.posidon.android.lookerupper.data.providers
 
 import android.app.Activity
-import android.content.Context
-import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
-import io.posidon.android.launcherutils.AppLoader
 import io.posidon.android.lookerupper.data.SearchQuery
 import io.posidon.android.lookerupper.data.Searcher
-import io.posidon.android.lookerupper.data.results.AppResult
 import io.posidon.android.lookerupper.data.results.InstantAnswerResult
-import io.posidon.android.lookerupper.data.results.Relevance
-import io.posidon.android.lookerupper.data.results.SearchResult
 import posidon.android.loader.DuckInstantAnswer
-import java.util.*
-import kotlin.collections.ArrayList
 
 class DuckDuckGoProvider(searcher: Searcher) : AsyncSearchProvider(searcher) {
 

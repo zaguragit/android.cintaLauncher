@@ -3,12 +3,9 @@ package io.posidon.android.cintalauncher.providers.summary
 import android.content.Context
 import android.service.notification.StatusBarNotification
 import androidx.core.app.NotificationCompat
-import androidx.palette.graphics.Palette
-import io.posidon.android.cintalauncher.data.feed.summary.media.MediaSummary
-import io.posidon.android.cintalauncher.data.feed.summary.notification.NotificationSummary
 import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
+import io.posidon.android.cintalauncher.data.feed.summary.notification.NotificationSummary
 import io.posidon.android.cintalauncher.providers.notification.NotificationCreator
-import posidon.android.conveniencelib.toBitmap
 import java.lang.reflect.InvocationTargetException
 import java.time.Instant
 

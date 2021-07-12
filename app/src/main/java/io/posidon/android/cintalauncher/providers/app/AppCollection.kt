@@ -1,17 +1,11 @@
 package io.posidon.android.cintalauncher.providers.app
 
 import android.content.Context
-import android.os.Process
-import android.os.UserHandle
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import io.posidon.android.cintalauncher.BuildConfig
-import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.LauncherActivity
-import io.posidon.android.cintalauncher.ui.settings.CintaSettings
 import io.posidon.android.launcherutils.AppLoader
-import java.util.LinkedList
+import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 

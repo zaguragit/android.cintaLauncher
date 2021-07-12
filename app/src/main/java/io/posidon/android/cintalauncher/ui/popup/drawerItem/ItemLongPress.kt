@@ -3,8 +3,6 @@ package io.posidon.android.cintalauncher.ui.popup.drawerItem
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.RoundRectShape
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +13,12 @@ import androidx.appcompat.widget.ListPopupWindow
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import posidon.android.conveniencelib.dp
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.data.items.showProperties
 import posidon.android.conveniencelib.Device
+import posidon.android.conveniencelib.dp
 import posidon.android.conveniencelib.vibrate
 
 object ItemLongPress {

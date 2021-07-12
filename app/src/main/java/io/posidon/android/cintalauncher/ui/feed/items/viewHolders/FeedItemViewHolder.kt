@@ -17,12 +17,12 @@ import io.posidon.android.cintalauncher.ui.feed.items.ActionsAdapter
 import posidon.android.conveniencelib.dp
 
 open class FeedItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val source = itemView.findViewById<TextView>(R.id.source)
-    val title = itemView.findViewById<TextView>(R.id.title)
-    val description = itemView.findViewById<TextView>(R.id.description)
-    val icon = itemView.findViewById<ImageView>(R.id.icon)
-    val card = itemView.findViewById<CardView>(R.id.card)
-    val actions = itemView.findViewById<RecyclerView>(R.id.actions_recycler).apply {
+    val source = itemView.findViewById<TextView>(R.id.source)!!
+    val title = itemView.findViewById<TextView>(R.id.title)!!
+    val description = itemView.findViewById<TextView>(R.id.description)!!
+    val icon = itemView.findViewById<ImageView>(R.id.icon)!!
+    val card = itemView.findViewById<CardView>(R.id.card)!!
+    val actions = itemView.findViewById<RecyclerView>(R.id.actions_recycler)!!.apply {
         layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
     }
     val actionButtonShape = run {

@@ -9,8 +9,8 @@ import io.posidon.android.lookerupper.data.results.SearchResult
 
 class ContactSearchViewHolder(itemView: View) : SearchViewHolder(itemView) {
 
-    val icon = itemView.findViewById<ImageView>(R.id.icon)
-    val text = itemView.findViewById<TextView>(R.id.text)
+    val icon = itemView.findViewById<ImageView>(R.id.icon)!!
+    val text = itemView.findViewById<TextView>(R.id.text)!!
 
     override fun onBind(result: SearchResult) {
         result as ContactResult

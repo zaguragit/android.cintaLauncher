@@ -21,11 +21,11 @@ class ActionsAdapter(
     override fun getItemCount(): Int = actions.size
 
     class ActionViewHolder(bg: Drawable, actionButtonTextColor: Int, itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val icon = itemView.findViewById<ImageView>(R.id.action_icon)
-        val text = itemView.findViewById<TextView>(R.id.action_text).apply {
+        val icon = itemView.findViewById<ImageView>(R.id.action_icon)!!
+        val text = itemView.findViewById<TextView>(R.id.action_text)!!.apply {
             setTextColor(actionButtonTextColor)
         }
-        val container = itemView.findViewById<View>(R.id.action_container).apply {
+        val container = itemView.findViewById<View>(R.id.action_container)!!.apply {
             background = bg.clone()
         }
     }

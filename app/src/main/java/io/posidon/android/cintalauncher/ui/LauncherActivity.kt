@@ -50,9 +50,9 @@ class LauncherActivity : FragmentActivity() {
 
     val notificationProvider = NotificationProvider(this)
 
-    val feedRecycler by lazy { findViewById<RecyclerView>(R.id.feed_recycler) }
-    val dockContainer by lazy { findViewById<ViewGroup>(R.id.dock_container) }
-    val scrollBar by lazy { findViewById<AlphabetScrollbar>(R.id.scroll_bar) }
+    val feedRecycler by lazy { findViewById<RecyclerView>(R.id.feed_recycler)!! }
+    val dockContainer by lazy { findViewById<ViewGroup>(R.id.dock_container)!! }
+    val scrollBar by lazy { findViewById<AlphabetScrollbar>(R.id.scroll_bar)!! }
 
     val appDrawer by lazy { AppDrawer(this, scrollBar) }
 

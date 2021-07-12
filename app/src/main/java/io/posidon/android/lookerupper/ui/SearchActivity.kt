@@ -1,7 +1,6 @@
 package io.posidon.android.lookerupper.ui
 
 import android.content.res.ColorStateList
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
