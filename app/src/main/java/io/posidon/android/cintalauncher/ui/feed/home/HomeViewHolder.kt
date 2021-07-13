@@ -20,13 +20,12 @@ import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.feed.home.summary.SummaryAdapter
 import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.lookerupper.ui.SearchActivity
-import posidon.android.conveniencelib.Device
 import posidon.android.conveniencelib.dp
 import posidon.android.conveniencelib.getStatusBarHeight
 
 class HomeViewHolder(
     scrollIndicator: ImageView,
-    val dockContainer: ViewGroup,
+    parentView: ViewGroup,
     itemView: View,
 ) : RecyclerView.ViewHolder(itemView) {
 
@@ -56,7 +55,7 @@ class HomeViewHolder(
             itemView.post(::updateRecents)
         }
         itemView.layoutParams.apply {
-            height = Device.screenHeight(itemView.context) - dockContainer.measuredHeight - itemView.context.getStatusBarHeight()
+            height = parentView.measuredHeight - itemView.context.getStatusBarHeight()
         }
         val s = itemView.dp(24).toInt()
         val vertical = itemView.findViewById<LinearLayout>(R.id.vertical)

@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.core.graphics.toRectF
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -214,7 +215,10 @@ class LauncherActivity : FragmentActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
+
         feedRecycler.setPadding(0, getStatusBarHeight(), 0, 0)
-        (scrollBar.layoutParams as ViewGroup.MarginLayoutParams).bottomMargin = getNavigationBarHeight()
+        scrollBar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = getNavigationBarHeight()
+        }
     }
 }

@@ -10,7 +10,10 @@ import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.data.feed.items.*
+import io.posidon.android.cintalauncher.data.feed.items.FeedItem
+import io.posidon.android.cintalauncher.data.feed.items.FeedItemSmall
+import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
+import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithProgress
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.feed.home.HomeViewHolder
@@ -44,7 +47,7 @@ class FeedAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            TYPE_HOME -> HomeViewHolder(scrollIndicator, dockContainer, LayoutInflater.from(parent.context)
+            TYPE_HOME -> HomeViewHolder(scrollIndicator, parent, LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_home, parent, false))
             TYPE_PLAIN -> FeedItemViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_plain, parent, false))
