@@ -3,7 +3,9 @@
     <style name="Theme.CintaLauncher.SearchBar.Container" parent="Theme.CintaLauncher">
         <item name="cardCornerRadius">@dimen/item_card_radius</item>
         <item name="android:padding">4dp</item>
-        <item name="android:layout_margin">@dimen/item_card_margin</item>
+
+        <item name="cardElevation">4dp</item>
+        <item name="cardUseCompatPadding">true</item>
     </style>
 
     <style name="Theme.CintaLauncher.SearchBar.Text" parent="Theme.CintaLauncher">

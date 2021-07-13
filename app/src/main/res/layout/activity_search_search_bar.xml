@@ -2,12 +2,13 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/search_bar_height"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
     android:id="@+id/search_bar_container"
     style="@style/Theme.CintaLauncher.SearchBar.Container">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/search_bar_height"
         android:orientation="horizontal">
         <ImageView
             style="@style/Theme.CintaLauncher.SearchBar.Icon"

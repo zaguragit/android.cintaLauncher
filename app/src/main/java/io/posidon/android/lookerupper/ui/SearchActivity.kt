@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.ui.color.ColorTheme
@@ -33,13 +33,24 @@ class SearchActivity : FragmentActivity() {
         setContentView(R.layout.activity_search)
         searcher.onCreate(this)
         loadColors()
+        val container = findViewById<View>(R.id.search_bar_container)!!
         findViewById<RecyclerView>(R.id.recycler).apply {
-            layoutManager = LinearLayoutManager(this@SearchActivity, RecyclerView.VERTICAL, false)
+            layoutManager = GridLayoutManager(this@SearchActivity, 3, RecyclerView.VERTICAL, false).apply {
+                spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                    override fun getSpanSize(i: Int): Int =
+                        if (adapter?.getItemViewType(i) == SearchAdapter.RESULT_APP) 1
+                        else 3
+                }
+            }
             this.adapter = this@SearchActivity.adapter
+            container.post {
+                setPadding(paddingLeft, container.measuredHeight, paddingRight, paddingBottom)
+            }
         }
         findViewById<TextView>(R.id.search_bar_text).doOnTextChanged { text, start, before, count ->
             searcher.query(text)
         }
+
     }
 
     private fun loadColors() {
