@@ -9,8 +9,8 @@
     <ImageView
         style="@style/Theme.CintaLauncher.SearchResult.Simple.Icon"
         android:id="@+id/icon"
-        android:layout_width="81dp"
-        android:layout_height="81dp"/>
+        android:layout_width="64dp"
+        android:layout_height="64dp"/>
     <TextView
         style="@style/Theme.CintaLauncher.SearchResult.Simple.Title"
         android:id="@+id/text"
