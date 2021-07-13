@@ -4,9 +4,12 @@ import android.app.ActivityOptions
 import android.content.ComponentName
 import android.content.Context
 import android.content.pm.LauncherApps
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.UserHandle
 import android.view.View
+import androidx.palette.graphics.Palette
+import posidon.android.conveniencelib.toBitmap
 
 class AppResult(
     val packageName: String,
@@ -16,6 +19,20 @@ class AppResult(
     icon: Drawable
 ) : SimpleResult(title, icon) {
     override var relevance = Relevance(0f)
+
+    private val _color = run {
+        val palette = Palette.from(icon.toBitmap()).generate()
+        val def = -0xdad9d9
+        var color = palette.getDominantColor(def)
+        val hsv = FloatArray(3)
+        Color.colorToHSV(color, hsv)
+        if (hsv[1] < .1f) {
+            color = palette.getVibrantColor(def)
+        }
+        color
+    }
+
+    fun getColor(): Int = _color
 
     override fun open(view: View) {
         try {

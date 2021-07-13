@@ -43,9 +43,10 @@ class AppProvider(
         val results = LinkedList<SearchResult>()
         apps.forEach {
             it.relevance = Relevance(FuzzySearch.tokenSortPartialRatio(query.toString(), it.title) / 100f)
-            if (it.relevance.value > .2f) {
+            if (it.relevance.value > .7f) {
                 results += it
             }
+            it.relevance = Relevance(it.relevance.value + .3f)
         }
         return results
     }
