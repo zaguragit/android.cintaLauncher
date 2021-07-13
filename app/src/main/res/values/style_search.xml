@@ -32,7 +32,12 @@
     </style>
 
     <style name="Theme.CintaLauncher.SearchResult.Simple.Title" parent="Theme.CintaLauncher">
-        <item name="android:padding">8dp</item>
+        <item name="android:paddingHorizontal">8dp</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.SearchResult.Simple.Subtitle" parent="Theme.CintaLauncher">
+        <item name="android:paddingHorizontal">8dp</item>
+        <item name="android:textSize">15sp</item>
     </style>
 </resources>

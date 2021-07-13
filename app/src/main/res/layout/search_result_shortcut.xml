@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    style="@style/Theme.CintaLauncher.SearchResult.Container">
+    <ImageView
+        style="@style/Theme.CintaLauncher.SearchResult.Simple.Icon"
+        android:id="@+id/icon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            style="@style/Theme.CintaLauncher.SearchResult.Simple.Title"
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            style="@style/Theme.CintaLauncher.SearchResult.Simple.Subtitle"
+            android:id="@+id/subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>

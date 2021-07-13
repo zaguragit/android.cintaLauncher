@@ -4,8 +4,10 @@ import android.app.ActivityOptions
 import android.content.ComponentName
 import android.content.Context
 import android.content.pm.LauncherApps
+import android.content.pm.ShortcutInfo
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.os.Process
 import android.os.UserHandle
 import android.view.View
 import androidx.palette.graphics.Palette
@@ -15,9 +17,9 @@ class AppResult(
     val packageName: String,
     val name: String,
     val userHandle: UserHandle,
-    title: String,
-    icon: Drawable
-) : SimpleResult(title, icon) {
+    override val title: String,
+    val icon: Drawable
+) : SearchResult {
     override var relevance = Relevance(0f)
 
     private val _color = run {
@@ -40,5 +42,14 @@ class AppResult(
                 ComponentName(packageName, name), userHandle, null,
                 ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.measuredWidth, view.measuredHeight).toBundle())
         } catch (e: Exception) { e.printStackTrace() }
+    }
+
+    fun getShortcuts(launcherApps: LauncherApps): List<ShortcutInfo> {
+        val shortcutQuery = LauncherApps.ShortcutQuery()
+        shortcutQuery.setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC or LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST or LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED)
+        shortcutQuery.setPackage(packageName)
+        return try {
+            launcherApps.getShortcuts(shortcutQuery, Process.myUserHandle())!!
+        } catch (e: Exception) { emptyList() }
     }
 }
