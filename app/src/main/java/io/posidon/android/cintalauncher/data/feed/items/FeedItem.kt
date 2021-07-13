@@ -21,4 +21,22 @@ interface FeedItem {
     fun onTap(view: View)
 
     val shouldTintIcon get() = true
+
+    /**
+     * Unique identifier (globally unique to this feed item)
+     */
+    val uid: String
+
+    /**
+     * Identifier (should be unique to this feed item, but that's not guaranteed)
+     */
+    val id: Long
+}
+
+fun String.longHash(): Long {
+    var h = 1125899906842597L // prime
+    for (i in 0 until length) {
+        h = 31 * h + this[i].code.toLong()
+    }
+    return h
 }

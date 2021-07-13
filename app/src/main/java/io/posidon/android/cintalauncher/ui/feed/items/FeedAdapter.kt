@@ -36,7 +36,7 @@ class FeedAdapter(
 
     override fun getItemCount() = itemList.size + 1
 
-    override fun getItemId(i: Int) = if (i == 0) 0 else getFeedItem(i).hashCode().toLong()
+    override fun getItemId(i: Int) = if (i == 0) 0 else getFeedItem(i).id
 
     override fun getItemViewType(i: Int) = if (i == 0) TYPE_HOME else when (getFeedItem(i)) {
         is FeedItemWithBigImage -> TYPE_BIG_IMAGE

@@ -74,6 +74,7 @@ class LauncherActivity : FragmentActivity() {
 
         feedRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         feedAdapter = FeedAdapter(this, dockContainer)
+        feedAdapter.setHasStableIds(true)
         feedRecycler.adapter = feedAdapter
         val r = resources.getDimension(R.dimen.dock_corner_radius)
         findViewById<View>(R.id.home_container).foreground = InvertedRoundRectDrawable(

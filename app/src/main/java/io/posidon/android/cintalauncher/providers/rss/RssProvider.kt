@@ -7,6 +7,7 @@ import android.net.Uri
 import android.view.View
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
+import io.posidon.android.cintalauncher.data.feed.items.longHash
 import io.posidon.android.cintalauncher.providers.Feed.Companion.MAX_ITEMS_HINT
 import io.posidon.android.cintalauncher.providers.FeedItemProvider
 import io.posidon.android.cintalauncher.util.AsyncLoadDrawable
@@ -30,6 +31,7 @@ object RssProvider : FeedItemProvider() {
             return emptyList()
         }
         return items.map {
+            val id = it.link.longHash()
             if (it.img == null) {
                 object : FeedItem {
                     override val color = if (it.source.accentColor == 0) 0 else it.source.accentColor or 0xff000000.toInt()
@@ -39,14 +41,11 @@ object RssProvider : FeedItemProvider() {
                     override val source: String = it.source.name
                     override val instant = it.time.toInstant()
                     override fun onTap(view: View) {
-                        view.context.startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(it.link.trim { it <= ' ' })
-                            )
-                        )
+                        view.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uid)))
                     }
                     override val shouldTintIcon = false
+                    override val uid = it.link.trim { it <= ' ' }
+                    override val id = id
                 }
             } else {
                 object : FeedItemWithBigImage {
@@ -58,14 +57,11 @@ object RssProvider : FeedItemProvider() {
                     override val source: String = it.source.name
                     override val instant = it.time.toInstant()
                     override fun onTap(view: View) {
-                        view.context.startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(it.link.trim { it <= ' ' })
-                            )
-                        )
+                        view.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uid)))
                     }
                     override val shouldTintIcon = false
+                    override val uid = it.link.trim { it <= ' ' }
+                    override val id = id
                 }
             }
         }

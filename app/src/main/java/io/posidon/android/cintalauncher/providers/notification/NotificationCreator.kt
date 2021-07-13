@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.service.notification.StatusBarNotification
 import android.view.View
@@ -111,6 +112,14 @@ object NotificationCreator {
             }
         }?.toTypedArray() ?: emptyArray()
 
+        val id = notification.id.toLong() shl 32 or
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) notification.uid.toLong()
+            else notification.packageName.hashCode().toLong()
+
+        val uid = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            "⍾$id"
+            else "${notification.packageName}⍾${notification.id}"
+
         if (importance == -1) {
             return object : FeedItemSmall {
                 override val color = color
@@ -125,6 +134,8 @@ object NotificationCreator {
                 override fun onTap(view: View) {
                     notification.notification.contentIntent?.send()
                 }
+                override val uid = uid
+                override val id = id
             }
         }
 
@@ -145,6 +156,8 @@ object NotificationCreator {
                 override fun onTap(view: View) {
                     notification.notification.contentIntent?.send()
                 }
+                override val uid = uid
+                override val id = id
             }
         }
 
@@ -165,6 +178,8 @@ object NotificationCreator {
                 override fun onTap(view: View) {
                     notification.notification.contentIntent?.send()
                 }
+                override val uid = uid
+                override val id = id
             }
         }
 
@@ -181,6 +196,8 @@ object NotificationCreator {
             override fun onTap(view: View) {
                 notification.notification.contentIntent?.send()
             }
+            override val uid = uid
+            override val id = id
         }
     }
 }
