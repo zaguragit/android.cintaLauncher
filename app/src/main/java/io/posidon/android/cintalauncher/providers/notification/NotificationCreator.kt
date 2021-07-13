@@ -132,7 +132,11 @@ object NotificationCreator {
                 override val importance = importance.coerceAtLeast(0)
                 override val isNotification = true
                 override fun onTap(view: View) {
-                    notification.notification.contentIntent?.send()
+                    try { notification.notification.contentIntent?.send() }
+                    catch (e: Exception) {
+                        notification.notification.deleteIntent?.send()
+                        e.printStackTrace()
+                    }
                 }
                 override val uid = uid
                 override val id = id
@@ -154,7 +158,11 @@ object NotificationCreator {
                 override val importance = importance
                 override val isNotification = true
                 override fun onTap(view: View) {
-                    notification.notification.contentIntent?.send()
+                    try { notification.notification.contentIntent?.send() }
+                    catch (e: Exception) {
+                        notification.notification.deleteIntent?.send()
+                        e.printStackTrace()
+                    }
                 }
                 override val uid = uid
                 override val id = id
@@ -176,7 +184,11 @@ object NotificationCreator {
                 override val importance = importance
                 override val isNotification = true
                 override fun onTap(view: View) {
-                    notification.notification.contentIntent?.send()
+                    try { notification.notification.contentIntent?.send() }
+                    catch (e: Exception) {
+                        notification.notification.deleteIntent?.send()
+                        e.printStackTrace()
+                    }
                 }
                 override val uid = uid
                 override val id = id
@@ -194,7 +206,11 @@ object NotificationCreator {
             override val importance = importance
             override val isNotification = true
             override fun onTap(view: View) {
-                notification.notification.contentIntent?.send()
+                try { notification.notification.contentIntent?.send() }
+                catch (e: Exception) {
+                    notification.notification.deleteIntent?.send()
+                    e.printStackTrace()
+                }
             }
             override val uid = uid
             override val id = id

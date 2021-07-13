@@ -4,7 +4,7 @@ import android.content.res.ColorStateList
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.widget.*
+import android.widget.ImageView
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,7 +14,8 @@ import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.view.AlphabetScrollbar
-import posidon.android.conveniencelib.*
+import posidon.android.conveniencelib.getStatusBarHeight
+import posidon.android.conveniencelib.onEnd
 
 class AppDrawer(
     private val activity: LauncherActivity,
@@ -63,6 +64,8 @@ class AppDrawer(
         scrollBar.postInvalidate()
         view.postInvalidate()
     }
+
+    val isOpen get() = view.isVisible
 
     fun open(v: View) {
         val sbh = v.context.getStatusBarHeight()

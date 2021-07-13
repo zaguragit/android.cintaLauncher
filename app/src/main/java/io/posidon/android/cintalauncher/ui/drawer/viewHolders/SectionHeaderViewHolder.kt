@@ -15,7 +15,7 @@ class SectionHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
 
     val highlightDrawable = HighlightSectionIndexer.createHighlightDrawable(
         itemView.context,
-        itemView.context.getColor(R.color.accent)
+        0
     )
 }
 

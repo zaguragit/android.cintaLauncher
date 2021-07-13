@@ -6,7 +6,6 @@ import androidx.core.app.NotificationCompat
 import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
 import io.posidon.android.cintalauncher.data.feed.summary.notification.NotificationSummary
 import io.posidon.android.cintalauncher.providers.notification.NotificationCreator
-import java.lang.reflect.InvocationTargetException
 import java.time.Instant
 
 object NotificationSummaryCreator {
@@ -35,7 +34,10 @@ object NotificationSummaryCreator {
             instant = instant,
             onTap = {
                 try { notification.notification.contentIntent?.send() }
-                catch (e: InvocationTargetException) { e.printStackTrace() }
+                catch (e: Exception) {
+                    notification.notification.deleteIntent?.send()
+                    e.printStackTrace()
+                }
             }
         )
     }

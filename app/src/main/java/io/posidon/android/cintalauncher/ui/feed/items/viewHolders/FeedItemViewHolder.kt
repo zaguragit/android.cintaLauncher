@@ -49,7 +49,7 @@ fun bindFeedItemViewHolder(
         val actionsBG = ShapeDrawable(holder.actionButtonShape.clone()).apply {
             paint.color = ColorTheme.actionButtonBG(color)
         }
-        holder.actions.adapter = ActionsAdapter(item.actions, ColorTheme.actionButtonFG(item.color.let { if (it == 0) holder.itemView.context.getColor(R.color.accent) else it }), actionsBG)
+        holder.actions.adapter = ActionsAdapter(item.actions, ColorTheme.actionButtonFG(item.color.let { if (it == 0) ColorTheme.accentColor else it }), actionsBG)
     }
     styleFeedItemViewHolder(holder, color)
 }

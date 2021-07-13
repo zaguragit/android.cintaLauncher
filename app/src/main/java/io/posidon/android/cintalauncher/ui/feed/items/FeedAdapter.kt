@@ -24,8 +24,7 @@ import posidon.android.conveniencelib.dp
 import posidon.android.conveniencelib.toBitmap
 
 class FeedAdapter(
-    val activity: LauncherActivity,
-    val dockContainer: ViewGroup
+    val activity: LauncherActivity
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inline val context: Context get() = activity
@@ -72,9 +71,9 @@ class FeedAdapter(
         val color = themedColorCache.getOrPut(item.sourceIcon to item.color) {
             val color = colorCache.getOrPut(item.sourceIcon to item.color) {
                 if (item.shouldTintIcon || item.sourceIcon == null) {
-                    if (item.color == 0) holder.itemView.context.getColor(R.color.accent) else item.color
+                    if (item.color == 0) ColorTheme.accentColor else item.color
                 } else if (item.color != 0) item.color else {
-                    val accent = holder.itemView.context.getColor(R.color.accent)
+                    val accent = ColorTheme.accentColor
                     Palette.from(item.sourceIcon!!.toBitmap()).generate().getDominantColor(accent)
                 }
             }

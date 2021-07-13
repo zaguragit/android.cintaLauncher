@@ -52,7 +52,6 @@ class LauncherActivity : FragmentActivity() {
     val notificationProvider = NotificationProvider(this)
 
     val feedRecycler by lazy { findViewById<RecyclerView>(R.id.feed_recycler)!! }
-    val dockContainer by lazy { findViewById<ViewGroup>(R.id.dock_container)!! }
     val scrollBar by lazy { findViewById<AlphabetScrollbar>(R.id.scroll_bar)!! }
 
     val appDrawer by lazy { AppDrawer(this, scrollBar) }
@@ -73,7 +72,7 @@ class LauncherActivity : FragmentActivity() {
         wallpaperManager = WallpaperManager.getInstance(this)
 
         feedRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        feedAdapter = FeedAdapter(this, dockContainer)
+        feedAdapter = FeedAdapter(this)
         feedAdapter.setHasStableIds(true)
         feedRecycler.adapter = feedAdapter
         val r = resources.getDimension(R.dimen.dock_corner_radius)
@@ -124,8 +123,8 @@ class LauncherActivity : FragmentActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        feedRecycler.scrollY = 0
+        if (appDrawer.isOpen) appDrawer.close()
+        else feedRecycler.scrollToPosition(0)
     }
 
     private var lastUpdateTime = System.currentTimeMillis()
