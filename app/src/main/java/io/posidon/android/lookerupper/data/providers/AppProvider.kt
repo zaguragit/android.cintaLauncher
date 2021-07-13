@@ -29,7 +29,7 @@ class AppProvider(
             shortcuts.addAll(app.getShortcuts(launcherApps).map {
                 ShortcutResult(
                     it,
-                    it.longLabel.toString(),
+                    (it.longLabel ?: it.shortLabel).toString(),
                     launcherApps.getShortcutIconDrawable(it, context.resources.displayMetrics.densityDpi),
                     app
                 )
