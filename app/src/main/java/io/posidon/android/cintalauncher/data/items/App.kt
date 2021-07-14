@@ -28,7 +28,6 @@ class App(
     override var notificationCount = 0
 
     override fun open(context: Context, view: View?) {
-        LauncherItem.itemHasOpened(this)
         try {
             context.getSystemService(LauncherApps::class.java).startMainActivity(ComponentName(packageName, name), userHandle, view?.clipBounds,
                 ActivityOptions.makeScaleUpAnimation(view, 0, 0, view?.measuredWidth ?: 0, view?.measuredHeight ?: 0).toBundle())

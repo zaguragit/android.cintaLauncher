@@ -7,11 +7,14 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.items.App
+import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.drawer.viewHolders.*
 import io.posidon.android.cintalauncher.ui.view.HighlightSectionIndexer
 import java.util.*
 
-class AppDrawerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), HighlightSectionIndexer {
+class AppDrawerAdapter(
+    val launcherActivity: LauncherActivity
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), HighlightSectionIndexer {
 
     interface DrawerItem {
         val label: String
@@ -38,7 +41,7 @@ class AppDrawerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Highli
         val item = items[i]
         when (holder.itemViewType) {
             SECTION_HEADER -> bindSectionHeaderViewHolder(holder as SectionHeaderViewHolder, item as SectionHeaderItem, highlightI == i)
-            APP_ITEM -> bindAppViewHolder(holder as AppViewHolder, (item as AppItem).item, if (highlightI == -1) null else items[highlightI].label[0])
+            APP_ITEM -> bindAppViewHolder(holder as AppViewHolder, (item as AppItem).item, if (highlightI == -1) null else items[highlightI].label[0], launcherActivity.suggestionsManager)
         }
     }
 

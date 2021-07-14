@@ -6,6 +6,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.items.LauncherItem
+import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
 import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter.Companion.APP_ITEM
@@ -28,7 +29,8 @@ class AppItem(val item: LauncherItem) : AppDrawerAdapter.DrawerItem {
 fun bindAppViewHolder(
     holder: AppViewHolder,
     item: LauncherItem,
-    highlightedChar: Char?
+    highlightedChar: Char?,
+    suggestionsManager: AppSuggestionsManager,
 ) {
     val isDimmed = highlightedChar != null && highlightedChar != item.label[0].uppercaseChar()
     holder.card.alpha = if (isDimmed) .3f else 1f
@@ -38,6 +40,7 @@ fun bindAppViewHolder(
     holder.label.setTextColor(ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor))
     holder.card.setCardBackgroundColor(backgroundColor)
     holder.itemView.setOnClickListener {
+        suggestionsManager.onItemOpened(item)
         item.open(it.context.applicationContext, it)
     }
     holder.itemView.setOnLongClickListener {

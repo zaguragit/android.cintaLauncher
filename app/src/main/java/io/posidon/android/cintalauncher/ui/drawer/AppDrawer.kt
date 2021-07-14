@@ -24,7 +24,7 @@ class AppDrawer(
 
     val view = activity.findViewById<View>(R.id.app_drawer_container)!!
 
-    private val adapter = AppDrawerAdapter()
+    private val adapter = AppDrawerAdapter(activity)
 
     private val bottomBar = view.findViewById<View>(R.id.bottom_bar)
 

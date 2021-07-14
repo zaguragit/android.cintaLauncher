@@ -46,7 +46,7 @@ class FeedAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            TYPE_HOME -> HomeViewHolder(scrollIndicator, parent, LayoutInflater.from(parent.context)
+            TYPE_HOME -> HomeViewHolder(scrollIndicator, parent, activity, LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_home, parent, false))
             TYPE_PLAIN -> FeedItemViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_plain, parent, false))

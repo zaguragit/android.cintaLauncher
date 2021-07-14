@@ -20,4 +20,6 @@
     <string name="permission_notifications">Notifications</string>
     <string name="permission_notifications_explanation">For displaying notifications in your feed, and also a media player when you\'re listening to something</string>
     <string name="grant_permissions">Grant permissions</string>
+    <string name="permission_usage_access">Usage access</string>
+    <string name="permission_usage_access_explanation">Cinta will see which apps you use, to improve the app suggestions</string>
 </resources>

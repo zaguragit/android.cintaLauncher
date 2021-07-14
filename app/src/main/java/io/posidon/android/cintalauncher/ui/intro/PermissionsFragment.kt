@@ -14,6 +14,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.util.FakeLauncherActivity
@@ -29,13 +30,15 @@ class PermissionsFragment : FragmentWithNext(R.layout.intro_permissions) {
     }
 
     fun updatePermissionStatus() = updatePermissionStatus(requireView())
+
     private fun updatePermissionStatus(v: View) = v.apply {
         val tickStorage = findViewById<ImageView>(R.id.tick_storage)!!
         val tickContacts = findViewById<ImageView>(R.id.tick_contacts)!!
         val tickNotifications = findViewById<ImageView>(R.id.tick_notifications)!!
+        val tickUsageAccess = findViewById<ImageView>(R.id.tick_usage_access)!!
         if (
             ContextCompat.checkSelfPermission(
-                requireContext(),
+                context,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
         ) {
@@ -46,6 +49,7 @@ class PermissionsFragment : FragmentWithNext(R.layout.intro_permissions) {
                 tickStorage.imageTintList = tl
                 tickContacts.imageTintList = tl
                 tickNotifications.imageTintList = tl
+                tickUsageAccess.imageTintList = tl
                 a.updateColorTheme()
             }
         } else {
@@ -55,7 +59,7 @@ class PermissionsFragment : FragmentWithNext(R.layout.intro_permissions) {
 
         if (
             ContextCompat.checkSelfPermission(
-                requireContext(),
+                context,
                 Manifest.permission.READ_CONTACTS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
@@ -67,14 +71,22 @@ class PermissionsFragment : FragmentWithNext(R.layout.intro_permissions) {
         }
 
         if (
-            NotificationManagerCompat.getEnabledListenerPackages(requireContext())
-                .contains(requireContext().packageName)
+            NotificationManagerCompat.getEnabledListenerPackages(context)
+                .contains(context.packageName)
         ) {
             findViewById<View>(R.id.button_notifications)!!.isVisible = false
             tickNotifications.isVisible = true
         } else {
             findViewById<View>(R.id.button_notifications)!!
                 .setOnClickListener(::requestNotificationsPermission)
+        }
+
+        if (AppSuggestionsManager.checkUsageAccessPermission(context)) {
+            findViewById<View>(R.id.button_usage_access)!!.isVisible = false
+            tickUsageAccess.isVisible = true
+        } else {
+            findViewById<View>(R.id.button_usage_access)!!
+                .setOnClickListener(::requestUsageAccessPermission)
         }
     }
 
@@ -127,11 +139,20 @@ class PermissionsFragment : FragmentWithNext(R.layout.intro_permissions) {
     }
 
     private fun requestNotificationsPermission(v: View) {
-        if (!NotificationManagerCompat.getEnabledListenerPackages(requireContext()).contains(requireContext().packageName)) {
-            startActivity(
+        if (!NotificationManagerCompat.getEnabledListenerPackages(v.context).contains(v.context.packageName)) {
+            v.context.startActivity(
                 Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS").addFlags(
                     Intent.FLAG_ACTIVITY_NEW_TASK
-                ))
+                )
+            )
         }
+    }
+
+    private fun requestUsageAccessPermission(v: View) {
+        v.context.startActivity(
+            Intent(android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS).addFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK
+            )
+        )
     }
 }

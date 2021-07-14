@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.items.App
-import io.posidon.android.cintalauncher.data.items.LauncherItem
+import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
 import io.posidon.android.cintalauncher.providers.Feed
 import io.posidon.android.cintalauncher.providers.app.AppCallback
 import io.posidon.android.cintalauncher.providers.app.AppCollection
@@ -48,6 +48,8 @@ class LauncherActivity : FragmentActivity() {
 
     val feed = Feed()
     val settings = Settings()
+
+    val suggestionsManager = AppSuggestionsManager()
 
     val notificationProvider = NotificationProvider(this)
 
@@ -144,14 +146,13 @@ class LauncherActivity : FragmentActivity() {
             lastUpdateTime = current
             thread (isDaemon = true, block = RssProvider::update)
         }
+        suggestionsManager.onResume(this)
     }
 
     override fun onPause() {
         super.onPause()
         appDrawer.close()
-        settings.edit(this) {
-            "stats:recently_opened" set LauncherItem.last3.map(LauncherItem::toString).toTypedArray()
-        }
+        suggestionsManager.save(settings, this)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -192,7 +193,7 @@ class LauncherActivity : FragmentActivity() {
     fun loadApps() {
         appLoader.async(this) { apps: AppCollection ->
             appDrawer.update(apps.sections)
-            LauncherItem.loadSavedRecents(settings, apps.byName)
+            suggestionsManager.onAppsLoaded(this, settings, apps.byName)
             Log.d("Cinta", "updated apps (${apps.size} items)")
         }
     }

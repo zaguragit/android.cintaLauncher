@@ -5,9 +5,7 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
-import io.posidon.android.cintalauncher.storage.Settings
 import java.util.*
-import kotlin.collections.HashMap
 
 interface LauncherItem {
 
@@ -34,25 +32,6 @@ interface LauncherItem {
     override fun toString(): String
 
     companion object {
-        var last3 = LinkedList<LauncherItem>()
-            private set
-
-        fun itemHasOpened(item: LauncherItem) {
-            last3.removeAll { it == item }
-            last3.addFirst(item)
-            while (last3.size > 3) last3.removeLast()
-        }
-
-        fun loadSavedRecents(settings: Settings, appsByName: HashMap<String, MutableList<App>>) {
-            settings.getStrings("stats:recently_opened")?.let {
-                val last3 = LinkedList<LauncherItem>()
-                it.forEach {
-                    parse(it, appsByName)?.let { it1 -> last3.add(it1) }
-                }
-                this.last3 = last3
-            }
-        }
-
         fun parse(string: String, appsByName: HashMap<String, MutableList<App>>): LauncherItem? {
             return App.parse(string, appsByName)
         }

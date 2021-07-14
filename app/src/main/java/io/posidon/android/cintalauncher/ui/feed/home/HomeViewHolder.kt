@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.providers.summary.NotificationSummariesProvider
+import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.feed.home.summary.SummaryAdapter
 import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
@@ -26,6 +26,7 @@ import posidon.android.conveniencelib.getStatusBarHeight
 class HomeViewHolder(
     scrollIndicator: ImageView,
     parentView: ViewGroup,
+    val launcherActivity: LauncherActivity,
     itemView: View,
 ) : RecyclerView.ViewHolder(itemView) {
 
@@ -35,7 +36,7 @@ class HomeViewHolder(
         layoutManager = LinearLayoutManager(itemView.context, RecyclerView.VERTICAL, false)
         adapter = summaryAdapter
     }
-    val recentlyOpenedAdapter = RecentlyOpenedItemsAdapter()
+    val recentlyOpenedAdapter = RecentlyOpenedItemsAdapter(launcherActivity.suggestionsManager)
     val recentlyOpenedRecycler = summaryCard.findViewById<RecyclerView>(R.id.recents_recycler)!!.apply {
         layoutManager = GridLayoutManager(itemView.context, 3, RecyclerView.VERTICAL, false)
         adapter = recentlyOpenedAdapter
@@ -78,7 +79,7 @@ class HomeViewHolder(
     }
 
     fun updateRecents() {
-        val recent = LauncherItem.last3
+        val recent = launcherActivity.suggestionsManager.getLast3(launcherActivity)
         if (recent.isEmpty()) {
             recentlyOpenedRecycler.isVisible = false
         } else {

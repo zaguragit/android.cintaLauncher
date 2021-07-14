@@ -6,9 +6,13 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.items.LauncherItem
-import io.posidon.android.cintalauncher.ui.drawer.viewHolders.*
+import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
+import io.posidon.android.cintalauncher.ui.drawer.viewHolders.AppViewHolder
+import io.posidon.android.cintalauncher.ui.drawer.viewHolders.bindAppViewHolder
 
-class RecentlyOpenedItemsAdapter : RecyclerView.Adapter<AppViewHolder>() {
+class RecentlyOpenedItemsAdapter(
+    val suggestionsManager: AppSuggestionsManager
+) : RecyclerView.Adapter<AppViewHolder>() {
 
     private var items: Array<LauncherItem> = emptyArray()
 
@@ -21,7 +25,7 @@ class RecentlyOpenedItemsAdapter : RecyclerView.Adapter<AppViewHolder>() {
 
     override fun onBindViewHolder(holder: AppViewHolder, i: Int) {
         val item = items[i]
-        bindAppViewHolder(holder, item, null)
+        bindAppViewHolder(holder, item, null, suggestionsManager)
     }
 
     fun updateItems(items: Array<LauncherItem>) {
