@@ -3,7 +3,10 @@
     <style name="Theme.CintaLauncher.ItemPopup.Container" parent="Theme.CintaLauncher">
         <item name="cardBackgroundColor">@color/drawer_bottom_bar</item>
         <item name="cardCornerRadius">@dimen/item_card_radius</item>
-        <item name="android:padding">12dp</item>
+        <item name="android:padding">4dp</item>
+
+        <item name="cardElevation">4dp</item>
+        <item name="cardUseCompatPadding">true</item>
     </style>
 
     <style name="Theme.CintaLauncher.ItemPopup.Shortcut.Icon" parent="Theme.CintaLauncher">

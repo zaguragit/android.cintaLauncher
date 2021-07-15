@@ -36,7 +36,7 @@ class HomeViewHolder(
         layoutManager = LinearLayoutManager(itemView.context, RecyclerView.VERTICAL, false)
         adapter = summaryAdapter
     }
-    val recentlyOpenedAdapter = RecentlyOpenedItemsAdapter(launcherActivity.suggestionsManager)
+    val recentlyOpenedAdapter = RecentlyOpenedItemsAdapter(launcherActivity)
     val recentlyOpenedRecycler = summaryCard.findViewById<RecyclerView>(R.id.recents_recycler)!!.apply {
         layoutManager = GridLayoutManager(itemView.context, 3, RecyclerView.VERTICAL, false)
         adapter = recentlyOpenedAdapter

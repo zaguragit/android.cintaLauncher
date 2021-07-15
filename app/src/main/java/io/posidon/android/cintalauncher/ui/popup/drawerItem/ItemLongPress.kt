@@ -1,6 +1,7 @@
 package io.posidon.android.cintalauncher.ui.popup.drawerItem
 
 import android.content.Context
+import android.content.pm.LauncherApps
 import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
@@ -27,7 +28,7 @@ object ItemLongPress {
     fun makePopupWindow(context: Context, item: LauncherItem, backgroundColor: Int, textColor: Int, onInfo: (View) -> Unit): PopupWindow {
         val content = LayoutInflater.from(context).inflate(R.layout.long_press_item_popup, null)
         if (item is App) {
-            val shortcuts = item.getShortcuts(context)
+            val shortcuts = item.getShortcuts(context.getSystemService(LauncherApps::class.java))
             if (shortcuts.isNotEmpty()) {
                 val recyclerView = content.findViewById<RecyclerView>(R.id.recycler)
                 recyclerView.isNestedScrollingEnabled = false
@@ -60,10 +61,17 @@ object ItemLongPress {
         return window
     }
 
-    inline fun onItemLongPress(context: Context, backgroundColor: Int, textColor: Int, view: View, item: LauncherItem) {
+    inline fun onItemLongPress(
+        context: Context,
+        backgroundColor: Int,
+        textColor: Int,
+        view: View,
+        item: LauncherItem,
+        navbarHeight: Int,
+    ) {
         if (currentPopup == null) {
             context.vibrate(14)
-            val (x, y, gravity) = getPopupLocationFromView(view)
+            val (x, y, gravity) = getPopupLocationFromView(view, navbarHeight)
             val popupWindow = makePopupWindow(context, item, backgroundColor, textColor) {
                 item.showProperties(view, backgroundColor, textColor)
             }
@@ -74,7 +82,10 @@ object ItemLongPress {
     /**
      * @return Triple(x, y, gravity)
      */
-    inline fun getPopupLocationFromView(view: View): Triple<Int, Int, Int> {
+    inline fun getPopupLocationFromView(
+        view: View,
+        navbarHeight: Int,
+    ): Triple<Int, Int, Int> {
 
         val location = IntArray(2).also {
             view.getLocationOnScreen(it)
@@ -95,10 +106,10 @@ object ItemLongPress {
 
         val y = if (location[1] < screenHeight / 2) {
             gravity = gravity or Gravity.TOP
-            location[1] + view.measuredHeight + view.dp(12).toInt()
+            location[1] + view.measuredHeight
         } else {
             gravity = gravity or Gravity.BOTTOM
-            screenHeight - location[1] + view.dp(12).toInt()// + navbarHeight
+            screenHeight - location[1] + navbarHeight
         }
 
         return Triple(x, y, gravity)

@@ -50,12 +50,12 @@ class App(
 
     override fun toString() = "$packageName/$name/${userHandle.hashCode()}"
 
-    fun getShortcuts(context: Context): List<ShortcutInfo> {
+    fun getShortcuts(launcherApps: LauncherApps): List<ShortcutInfo> {
         val shortcutQuery = ShortcutQuery()
         shortcutQuery.setQueryFlags(ShortcutQuery.FLAG_MATCH_DYNAMIC or ShortcutQuery.FLAG_MATCH_MANIFEST or ShortcutQuery.FLAG_MATCH_PINNED)
         shortcutQuery.setPackage(packageName)
         return try {
-            context.getSystemService(LauncherApps::class.java).getShortcuts(shortcutQuery, Process.myUserHandle())!!
+            launcherApps.getShortcuts(shortcutQuery, Process.myUserHandle())!!
         } catch (e: Exception) { emptyList() }
     }
 

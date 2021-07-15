@@ -3,7 +3,10 @@ package io.posidon.android.lookerupper.data.providers
 import android.app.Activity
 import android.content.Context
 import android.content.pm.LauncherApps
+import android.graphics.drawable.Drawable
+import android.os.UserHandle
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
+import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.launcherutils.AppLoader
 import io.posidon.android.lookerupper.data.SearchQuery
 import io.posidon.android.lookerupper.data.Searcher
@@ -46,7 +49,9 @@ class AppProvider(
         }
     }
 
-    val appLoader = AppLoader(::AppResult, ::AppCollection)
+    private fun makeAppResult(packageName: String, name: String, profile: UserHandle, label: String, icon: Drawable) = AppResult(App(packageName, name, profile, label, icon))
+
+    val appLoader = AppLoader(::makeAppResult, ::AppCollection)
     var apps = emptyList<AppResult>()
     var shortcuts = emptyList<ShortcutResult>()
 

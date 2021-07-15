@@ -31,6 +31,7 @@ fun bindAppViewHolder(
     item: LauncherItem,
     highlightedChar: Char?,
     suggestionsManager: AppSuggestionsManager,
+    navbarHeight: Int,
 ) {
     val isDimmed = highlightedChar != null && highlightedChar != item.label[0].uppercaseChar()
     holder.card.alpha = if (isDimmed) .3f else 1f
@@ -44,7 +45,7 @@ fun bindAppViewHolder(
         item.open(it.context.applicationContext, it)
     }
     holder.itemView.setOnLongClickListener {
-        ItemLongPress.onItemLongPress(it.context, backgroundColor, ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor), it, item)
+        ItemLongPress.onItemLongPress(it.context, backgroundColor, ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor), it, item, navbarHeight)
         true
     }
 }

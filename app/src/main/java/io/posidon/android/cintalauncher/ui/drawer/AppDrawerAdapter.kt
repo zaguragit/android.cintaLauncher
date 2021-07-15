@@ -10,6 +10,7 @@ import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.drawer.viewHolders.*
 import io.posidon.android.cintalauncher.ui.view.HighlightSectionIndexer
+import posidon.android.conveniencelib.getNavigationBarHeight
 import java.util.*
 
 class AppDrawerAdapter(
@@ -41,7 +42,7 @@ class AppDrawerAdapter(
         val item = items[i]
         when (holder.itemViewType) {
             SECTION_HEADER -> bindSectionHeaderViewHolder(holder as SectionHeaderViewHolder, item as SectionHeaderItem, highlightI == i)
-            APP_ITEM -> bindAppViewHolder(holder as AppViewHolder, (item as AppItem).item, if (highlightI == -1) null else items[highlightI].label[0], launcherActivity.suggestionsManager)
+            APP_ITEM -> bindAppViewHolder(holder as AppViewHolder, (item as AppItem).item, if (highlightI == -1) null else items[highlightI].label[0], launcherActivity.suggestionsManager, launcherActivity.getNavigationBarHeight())
         }
     }
 
