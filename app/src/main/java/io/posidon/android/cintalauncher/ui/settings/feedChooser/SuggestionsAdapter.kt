@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
+import io.posidon.android.cintalauncher.color.ColorTheme
 import posidon.android.conveniencelib.dp
 
 class SuggestionsAdapter(

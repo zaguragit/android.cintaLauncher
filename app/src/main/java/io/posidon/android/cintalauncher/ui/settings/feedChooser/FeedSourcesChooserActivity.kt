@@ -2,42 +2,31 @@ package io.posidon.android.cintalauncher.ui.settings.feedChooser
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.view.View
-import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ExpandableListView
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.storage.Settings
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
+import io.posidon.android.cintalauncher.ui.settings.SettingsActivity
 import posidon.android.conveniencelib.dp
 import posidon.android.conveniencelib.getNavigationBarHeight
 import posidon.android.conveniencelib.getStatusBarHeight
 import posidon.android.conveniencelib.vibrate
 
-class FeedSourcesChooser : AppCompatActivity() {
+class FeedSourcesChooserActivity : SettingsActivity() {
 
-    val settings = Settings()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.feed_chooser)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) window.setDecorFitsSystemWindows(false)
-        else window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
-        settings.init(applicationContext)
-        loadColors()
+    override fun init(savedInstanceState: Bundle?) {
+        setContentView(R.layout.activity_settings_feed_chooser)
 
         val grid = findViewById<RecyclerView>(R.id.recycler)
         grid.layoutManager = GridLayoutManager(this, 2)
@@ -48,16 +37,12 @@ class FeedSourcesChooser : AppCompatActivity() {
 
         grid.adapter = FeedChooserAdapter(settings, feedUrls)
         val fab = findViewById<FloatingActionButton>(R.id.fab)
-        fab.backgroundTintList = ColorStateList.valueOf(ColorTheme.accentColor and 0x00ffffff or 0x33000000)
-        fab.imageTintList = ColorStateList.valueOf(ColorTheme.accentColor)
+        fab.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
+        fab.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(this, ColorTheme.buttonColor))
         fab.setOnClickListener {
             sourceEditPopup(it.context, settings, feedUrls, grid.adapter!!)
         }
         (fab.layoutParams as FrameLayout.LayoutParams).bottomMargin = dp(20).toInt() + getNavigationBarHeight()
-    }
-
-    private fun loadColors() {
-        window.decorView.setBackgroundColor(ColorTheme.feedBG)
     }
 
     companion object {
@@ -83,8 +68,8 @@ class FeedSourcesChooser : AppCompatActivity() {
             input.setHintTextColor(hintColor)
 
             dialog.findViewById<TextView>(R.id.done)!!.run {
-                setTextColor(ColorTheme.titleColorForBG(context, ColorTheme.appDrawerButtonColor))
-                backgroundTintList = ColorStateList.valueOf(ColorTheme.appDrawerButtonColor)
+                setTextColor(ColorTheme.titleColorForBG(context, ColorTheme.buttonColor))
+                backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
                 setOnClickListener {
                     dialog.dismiss()
 
@@ -116,7 +101,7 @@ class FeedSourcesChooser : AppCompatActivity() {
                 val url = feedUrls[i]
                 dialog.findViewById<TextView>(R.id.remove)!!.run {
                     val hsl = FloatArray(3)
-                    ColorUtils.colorToHSL(ColorTheme.appDrawerButtonColor, hsl)
+                    ColorUtils.colorToHSL(ColorTheme.buttonColor, hsl)
                     hsl[0] = 0f
                     hsl[1] = hsl[1].coerceAtLeast(0.3f)
                     val bg = ColorUtils.HSLToColor(hsl)

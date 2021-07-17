@@ -10,9 +10,9 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.LauncherActivity
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.view.AlphabetScrollbar
 import posidon.android.conveniencelib.getStatusBarHeight
 import posidon.android.conveniencelib.onEnd
@@ -94,8 +94,8 @@ class AppDrawer(
     fun updateColorTheme() {
         view.setBackgroundColor(ColorTheme.appDrawerColor and 0xffffff or 0xdd000000.toInt())
         bottomBar.setBackgroundColor(ColorTheme.appDrawerBottomBarColor)
-        closeButton.backgroundTintList = ColorStateList.valueOf(ColorTheme.appDrawerButtonColor)
-        closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.appDrawerButtonColor))
+        closeButton.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
+        closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))
         scrollBar.highlightColor = ColorTheme.accentColor
     }
 

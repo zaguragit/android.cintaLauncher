@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.providers.summary.NotificationSummariesProvider
 import io.posidon.android.cintalauncher.ui.LauncherActivity
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.feed.home.summary.SummaryAdapter
 import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.lookerupper.ui.SearchActivity
@@ -94,7 +94,7 @@ fun bindHomeViewHolder(
 ) {
     holder.updateSummary()
     holder.updateRecents()
-    (holder.itemView.background as InvertedRoundRectDrawable).color = ColorTheme.feedBG
+    (holder.itemView.background as InvertedRoundRectDrawable).color = ColorTheme.uiBG
     holder.recentlyOpenedAdapter.notifyDataSetChanged()
     holder.searchCard.setCardBackgroundColor(ColorTheme.searchBarBG)
     holder.searchIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)

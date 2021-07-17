@@ -8,8 +8,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.storage.Settings
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
 
 class FeedChooserAdapter(
     private val settings: Settings,
@@ -28,7 +28,7 @@ class FeedChooserAdapter(
         holder.card.backgroundTintList = ColorStateList.valueOf(ColorTheme.feedCardBG)
         holder.text.setTextColor(ColorTheme.feedCardDescription)
         holder.text.setOnLongClickListener {
-            FeedSourcesChooser.sourceEditPopup(it.context, settings, feedUrls, this, i)
+            FeedSourcesChooserActivity.sourceEditPopup(it.context, settings, feedUrls, this, i)
             true
         }
     }

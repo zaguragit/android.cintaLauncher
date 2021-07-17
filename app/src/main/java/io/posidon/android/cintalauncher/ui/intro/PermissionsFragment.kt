@@ -14,9 +14,9 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
 import io.posidon.android.cintalauncher.ui.LauncherActivity
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.util.FakeLauncherActivity
 
 class PermissionsFragment : FragmentWithNext(R.layout.intro_permissions) {

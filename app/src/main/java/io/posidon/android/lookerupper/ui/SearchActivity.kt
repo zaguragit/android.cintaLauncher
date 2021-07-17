@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.lookerupper.data.Searcher
 import io.posidon.android.lookerupper.data.providers.AppProvider
 import io.posidon.android.lookerupper.data.providers.ContactProvider
@@ -56,7 +56,7 @@ class SearchActivity : FragmentActivity() {
     }
 
     private fun loadColors() {
-        window.decorView.setBackgroundColor(ColorTheme.feedBG)
+        window.decorView.setBackgroundColor(ColorTheme.uiBG)
         findViewById<View>(R.id.search_bar_container).backgroundTintList =
             ColorStateList.valueOf(ColorTheme.searchBarBG)
         findViewById<TextView>(R.id.search_bar_text).run {

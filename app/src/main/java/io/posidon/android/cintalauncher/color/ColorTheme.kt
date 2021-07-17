@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.ui.color
+package io.posidon.android.cintalauncher.color
 
 import android.Manifest
 import android.app.Activity
@@ -23,7 +23,7 @@ private lateinit var colorThemeInstance: ColorTheme
 interface ColorTheme {
     val accentColor: Int
 
-    val feedBG: Int
+    val uiBG: Int
 
     val feedCardBG: Int
     val feedCardTitle: Int
@@ -31,7 +31,8 @@ interface ColorTheme {
 
     val appDrawerColor: Int
     val appDrawerBottomBarColor: Int
-    val appDrawerButtonColor: Int
+
+    val buttonColor: Int
 
     val appDrawerSectionColor: Int
     val appDrawerItemBase: Int
@@ -150,8 +151,8 @@ interface ColorTheme {
 
         override val accentColor: Int
             get() = colorThemeInstance.accentColor
-        override val feedBG: Int
-            get() = colorThemeInstance.feedBG
+        override val uiBG: Int
+            get() = colorThemeInstance.uiBG
         override val feedCardBG: Int
             get() = colorThemeInstance.feedCardBG
         override val feedCardTitle: Int
@@ -162,8 +163,8 @@ interface ColorTheme {
             get() = colorThemeInstance.appDrawerColor
         override val appDrawerBottomBarColor: Int
             get() = colorThemeInstance.appDrawerBottomBarColor
-        override val appDrawerButtonColor: Int
-            get() = colorThemeInstance.appDrawerButtonColor
+        override val buttonColor: Int
+            get() = colorThemeInstance.buttonColor
         override val appDrawerSectionColor: Int
             get() = colorThemeInstance.appDrawerSectionColor
         override val appDrawerItemBase: Int

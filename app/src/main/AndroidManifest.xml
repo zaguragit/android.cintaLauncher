@@ -70,7 +70,7 @@
             android:name=".ui.settings.CintaSettings"
             android:icon="@drawable/launcher_settings"
             android:label="@string/launcher_settings"
-            android:launchMode="singleInstance">
+            android:taskAffinity="io.posidon.android.cintalauncher.ui.settings.CintaSettings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES"/>
@@ -81,8 +81,9 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.settings.feedChooser.FeedSourcesChooser"/>
+        <activity android:name=".ui.settings.feedChooser.FeedSourcesChooserActivity"/>
+
+        <activity android:name=".ui.settings.iconPackPicker.IconPackPickerActivity"/>
 
         <activity android:name=".util.StackTraceActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"/>

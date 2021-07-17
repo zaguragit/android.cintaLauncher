@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.lookerupper.data.results.SearchResult
 import io.posidon.android.lookerupper.data.results.ShortcutResult
 
@@ -19,8 +19,8 @@ class ShortcutSearchViewHolder(itemView: View) : SearchViewHolder(itemView) {
         icon.setImageDrawable(result.icon)
         text.text = result.title
         subtitle.text = result.app.title
-        text.setTextColor(ColorTheme.titleColorForBG(itemView.context, ColorTheme.feedBG))
-        subtitle.setTextColor(ColorTheme.textColorForBG(itemView.context, ColorTheme.feedBG))
+        text.setTextColor(ColorTheme.titleColorForBG(itemView.context, ColorTheme.uiBG))
+        subtitle.setTextColor(ColorTheme.textColorForBG(itemView.context, ColorTheme.uiBG))
         itemView.setOnClickListener(result::open)
     }
 }

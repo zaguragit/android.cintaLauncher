@@ -11,8 +11,8 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.feed.items.ActionsAdapter
 import posidon.android.conveniencelib.dp
 
@@ -59,7 +59,7 @@ fun styleFeedItemViewHolder(
     color: Int,
 ) {
     holder.source.setTextColor(color)
-    holder.itemView.setBackgroundColor(ColorTheme.feedBG)
+    holder.itemView.setBackgroundColor(ColorTheme.uiBG)
     holder.card.setCardBackgroundColor(ColorTheme.feedCardBG)
     holder.title.setTextColor(ColorTheme.feedCardTitle)
     holder.description.setTextColor(ColorTheme.feedCardDescription)

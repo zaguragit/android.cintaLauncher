@@ -11,6 +11,12 @@
         app:title="@string/rss_sources">
         <intent
             android:targetPackage="io.posidon.android.cintalauncher"
-            android:targetClass="io.posidon.android.cintalauncher.ui.settings.feedChooser.FeedSourcesChooser"/>
+            android:targetClass="io.posidon.android.cintalauncher.ui.settings.feedChooser.FeedSourcesChooserActivity"/>
+    </Preference>
+    <Preference
+        app:title="@string/icon_packs">
+        <intent
+            android:targetPackage="io.posidon.android.cintalauncher"
+            android:targetClass="io.posidon.android.cintalauncher.ui.settings.iconPackPicker.IconPackPickerActivity"/>
     </Preference>
 </PreferenceScreen>

@@ -10,12 +10,12 @@ import androidx.core.content.ContextCompat
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemSmall
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithProgress
 import io.posidon.android.cintalauncher.ui.LauncherActivity
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.feed.home.HomeViewHolder
 import io.posidon.android.cintalauncher.ui.feed.home.bindHomeViewHolder
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.*

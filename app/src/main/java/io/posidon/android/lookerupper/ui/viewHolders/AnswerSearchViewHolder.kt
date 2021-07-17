@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.lookerupper.data.results.InstantAnswerResult
 import io.posidon.android.lookerupper.data.results.SearchResult
 import posidon.android.conveniencelib.dp

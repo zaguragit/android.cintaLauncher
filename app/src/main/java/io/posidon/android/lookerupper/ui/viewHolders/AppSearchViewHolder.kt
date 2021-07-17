@@ -5,7 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
 import io.posidon.android.lookerupper.data.results.AppResult
 import io.posidon.android.lookerupper.data.results.SearchResult
@@ -21,6 +21,7 @@ class AppSearchViewHolder(itemView: View, val navbarHeight: Int) : SearchViewHol
         icon.setImageDrawable(result.icon)
         text.text = result.title
         val backgroundColor = ColorTheme.tintAppDrawerItem(result.getColor())
+        text.setTextColor(ColorTheme.titleColorForBG(itemView.context, backgroundColor))
         card.setCardBackgroundColor(backgroundColor)
         itemView.setOnClickListener(result::open)
         itemView.setOnLongClickListener {

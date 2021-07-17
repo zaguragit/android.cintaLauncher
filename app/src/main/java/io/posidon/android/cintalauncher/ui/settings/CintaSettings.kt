@@ -2,35 +2,26 @@ package io.posidon.android.cintalauncher.ui.settings
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
+import android.view.View
 import androidx.preference.PreferenceDataStore
 import androidx.preference.PreferenceFragmentCompat
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.storage.Settings
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.util.StackTraceActivity
+import posidon.android.conveniencelib.getStatusBarHeight
 
-class CintaSettings : FragmentActivity() {
+class CintaSettings : SettingsActivity() {
 
-    val settings = Settings()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+    override fun init(savedInstanceState: Bundle?) {
         StackTraceActivity.init(applicationContext)
-        settings.init(applicationContext)
+        setContentView(R.layout.activity_settings)
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.settings_container, SettingsFragment(settings))
                 .commit()
         }
-        ColorTheme.onCreate(this)
-        loadColors()
-    }
-
-    private fun loadColors() {
-        window.decorView.setBackgroundColor(ColorTheme.feedBG)
+        findViewById<View>(R.id.settings_container).setPadding(0, getStatusBarHeight(), 0, 0)
     }
 
     class SettingsFragment(val settings: Settings) : PreferenceFragmentCompat() {

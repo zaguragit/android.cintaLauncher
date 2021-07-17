@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.CintaLauncher.IconPackPicker.Item.Icon" parent="Theme.CintaLauncher">
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.IconPackPicker.Item.Title" parent="Theme.CintaLauncher">
+        <item name="android:paddingHorizontal">8dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.IconPackPicker.Section.Title" parent="Theme.CintaLauncher">
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+</resources>

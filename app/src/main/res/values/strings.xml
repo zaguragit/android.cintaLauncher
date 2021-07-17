@@ -22,4 +22,8 @@
     <string name="grant_permissions">Grant permissions</string>
     <string name="permission_usage_access">Usage access</string>
     <string name="permission_usage_access_explanation">Cinta will see which apps you use, to improve the app suggestions</string>
+    <string name="icon_packs">Icon packs</string>
+    <string name="chosen">Chosen</string>
+    <string name="available">Available</string>
+    <string name="system">System</string>
 </resources>

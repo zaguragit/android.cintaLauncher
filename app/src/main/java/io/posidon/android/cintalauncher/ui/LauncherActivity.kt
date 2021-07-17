@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
@@ -30,7 +31,6 @@ import io.posidon.android.cintalauncher.providers.notification.NotificationProvi
 import io.posidon.android.cintalauncher.providers.rss.RssProvider
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.storage.colorTheme
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
 import io.posidon.android.cintalauncher.ui.feed.items.FeedAdapter
 import io.posidon.android.cintalauncher.ui.view.AlphabetScrollbar
@@ -191,7 +191,7 @@ class LauncherActivity : FragmentActivity() {
     }
 
     fun loadApps() {
-        appLoader.async(this) { apps: AppCollection ->
+        appLoader.async(this, settings.getStrings("icon_packs") ?: emptyArray()) { apps: AppCollection ->
             appDrawer.update(apps.sections)
             suggestionsManager.onAppsLoaded(this, settings, apps.byName)
             Log.d("Cinta", "updated apps (${apps.size} items)")

@@ -1,43 +1,47 @@
-package io.posidon.android.cintalauncher.ui.color
+package io.posidon.android.cintalauncher.color
 
-import android.app.WallpaperColors
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.graphics.ColorUtils
+import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.color.TintedColorTheme.Companion.tintWithSwatch
 import posidon.android.conveniencelib.Colors
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.pow
+import kotlin.math.*
 
+class PalleteTintedColorTheme(
+    wallpaper: Palette,
+    context: Context
+) : TintedColorTheme {
 
-@RequiresApi(Build.VERSION_CODES.O_MR1)
-class AndroidOMR1WallColorTheme(
-    context: Context,
-    colors: WallpaperColors
-): TintedColorTheme {
+    override val accentColor = run {
+        val d = wallpaper.vibrantSwatch ?: wallpaper.lightVibrantSwatch ?: wallpaper.dominantSwatch
+        val hsl = d?.hsl ?: return@run context.getColor(R.color.accent)
+        hsl[2] = hsl[2].coerceAtLeast(.5f)
+        ColorUtils.HSLToColor(hsl)
+    }
 
-    private val primary = colors.primaryColor
-    private val secondary = colors.secondaryColor
-    private val tertiary = colors.tertiaryColor
-
-    override val accentColor = (tertiary ?: secondary ?: primary).toArgb()
-    override val feedBG = primary.toArgb() and 0xffffff or (context.getColor(R.color.feed_bg) and 0xff000000.toInt())
+    override val uiBG = tintWithSwatch(context, R.color.feed_bg, run {
+        val dm = wallpaper.darkMutedSwatch
+        val dv = wallpaper.darkVibrantSwatch
+        val dom = wallpaper.dominantSwatch
+        var y = dv
+        if (y == null || dm != null && dm.population > y.population) y = dm
+        if (y == null || dom != null && dom.population > y.population) y = dom
+        y
+    }, 0.1f)
 
     override val feedCardBG = run {
-        val dom = (secondary ?: primary).toArgb()
-        val hsl = FloatArray(3)
-        ColorUtils.colorToHSL(dom, hsl)
-        val l = hsl[2]
+        val dom = wallpaper.dominantSwatch ?: wallpaper.vibrantSwatch ?: return@run context.getColor(R.color.default_card_bg)
+        val domHsl = dom.hsl
+        val l = domHsl[2]
         when {
             l < .22f -> {
-                //val hsl = (wallpaper.darkVibrantSwatch ?: wallpaper.darkMutedSwatch ?: dom).hsl
+                val hsl = (wallpaper.darkVibrantSwatch ?: wallpaper.darkMutedSwatch ?: dom).hsl
                 hsl[2] = min(hsl[2], .24f)
                 ColorUtils.HSLToColor(hsl)
             }
             else -> {
-                //val hsl = (wallpaper.lightVibrantSwatch ?: wallpaper.lightMutedSwatch ?: dom).hsl
+                val hsl = (wallpaper.lightVibrantSwatch ?: wallpaper.lightMutedSwatch ?: dom).hsl
                 hsl[2] = max(hsl[2], .96f - hsl[1] * .1f)
                 ColorUtils.HSLToColor(hsl)
             }
@@ -48,9 +52,9 @@ class AndroidOMR1WallColorTheme(
     override val feedCardDescription = textColorForBG(context, feedCardBG)
 
     override val appDrawerColor = run {
-        val rgb = primary.toArgb()
-        val hsl = FloatArray(3)
-        ColorUtils.colorToHSL(rgb, hsl)
+        val swatch = wallpaper.dominantSwatch ?: return@run context.getColor(R.color.drawer_bg)
+        val rgb = swatch.rgb
+        val hsl = swatch.hsl
         val lum = Colors.getLuminance(rgb)
         when {
             lum > .7f -> {
@@ -65,9 +69,6 @@ class AndroidOMR1WallColorTheme(
         ColorUtils.HSLToColor(hsl)
     }
 
-    //override val appDrawerBottomBarColor = primary.toArgb() and 0xffffff or (context.getColor(R.color.drawer_bottom_bar) and 0xff000000.toInt())
-    //override val appDrawerButtonColor = secondary?.toArgb() ?: baseTheme.appDrawerButtonColor
-
     override val appDrawerBottomBarColor = run {
         val isLight = Colors.getLuminance(appDrawerColor) > .7f
         val hsl = FloatArray(3)
@@ -75,10 +76,9 @@ class AndroidOMR1WallColorTheme(
         hsl[2] *= if (isLight) .8f else 1.2f
         ColorUtils.HSLToColor(hsl) and 0xffffff or 0x88000000.toInt()
     }
-    override val appDrawerButtonColor = run {
-        val swatch = tertiary ?: secondary ?: primary
-        val hsl = FloatArray(3)
-        ColorUtils.colorToHSL(swatch.toArgb(), hsl)
+    override val buttonColor = run {
+        val swatch = wallpaper.vibrantSwatch ?: wallpaper.dominantSwatch ?: return@run context.getColor(R.color.button_bg)
+        val hsl = swatch.hsl
         hsl[2] = min(hsl[2], 0.4f)
         ColorUtils.HSLToColor(hsl)
     }
@@ -92,10 +92,8 @@ class AndroidOMR1WallColorTheme(
             hsl[1] *= hsl[1].pow(.15f) * 8.6f
             hsl[2] = hsl[2].coerceAtLeast(.96f)
         } else {
-            val baseHSL = FloatArray(3)
-            val v = secondary ?: primary
-            ColorUtils.colorToHSL(v.toArgb(), baseHSL)
-            val s = baseHSL[1]
+            val v = wallpaper.vibrantSwatch ?: wallpaper.dominantSwatch
+            val s = v?.hsl?.get(1) ?: .5f
             hsl[2] = 0.36f - s * 0.3f
             if (s >= 0.5f) {
                 hsl[1] = 0.36f - s * 0.1f

@@ -41,7 +41,7 @@ dependencies {
     implementation("com.willowtreeapps:fuzzywuzzy-kotlin-jvm:0.9.0")
     implementation("com.pixplicity.sharp:library:1.1.0")
     implementation("androidx.palette:palette-ktx:1.0.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.20")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.21")
     implementation("androidx.core:core-ktx:1.6.0")
     implementation("androidx.preference:preference-ktx:1.1.1")
     implementation("com.google.android.material:material:1.4.0")

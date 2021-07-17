@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.fragment.app.FragmentActivity
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
+import io.posidon.android.cintalauncher.color.ColorTheme
 import java.util.*
 
 class IntroActivity : FragmentActivity() {
@@ -75,6 +75,6 @@ class IntroActivity : FragmentActivity() {
             backgroundTintList = ColorStateList.valueOf(ColorTheme.accentColor)
             imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(this@IntroActivity, ColorTheme.accentColor))
         }
-        window.decorView.setBackgroundColor(ColorTheme.feedBG)
+        window.decorView.setBackgroundColor(ColorTheme.uiBG)
     }
 }

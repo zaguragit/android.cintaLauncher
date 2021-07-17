@@ -10,9 +10,9 @@ import androidx.cardview.widget.CardView
 import com.appspell.shaderview.ShaderView
 import com.appspell.shaderview.gl.params.ShaderParamsBuilder
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
 import io.posidon.android.cintalauncher.data.feed.summary.media.MediaSummary
-import io.posidon.android.cintalauncher.ui.color.ColorTheme
 import posidon.android.conveniencelib.Colors
 import posidon.android.conveniencelib.toBitmap
 import posidon.android.conveniencelib.vibrate

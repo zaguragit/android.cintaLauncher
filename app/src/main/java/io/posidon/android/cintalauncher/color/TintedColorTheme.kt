@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.ui.color
+package io.posidon.android.cintalauncher.color
 
 import android.content.Context
 import android.graphics.Color
@@ -6,7 +6,9 @@ import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.R
 import posidon.android.conveniencelib.Colors
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.min
+import kotlin.math.sqrt
 
 interface TintedColorTheme : ColorTheme {
 
