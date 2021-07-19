@@ -45,27 +45,6 @@ class AppSuggestionsManager {
         }
     }
 
-    companion object {
-        fun checkUsageAccessPermission(context: Context): Boolean {
-            val aom = context.getSystemService(AppOpsManager::class.java)
-            val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                aom.unsafeCheckOpNoThrow(
-                    AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    Process.myUid(), context.packageName
-                )
-            } else aom.checkOpNoThrow(
-                AppOpsManager.OPSTR_GET_USAGE_STATS,
-                Process.myUid(), context.packageName
-            )
-
-            return if (mode == AppOpsManager.MODE_DEFAULT) {
-                context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
-            } else {
-                mode == AppOpsManager.MODE_ALLOWED
-            }
-        }
-    }
-
     fun tryLoadFromSystem(context: Context) {
         if (checkUsageAccessPermission(context)) {
             loadSystemRecents(context, appsByName)
@@ -105,6 +84,27 @@ class AppSuggestionsManager {
     fun save(settings: Settings, context: Context) {
         settings.edit(context) {
             "stats:recently_opened" set last3.map(LauncherItem::toString).toTypedArray()
+        }
+    }
+
+    companion object {
+        fun checkUsageAccessPermission(context: Context): Boolean {
+            val aom = context.getSystemService(AppOpsManager::class.java)
+            val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                aom.unsafeCheckOpNoThrow(
+                    AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    Process.myUid(), context.packageName
+                )
+            } else aom.checkOpNoThrow(
+                AppOpsManager.OPSTR_GET_USAGE_STATS,
+                Process.myUid(), context.packageName
+            )
+
+            return if (mode == AppOpsManager.MODE_DEFAULT) {
+                context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
+            } else {
+                mode == AppOpsManager.MODE_ALLOWED
+            }
         }
     }
 }

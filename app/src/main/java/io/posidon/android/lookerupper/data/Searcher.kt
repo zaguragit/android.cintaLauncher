@@ -1,11 +1,13 @@
 package io.posidon.android.lookerupper.data
 
 import android.app.Activity
+import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.lookerupper.data.providers.SearchProvider
 import io.posidon.android.lookerupper.data.results.SearchResult
 import java.util.*
 
 class Searcher(
+    val settings: Settings,
     vararg providers: (Searcher) -> SearchProvider,
     val update: (List<SearchResult>) -> Unit
 ) {

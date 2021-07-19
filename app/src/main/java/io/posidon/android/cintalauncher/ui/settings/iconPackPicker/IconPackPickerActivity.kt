@@ -65,12 +65,6 @@ class IconPackPickerActivity : SettingsActivity() {
         recycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         val adapter = IconPackPickerAdapter(settings, chosenIconPacks, iconPacks, systemPack)
 
-        println("""
-            |c: ${chosenIconPacks.joinToString { it.packageName }}
-            |a: ${iconPacks.joinToString { it.packageName }}
-            |s: ${settings.getStrings("icon_packs")?.joinToString()}
-        """.trimMargin("|"))
-
         recycler.adapter = adapter
         val th = ItemTouchHelper(TouchCallback(adapter))
         th.attachToRecyclerView(recycler)

@@ -19,7 +19,7 @@ import kotlin.collections.ArrayList
 import kotlin.math.pow
 
 class AppProvider(
-    searcher: Searcher
+    val searcher: Searcher
 ) : SearchProvider {
 
     class AppCollection(size: Int) : AppLoader.AppCollection<AppResult> {
@@ -56,7 +56,7 @@ class AppProvider(
     var shortcuts = emptyList<ShortcutResult>()
 
     override fun Activity.onCreate() {
-        appLoader.async(this) {
+        appLoader.async(this, searcher.settings.getStrings("icon_packs") ?: emptyArray()) {
             apps = it.list
             shortcuts = it.shortcuts
         }

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.lookerupper.data.Searcher
 import io.posidon.android.lookerupper.data.providers.AppProvider
 import io.posidon.android.lookerupper.data.providers.ContactProvider
@@ -21,17 +22,17 @@ import posidon.android.conveniencelib.getNavigationBarHeight
 class SearchActivity : FragmentActivity() {
 
     lateinit var adapter: SearchAdapter
-    val searcher = Searcher(::AppProvider, ::ContactProvider, ::DuckDuckGoProvider, update = ::updateResults)
+    val settings = Settings()
+    val searcher = Searcher(settings, ::AppProvider, ::ContactProvider, ::DuckDuckGoProvider, update = ::updateResults)
 
-    private fun updateResults(list: List<SearchResult>) {
-        runOnUiThread {
-            adapter.update(list)
-        }
+    private fun updateResults(list: List<SearchResult>) = runOnUiThread {
+        adapter.update(list)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        settings.init(this)
         searcher.onCreate(this)
         loadColors()
         val container = findViewById<View>(R.id.search_bar_container)!!

@@ -44,10 +44,12 @@ class FeedAdapter(
         else -> TYPE_PLAIN
     }
 
+    private var homeViewHolder: HomeViewHolder? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_HOME -> HomeViewHolder(scrollIndicator, parent, activity, LayoutInflater.from(parent.context)
-                .inflate(R.layout.feed_home, parent, false))
+                .inflate(R.layout.feed_home, parent, false)).also { homeViewHolder = it }
             TYPE_PLAIN -> FeedItemViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_plain, parent, false))
             TYPE_SMALL -> FeedItemSmallViewHolder(LayoutInflater.from(parent.context)
@@ -111,6 +113,10 @@ class FeedAdapter(
     fun updateColorTheme() {
         themedColorCache.clear()
         notifyDataSetChanged()
+    }
+
+    fun onAppsLoaded() {
+        homeViewHolder?.updateRecents()
     }
 
     companion object {

@@ -146,7 +146,11 @@ class LauncherActivity : FragmentActivity() {
             lastUpdateTime = current
             thread (isDaemon = true, block = RssProvider::update)
         }
-        suggestionsManager.onResume(this)
+        if (shouldUpdate) {
+            loadApps()
+        } else {
+            suggestionsManager.onResume(this)
+        }
     }
 
     override fun onPause() {
@@ -194,6 +198,9 @@ class LauncherActivity : FragmentActivity() {
         appLoader.async(this, settings.getStrings("icon_packs") ?: emptyArray()) { apps: AppCollection ->
             appDrawer.update(apps.sections)
             suggestionsManager.onAppsLoaded(this, settings, apps.byName)
+            runOnUiThread {
+                feedAdapter.onAppsLoaded()
+            }
             Log.d("Cinta", "updated apps (${apps.size} items)")
         }
     }
