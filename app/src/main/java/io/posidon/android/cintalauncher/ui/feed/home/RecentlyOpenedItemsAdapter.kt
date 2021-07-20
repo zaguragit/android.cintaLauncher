@@ -18,7 +18,7 @@ class RecentlyOpenedItemsAdapter(
     val suggestionsManager = launcherActivity.suggestionsManager
     val navbarHeight = launcherActivity.getNavigationBarHeight()
 
-    private var items: Array<LauncherItem> = emptyArray()
+    private var items: List<LauncherItem> = emptyList()
 
     override fun getItemCount(): Int = items.size
 
@@ -32,7 +32,7 @@ class RecentlyOpenedItemsAdapter(
         bindAppViewHolder(holder, item, null, suggestionsManager, navbarHeight)
     }
 
-    fun updateItems(items: Array<LauncherItem>) {
+    fun updateItems(items: List<LauncherItem>) {
         this.items = items
         notifyDataSetChanged()
     }

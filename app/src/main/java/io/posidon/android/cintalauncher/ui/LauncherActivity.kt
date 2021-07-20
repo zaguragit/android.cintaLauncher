@@ -5,7 +5,6 @@ import android.app.WallpaperManager
 import android.content.Intent
 import android.content.pm.LauncherApps
 import android.content.res.Configuration
-import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -39,7 +38,6 @@ import io.posidon.android.cintalauncher.util.StackTraceActivity
 import io.posidon.android.launcherutils.AppLoader
 import io.posidon.android.launcherutils.GestureNavContract
 import io.posidon.android.launcherutils.LiveWallpaper
-import posidon.android.conveniencelib.Device
 import posidon.android.conveniencelib.getNavigationBarHeight
 import posidon.android.conveniencelib.getStatusBarHeight
 import kotlin.concurrent.thread
@@ -76,6 +74,7 @@ class LauncherActivity : FragmentActivity() {
         feedRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         feedAdapter = FeedAdapter(this)
         feedAdapter.setHasStableIds(true)
+        feedRecycler.setItemViewCacheSize(20)
         feedRecycler.adapter = feedAdapter
         val r = resources.getDimension(R.dimen.dock_corner_radius)
         findViewById<View>(R.id.home_container).foreground = InvertedRoundRectDrawable(
@@ -212,11 +211,6 @@ class LauncherActivity : FragmentActivity() {
     }
 
     private fun configureWindow() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            window.decorView.findViewById<View>(android.R.id.content).systemGestureExclusionRects =
-                listOf(Rect(0, 0, Device.screenWidth(this), Device.screenHeight(this)))
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
             window.setDecorFitsSystemWindows(false)
         else window.setFlags(

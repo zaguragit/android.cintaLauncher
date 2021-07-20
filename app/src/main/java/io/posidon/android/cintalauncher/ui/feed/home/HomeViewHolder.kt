@@ -51,15 +51,16 @@ class HomeViewHolder(
     val searchIcon = itemView.findViewById<ImageView>(R.id.search_bar_icon)!!
     val searchText = itemView.findViewById<TextView>(R.id.search_bar_text)!!
 
+    val vertical = itemView.findViewById<LinearLayout>(R.id.vertical)!!
+
     init {
         NotificationSummariesProvider.init(itemView.context) {
-            itemView.post(::updateRecents)
+            itemView.post(::updateSummary)
         }
         itemView.layoutParams.apply {
             height = parentView.measuredHeight - itemView.context.getStatusBarHeight()
         }
         val s = itemView.dp(24).toInt()
-        val vertical = itemView.findViewById<LinearLayout>(R.id.vertical)
         vertical.addView(scrollIndicator, 4, LinearLayout.LayoutParams(s, s).apply {
             gravity = Gravity.CENTER_HORIZONTAL
         })
@@ -79,12 +80,12 @@ class HomeViewHolder(
     }
 
     fun updateRecents() {
-        val recent = launcherActivity.suggestionsManager.getLast3(launcherActivity)
+        val recent = launcherActivity.suggestionsManager.getLast3()
         if (recent.isEmpty()) {
             recentlyOpenedRecycler.isVisible = false
         } else {
             recentlyOpenedRecycler.isVisible = true
-            recentlyOpenedAdapter.updateItems(recent.toTypedArray())
+            recentlyOpenedAdapter.updateItems(recent)
         }
     }
 }

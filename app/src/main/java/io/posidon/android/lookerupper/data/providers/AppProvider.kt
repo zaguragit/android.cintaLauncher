@@ -3,6 +3,7 @@ package io.posidon.android.lookerupper.data.providers
 import android.app.Activity
 import android.content.Context
 import android.content.pm.LauncherApps
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.UserHandle
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
@@ -33,7 +34,7 @@ class AppProvider(
                 ShortcutResult(
                     it,
                     (it.longLabel ?: it.shortLabel).toString(),
-                    launcherApps.getShortcutIconDrawable(it, context.resources.displayMetrics.densityDpi),
+                    launcherApps.getShortcutIconDrawable(it, context.resources.displayMetrics.densityDpi) ?: ColorDrawable(),
                     app
                 )
             })

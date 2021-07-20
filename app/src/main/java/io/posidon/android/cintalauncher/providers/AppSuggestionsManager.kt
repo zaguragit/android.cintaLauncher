@@ -19,7 +19,9 @@ class AppSuggestionsManager {
     private var last3 = LinkedList<LauncherItem>()
     private var last3System = emptyList<LauncherItem>()
 
-    fun getLast3(context: Context) = if (checkUsageAccessPermission(context)) last3System else last3
+    private var hasPermission: Boolean = false
+
+    fun getLast3(): List<LauncherItem> = if (hasPermission) last3System else last3
 
     fun onItemOpened(item: LauncherItem) {
         last3.removeAll { it == item }
@@ -78,7 +80,10 @@ class AppSuggestionsManager {
     }
 
     fun onResume(context: Context) {
-        tryLoadFromSystem(context)
+        hasPermission = checkUsageAccessPermission(context)
+        if (hasPermission) {
+            loadSystemRecents(context, appsByName)
+        }
     }
 
     fun save(settings: Settings, context: Context) {
