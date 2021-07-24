@@ -82,7 +82,13 @@ class AppDrawer(
             .setStartDelay(0)
             .setDuration(100)
             .setInterpolator(DecelerateInterpolator())
-            .onEnd {}
+            .onEnd { view.isVisible = true }
+        activity.blurBG.isVisible = true
+        activity.blurBG.animate()
+            .alpha(1f)
+            .setInterpolator(DecelerateInterpolator())
+            .setDuration(100)
+            .onEnd { activity.blurBG.isVisible = true }
     }
 
     fun updateColorTheme() {
@@ -107,7 +113,7 @@ class AppDrawer(
             .setStartDelay(0)
             .setDuration(100)
             .setInterpolator(DecelerateInterpolator())
-            .onEnd {}
+            .onEnd { activity.feedRecycler.isInvisible = false }
         view.animate()
             .alpha(0f)
             .scaleX(1.1f)
@@ -116,5 +122,10 @@ class AppDrawer(
             .setDuration(100)
             .setInterpolator(AccelerateInterpolator())
             .onEnd { view.isVisible = false }
+        activity.blurBG.animate()
+            .alpha(0f)
+            .setInterpolator(AccelerateInterpolator())
+            .setDuration(100)
+            .onEnd { activity.blurBG.isVisible = false }
     }
 }

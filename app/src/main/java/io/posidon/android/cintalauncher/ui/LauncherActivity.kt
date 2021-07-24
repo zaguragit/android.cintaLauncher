@@ -5,6 +5,9 @@ import android.app.WallpaperManager
 import android.content.Intent
 import android.content.pm.LauncherApps
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -38,8 +41,7 @@ import io.posidon.android.cintalauncher.util.StackTraceActivity
 import io.posidon.android.launcherutils.AppLoader
 import io.posidon.android.launcherutils.GestureNavContract
 import io.posidon.android.launcherutils.LiveWallpaper
-import posidon.android.conveniencelib.getNavigationBarHeight
-import posidon.android.conveniencelib.getStatusBarHeight
+import posidon.android.conveniencelib.*
 import kotlin.concurrent.thread
 
 class LauncherActivity : FragmentActivity() {
@@ -54,6 +56,10 @@ class LauncherActivity : FragmentActivity() {
     val feedRecycler by lazy { findViewById<RecyclerView>(R.id.feed_recycler)!! }
     val scrollBar by lazy { findViewById<AlphabetScrollbar>(R.id.scroll_bar)!! }
 
+    val scrollBarContainer by lazy { findViewById<View>(R.id.scroll_bar_container)!! }
+
+    val blurBG by lazy { findViewById<View>(R.id.blur_bg)!! }
+
     val appDrawer by lazy { AppDrawer(this, scrollBar) }
 
     lateinit var feedAdapter: FeedAdapter
@@ -61,6 +67,8 @@ class LauncherActivity : FragmentActivity() {
     lateinit var wallpaperManager: WallpaperManager
 
     val appLoader = AppLoader(::App, ::AppCollection)
+
+    var blurBitmap: Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,7 +112,21 @@ class LauncherActivity : FragmentActivity() {
                 }
             }
             onWallpaperChanged()
+            loadBlur()
         }
+    }
+
+    private fun loadBlur() = thread(isDaemon = true, name = "Blur thread") {
+        val b = wallpaperManager.drawable.toBitmap(Device.screenWidth(this) / 3, Device.screenHeight(this) / 3)
+        blurBitmap = Graphics.fastBlur(b, dp(1).toInt())
+        runOnUiThread(::updateBlur)
+    }
+
+    private fun updateBlur() {
+        blurBG.background = LayerDrawable(arrayOf(
+            BitmapDrawable(resources, blurBitmap)
+        )).apply { setLayerInsetBottom(0, -scrollBarContainer.measuredHeight) }
+
     }
 
     private fun updateColorTheme(a: LauncherActivity, new: ColorTheme) {

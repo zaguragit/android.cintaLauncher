@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:focusable="true"
     android:clickable="true"
-    android:id="@+id/dock_container"
+    android:id="@+id/scroll_bar_container"
     style="@style/Theme.CintaLauncher.Dock.Container">
     <io.posidon.android.cintalauncher.ui.view.scrollbar.AlphabetScrollbar
         style="@style/Theme.CintaLauncher.Dock.Scrollbar"
