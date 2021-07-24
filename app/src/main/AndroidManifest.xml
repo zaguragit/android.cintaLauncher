@@ -49,7 +49,8 @@
         </activity>
 
         <activity
-            android:name="io.posidon.android.lookerupper.ui.SearchActivity">
+            android:name="io.posidon.android.lookerupper.ui.SearchActivity"
+            android:taskAffinity="io.posidon.android.lookerupper.ui.SearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
                 <action android:name="android.intent.action.SEARCH_LONG_PRESS"/>

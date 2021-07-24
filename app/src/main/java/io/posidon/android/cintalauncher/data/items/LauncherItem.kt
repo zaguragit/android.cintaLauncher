@@ -41,6 +41,7 @@ interface LauncherItem {
 fun LauncherItem.showProperties(view: View, backgroundColor: Int, textColor: Int) {
     if (this is App) {
         view.context.startActivity(Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             .setData(Uri.parse("package:$packageName")))
     }
 }

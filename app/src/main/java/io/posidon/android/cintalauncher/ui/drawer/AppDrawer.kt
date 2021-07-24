@@ -13,7 +13,7 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.LauncherActivity
-import io.posidon.android.cintalauncher.ui.view.AlphabetScrollbar
+import io.posidon.android.cintalauncher.ui.view.scrollbar.AlphabetScrollbar
 import posidon.android.conveniencelib.getStatusBarHeight
 import posidon.android.conveniencelib.onEnd
 
@@ -46,12 +46,6 @@ class AppDrawer(
             }
         }
         recycler.adapter = adapter
-        scrollBar.recycler = recycler
-        scrollBar.apply {
-            updateAdapter()
-            updateTheme()
-            textColor = 0x88ffffff.toInt()
-        }
         scrollBar.onStartScroll = ::open
     }
 
@@ -60,7 +54,7 @@ class AppDrawer(
     fun update(appSections: List<List<App>>) {
         this.appSections = appSections
         adapter.updateAppSections(appSections, activity)
-        scrollBar.updateAdapter()
+        scrollBar.controller.updateAdapter()
         scrollBar.postInvalidate()
         view.postInvalidate()
     }
@@ -72,7 +66,7 @@ class AppDrawer(
         recycler.setPadding(recycler.paddingLeft, sbh, recycler.paddingRight, recycler.paddingBottom)
         view.isVisible = true
         activity.feedRecycler.stopScroll()
-        scrollBar.showVisibleLetter = true
+        scrollBar.controller.showSelection = true
         activity.feedRecycler.animate()
             .alpha(0f)
             .scaleX(1.1f)
@@ -96,11 +90,15 @@ class AppDrawer(
         bottomBar.setBackgroundColor(ColorTheme.appDrawerBottomBarColor)
         closeButton.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
         closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))
-        scrollBar.highlightColor = ColorTheme.accentColor
+        scrollBar.controller.apply {
+            this.recycler = this@AppDrawer.recycler
+            updateAdapter()
+            updateTheme(view.context)
+        }
     }
 
     fun close(v: View? = null) {
-        scrollBar.showVisibleLetter = false
+        scrollBar.controller.showSelection = false
         activity.feedRecycler.isInvisible = false
         activity.feedRecycler.animate()
             .alpha(1f)

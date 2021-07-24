@@ -1,8 +1,12 @@
 package io.posidon.android.lookerupper.ui
 
+import android.app.SearchManager
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
@@ -18,6 +22,7 @@ import io.posidon.android.lookerupper.data.providers.ContactProvider
 import io.posidon.android.lookerupper.data.providers.DuckDuckGoProvider
 import io.posidon.android.lookerupper.data.results.SearchResult
 import posidon.android.conveniencelib.getNavigationBarHeight
+
 
 class SearchActivity : FragmentActivity() {
 
@@ -50,10 +55,19 @@ class SearchActivity : FragmentActivity() {
                 setPadding(paddingLeft, container.measuredHeight, paddingRight, paddingBottom)
             }
         }
-        findViewById<TextView>(R.id.search_bar_text).doOnTextChanged { text, start, before, count ->
-            searcher.query(text)
+        findViewById<EditText>(R.id.search_bar_text).run {
+            doOnTextChanged { text, start, before, count ->
+                searcher.query(text)
+            }
+            setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    val viewSearch = Intent(Intent.ACTION_WEB_SEARCH)
+                    viewSearch.putExtra(SearchManager.QUERY, v.text)
+                    v.context.startActivity(viewSearch)
+                    true
+                } else false
+            }
         }
-
     }
 
     private fun loadColors() {

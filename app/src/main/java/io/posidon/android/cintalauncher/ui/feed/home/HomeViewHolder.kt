@@ -45,7 +45,10 @@ class HomeViewHolder(
     val searchCard = itemView.findViewById<CardView>(R.id.search_bar_container)!!.apply {
         setOnClickListener {
             val context = it.context
-            context.startActivity(Intent(context, SearchActivity::class.java))
+            context.startActivity(
+                Intent(context, SearchActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            )
         }
     }
     val searchIcon = itemView.findViewById<ImageView>(R.id.search_bar_icon)!!

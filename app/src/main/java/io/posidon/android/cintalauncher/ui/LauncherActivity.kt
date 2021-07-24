@@ -32,7 +32,7 @@ import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.storage.colorTheme
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
 import io.posidon.android.cintalauncher.ui.feed.items.FeedAdapter
-import io.posidon.android.cintalauncher.ui.view.AlphabetScrollbar
+import io.posidon.android.cintalauncher.ui.view.scrollbar.AlphabetScrollbar
 import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.cintalauncher.util.StackTraceActivity
 import io.posidon.android.launcherutils.AppLoader

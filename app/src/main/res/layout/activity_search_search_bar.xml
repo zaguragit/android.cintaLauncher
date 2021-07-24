@@ -27,6 +27,9 @@
             android:includeFontPadding="false"
             android:scrollHorizontally="true"
             android:lines="1"
-            android:inputType="number|textNoSuggestions|phone|datetime"/>
+            android:inputType="number|textNoSuggestions|phone|datetime"
+            android:imeOptions="actionSearch">
+            <requestFocus/>
+        </EditText>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
