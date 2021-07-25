@@ -48,7 +48,8 @@ class AppSuggestionsManager {
     }
 
     fun tryLoadFromSystem(context: Context) {
-        if (checkUsageAccessPermission(context)) {
+        hasPermission = checkUsageAccessPermission(context)
+        if (hasPermission) {
             loadSystemRecents(context, appsByName)
         }
     }
@@ -64,7 +65,7 @@ class AppSuggestionsManager {
         stats.sortByDescending {
             (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 it.lastTimeVisible
-            else it.lastTimeUsed) + it.totalTimeInForeground * 0.001
+            else it.lastTimeUsed) + (it.totalTimeInForeground / 1000 / 20)
         }
 
         last3System = LinkedList<LauncherItem>().also {
