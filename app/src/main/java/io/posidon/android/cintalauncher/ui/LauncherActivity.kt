@@ -112,7 +112,6 @@ class LauncherActivity : FragmentActivity() {
                 }
             }
             onWallpaperChanged()
-            loadBlur()
         }
     }
 
@@ -200,7 +199,7 @@ class LauncherActivity : FragmentActivity() {
     }
 
     private fun onWallpaperChanged() {
-
+        loadBlur()
     }
 
     private fun handleGestureContract(intent: Intent) {

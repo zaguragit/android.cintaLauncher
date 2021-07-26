@@ -13,5 +13,5 @@
         style="@style/Theme.CintaLauncher.Dock.Scrollbar"
         android:id="@+id/scroll_bar"
         android:layout_width="match_parent"
-        android:layout_height="32dp"/>
+        android:layout_height="56dp"/>
 </LinearLayout>
