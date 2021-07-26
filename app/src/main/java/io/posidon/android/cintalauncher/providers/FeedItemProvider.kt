@@ -8,10 +8,10 @@ abstract class FeedItemProvider {
     abstract fun getUpdated(): List<FeedItem>
 
     private lateinit var feed: Feed
-    private lateinit var itemCache: List<FeedItem>
+    private var itemCache: List<FeedItem>? = null
     lateinit var settings: Settings
 
-    fun get(): List<FeedItem> = itemCache
+    fun get(): List<FeedItem> = itemCache ?: getUpdated().also { itemCache = it }
 
     fun preInit(feed: Feed) {
         this.feed = feed
