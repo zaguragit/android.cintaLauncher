@@ -1,9 +1,11 @@
 package io.posidon.android.cintalauncher.ui
 
+import android.Manifest
 import android.app.WallpaperColors
 import android.app.WallpaperManager
 import android.content.Intent
 import android.content.pm.LauncherApps
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -16,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.graphics.toRectF
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentActivity
@@ -116,6 +119,15 @@ class LauncherActivity : FragmentActivity() {
     }
 
     private fun loadBlur() = thread(isDaemon = true, name = "Blur thread") {
+        if (ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) != PackageManager.PERMISSION_GRANTED) {
+            if (blurBitmap == null) return@thread
+            blurBitmap = null
+            runOnUiThread(::updateBlur)
+            return@thread
+        }
         val b = wallpaperManager.drawable.toBitmap(Device.screenWidth(this) / 3, Device.screenHeight(this) / 3)
         blurBitmap = Graphics.fastBlur(b, dp(1).toInt())
         runOnUiThread(::updateBlur)
@@ -158,8 +170,13 @@ class LauncherActivity : FragmentActivity() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             ColorTheme.onResumePreOMR1(this, settings.colorTheme, ::updateColorTheme)
             onWallpaperChanged()
-        } else if (shouldUpdate) {
-            ColorTheme.onColorsChanged(this, settings.colorTheme, ::updateColorTheme) { wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM) }
+        } else {
+            if (blurBitmap == null) {
+                loadBlur()
+            }
+            if (shouldUpdate) {
+                ColorTheme.onColorsChanged(this, settings.colorTheme, ::updateColorTheme) { wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM) }
+            }
         }
         val current = System.currentTimeMillis()
         if (current - lastUpdateTime > 1000L * 60L * 5L) {
