@@ -7,7 +7,6 @@ import android.content.pm.LauncherApps
 import android.content.pm.LauncherApps.ShortcutQuery
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutInfo
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Process
 import android.os.UserHandle
@@ -34,16 +33,21 @@ class App(
         } catch (e: Exception) { e.printStackTrace() }
     }
 
-    private val _color = run {
+    val hsl: FloatArray
+    private val _color: Int
+
+    init {
         val palette = Palette.from(icon.toBitmap()).generate()
-        val def = super.getColor()
-        var color = palette.getDominantColor(def)
-        val hsv = FloatArray(3)
-        Color.colorToHSV(color, hsv)
-        if (hsv[1] < .1f) {
-            color = palette.getVibrantColor(def)
+        val d = palette.dominantSwatch
+        hsl = d?.hsl ?: FloatArray(3)
+        _color = run {
+            val def = super.getColor()
+            var color = (d ?: return@run def).rgb
+            if (hsl[1] < .1f) {
+                color = palette.getVibrantColor(color)
+            }
+            color
         }
-        color
     }
 
     override fun getColor(): Int = _color

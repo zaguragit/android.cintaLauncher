@@ -6,6 +6,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
@@ -20,7 +21,7 @@ class AppViewHolder(
     val label = itemView.findViewById<TextView>(R.id.icon_text)!!
 }
 
-class AppItem(val item: LauncherItem) : AppDrawerAdapter.DrawerItem {
+class AppItem(val item: App) : AppDrawerAdapter.DrawerItem {
     override fun getItemViewType() = APP_ITEM
     override val label: String
         get() = item.label
@@ -29,11 +30,10 @@ class AppItem(val item: LauncherItem) : AppDrawerAdapter.DrawerItem {
 fun bindAppViewHolder(
     holder: AppViewHolder,
     item: LauncherItem,
-    highlightedChar: Char?,
+    isDimmed: Boolean,
     suggestionsManager: AppSuggestionsManager,
     navbarHeight: Int,
 ) {
-    val isDimmed = highlightedChar != null && highlightedChar != item.label[0].uppercaseChar()
     holder.card.alpha = if (isDimmed) .3f else 1f
     holder.icon.setImageDrawable(item.icon)
     holder.label.text = item.label

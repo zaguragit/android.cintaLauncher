@@ -29,7 +29,7 @@ class RecentlyOpenedItemsAdapter(
 
     override fun onBindViewHolder(holder: AppViewHolder, i: Int) {
         val item = items[i]
-        bindAppViewHolder(holder, item, null, suggestionsManager, navbarHeight)
+        bindAppViewHolder(holder, item, false, suggestionsManager, navbarHeight)
     }
 
     fun updateItems(items: List<LauncherItem>) {

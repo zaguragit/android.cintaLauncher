@@ -6,6 +6,7 @@
         app:title="@string/color_theme_gen"
         app:entries="@array/color_theme_gens"
         android:entryValues="@array/color_theme_gens_data"
+        android:summary="%s"
         app:defaultValue="1"/>
     <Preference
         app:title="@string/rss_sources">
@@ -13,6 +14,13 @@
             android:targetPackage="io.posidon.android.cintalauncher"
             android:targetClass="io.posidon.android.cintalauncher.ui.settings.feedChooser.FeedSourcesChooserActivity"/>
     </Preference>
+    <ListPreference
+        app:key="scrollbar_controller"
+        app:title="@string/scrollbar_controller"
+        app:entries="@array/scrollbar_controllers"
+        android:entryValues="@array/scrollbar_controllers_data"
+        android:summary="%s"
+        app:defaultValue="0"/>
     <Preference
         app:title="@string/icon_packs">
         <intent

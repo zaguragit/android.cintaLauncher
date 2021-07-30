@@ -26,4 +26,5 @@
     <string name="chosen">Chosen</string>
     <string name="available">Available</string>
     <string name="system">System</string>
+    <string name="scrollbar_controller">App sorting</string>
 </resources>

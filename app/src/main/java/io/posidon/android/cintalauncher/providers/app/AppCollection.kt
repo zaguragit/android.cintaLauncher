@@ -12,6 +12,7 @@ import kotlin.collections.HashMap
 class AppCollection(appCount: Int) : AppLoader.AppCollection<App> {
     val list = ArrayList<App>(appCount)
     val byName = HashMap<String, MutableList<App>>()
+
     val sections = LinkedList<List<App>>()
 
     inline operator fun get(i: Int) = list[i]
@@ -44,19 +45,6 @@ class AppCollection(appCount: Int) : AppLoader.AppCollection<App> {
     override fun finalize(context: Context) {
         list.sortWith { o1, o2 ->
             o1.label.compareTo(o2.label, ignoreCase = true)
-        }
-
-        var currentChar = list[0].label[0].uppercaseChar()
-        var currentSection = LinkedList<App>().also { sections.add(it) }
-        for (app in list) {
-            if (app.label.startsWith(currentChar, ignoreCase = true)) {
-                currentSection.add(app)
-            }
-            else currentSection = LinkedList<App>().apply {
-                add(app)
-                sections.add(this)
-                currentChar = app.label[0].uppercaseChar()
-            }
         }
     }
 }

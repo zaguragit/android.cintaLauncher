@@ -34,11 +34,12 @@ import io.posidon.android.cintalauncher.providers.app.AppCallback
 import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.providers.notification.NotificationProvider
 import io.posidon.android.cintalauncher.providers.rss.RssProvider
-import io.posidon.android.cintalauncher.storage.Settings
-import io.posidon.android.cintalauncher.storage.colorTheme
+import io.posidon.android.cintalauncher.storage.*
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
 import io.posidon.android.cintalauncher.ui.feed.items.FeedAdapter
-import io.posidon.android.cintalauncher.ui.view.scrollbar.AlphabetScrollbar
+import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
+import io.posidon.android.cintalauncher.ui.view.scrollbar.alphabet.AlphabetScrollbarController
+import io.posidon.android.cintalauncher.ui.view.scrollbar.hue.HueScrollbarController
 import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.cintalauncher.util.StackTraceActivity
 import io.posidon.android.launcherutils.AppLoader
@@ -57,7 +58,7 @@ class LauncherActivity : FragmentActivity() {
     val notificationProvider = NotificationProvider(this)
 
     val feedRecycler by lazy { findViewById<RecyclerView>(R.id.feed_recycler)!! }
-    val scrollBar by lazy { findViewById<AlphabetScrollbar>(R.id.scroll_bar)!! }
+    val scrollBar by lazy { findViewById<Scrollbar>(R.id.scroll_bar)!! }
 
     val scrollBarContainer by lazy { findViewById<View>(R.id.scroll_bar_container)!! }
 
@@ -184,9 +185,25 @@ class LauncherActivity : FragmentActivity() {
             thread (isDaemon = true, block = RssProvider::update)
         }
         if (shouldUpdate) {
+            updateScrollbarController()
             loadApps()
         } else {
             suggestionsManager.onResume(this)
+        }
+    }
+
+    private fun updateScrollbarController() {
+        when (settings.scrollbarController) {
+            SCROLLBAR_CONTROLLER_BY_HUE -> {
+                if (scrollBar.controller !is HueScrollbarController) {
+                    scrollBar.controller = HueScrollbarController(scrollBar)
+                }
+            }
+            else -> {
+                if (scrollBar.controller !is AlphabetScrollbarController) {
+                    scrollBar.controller = AlphabetScrollbarController(scrollBar)
+                }
+            }
         }
     }
 
@@ -233,6 +250,7 @@ class LauncherActivity : FragmentActivity() {
 
     fun loadApps() {
         appLoader.async(this, settings.getStrings("icon_packs") ?: emptyArray()) { apps: AppCollection ->
+            scrollBar.controller.loadSections(apps)
             appDrawer.update(apps.sections)
             suggestionsManager.onAppsLoaded(this, settings, apps.byName)
             runOnUiThread {

@@ -2,26 +2,16 @@ package io.posidon.android.cintalauncher.ui.view.scrollbar
 
 import android.content.Context
 import android.graphics.Canvas
-import android.view.MotionEvent
-import androidx.recyclerview.widget.RecyclerView
+import io.posidon.android.cintalauncher.data.items.App
+import io.posidon.android.cintalauncher.providers.app.AppCollection
+import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
+import io.posidon.android.cintalauncher.ui.view.HighlightSectionIndexer
+import java.util.*
 
-abstract class ScrollbarController(val scrollbar: AlphabetScrollbar) {
+abstract class ScrollbarController(val scrollbar: Scrollbar) {
     abstract fun draw(canvas: Canvas)
-    abstract fun onTouchEvent(event: MotionEvent): Boolean
 
-    var recycler: RecyclerView? = null
-        set(value) {
-            field?.removeOnScrollListener(onScrollListener)
-            field = value
-            value?.addOnScrollListener(onScrollListener)
-        }
-
-    abstract val onScrollListener: RecyclerView.OnScrollListener
-
-    fun destroy() {
-        recycler?.removeOnScrollListener(onScrollListener)
-    }
-
+    abstract val indexer: HighlightSectionIndexer
 
     var showSelection = true
         set(value) {
@@ -29,6 +19,12 @@ abstract class ScrollbarController(val scrollbar: AlphabetScrollbar) {
             scrollbar.invalidate()
         }
 
-    abstract fun updateAdapter()
     abstract fun updateTheme(context: Context)
+    abstract fun loadSections(apps: AppCollection)
+    abstract fun createSectionHeaderItem(
+        items: LinkedList<AppDrawerAdapter.DrawerItem>,
+        section: List<App>
+    )
+
+    abstract fun updateAdapterIndexer(adapter: AppDrawerAdapter, appSections: List<List<App>>)
 }

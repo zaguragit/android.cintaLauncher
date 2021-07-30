@@ -4,12 +4,16 @@ import android.content.Context
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RoundRectShape
 import android.widget.SectionIndexer
+import io.posidon.android.cintalauncher.data.items.App
 import posidon.android.conveniencelib.dp
 
 interface HighlightSectionIndexer : SectionIndexer {
 
     fun highlight(i: Int)
     fun unhighlight()
+
+    fun isDimmed(app: App): Boolean
+    fun getHighlightI(): Int
 
     companion object {
         fun createHighlightDrawable(context: Context, accentColor: Int): ShapeDrawable {

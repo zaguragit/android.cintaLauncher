@@ -13,13 +13,13 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.LauncherActivity
-import io.posidon.android.cintalauncher.ui.view.scrollbar.AlphabetScrollbar
+import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
 import posidon.android.conveniencelib.getStatusBarHeight
 import posidon.android.conveniencelib.onEnd
 
 class AppDrawer(
     private val activity: LauncherActivity,
-    private val scrollBar: AlphabetScrollbar
+    private val scrollBar: Scrollbar
 ) {
 
     val view = activity.findViewById<View>(R.id.app_drawer_container)!!
@@ -53,10 +53,18 @@ class AppDrawer(
 
     fun update(appSections: List<List<App>>) {
         this.appSections = appSections
-        adapter.updateAppSections(appSections, activity)
-        scrollBar.controller.updateAdapter()
+        adapter.updateAppSections(appSections, activity, scrollBar.controller)
         scrollBar.postInvalidate()
         view.postInvalidate()
+    }
+
+    fun updateColorTheme() {
+        view.setBackgroundColor(ColorTheme.appDrawerColor and 0xffffff or 0xdd000000.toInt())
+        bottomBar.setBackgroundColor(ColorTheme.appDrawerBottomBarColor)
+        closeButton.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
+        closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))
+        scrollBar.recycler = this@AppDrawer.recycler
+        scrollBar.controller.updateTheme(view.context)
     }
 
     val isOpen get() = view.isVisible
@@ -89,18 +97,6 @@ class AppDrawer(
             .setInterpolator(DecelerateInterpolator())
             .setDuration(100)
             .onEnd { activity.blurBG.isVisible = true }
-    }
-
-    fun updateColorTheme() {
-        view.setBackgroundColor(ColorTheme.appDrawerColor and 0xffffff or 0xdd000000.toInt())
-        bottomBar.setBackgroundColor(ColorTheme.appDrawerBottomBarColor)
-        closeButton.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
-        closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))
-        scrollBar.controller.apply {
-            this.recycler = this@AppDrawer.recycler
-            updateAdapter()
-            updateTheme(view.context)
-        }
     }
 
     fun close(v: View? = null) {

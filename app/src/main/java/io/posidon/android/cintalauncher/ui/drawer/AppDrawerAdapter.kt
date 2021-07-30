@@ -10,19 +10,22 @@ import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.drawer.viewHolders.*
 import io.posidon.android.cintalauncher.ui.view.HighlightSectionIndexer
+import io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarController
 import posidon.android.conveniencelib.getNavigationBarHeight
 import java.util.*
 
 class AppDrawerAdapter(
     val launcherActivity: LauncherActivity
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), HighlightSectionIndexer {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    var indexer: HighlightSectionIndexer? = null
 
     interface DrawerItem {
         val label: String
         fun getItemViewType(): Int
     }
 
-    private var items: Array<DrawerItem> = emptyArray()
+    var items: Array<DrawerItem> = emptyArray()
 
     override fun getItemCount(): Int = items.size
 
@@ -41,42 +44,24 @@ class AppDrawerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, i: Int) {
         val item = items[i]
         when (holder.itemViewType) {
-            SECTION_HEADER -> bindSectionHeaderViewHolder(holder as SectionHeaderViewHolder, item as SectionHeaderItem, highlightI == i)
-            APP_ITEM -> bindAppViewHolder(holder as AppViewHolder, (item as AppItem).item, if (highlightI == -1) null else items[highlightI].label[0], launcherActivity.suggestionsManager, launcherActivity.getNavigationBarHeight())
+            SECTION_HEADER -> bindSectionHeaderViewHolder(holder as SectionHeaderViewHolder, item as SectionHeaderItem, indexer?.getHighlightI() == i)
+            APP_ITEM -> bindAppViewHolder(holder as AppViewHolder, (item as AppItem).item, indexer?.isDimmed(item.item) ?: false, launcherActivity.suggestionsManager, launcherActivity.getNavigationBarHeight())
         }
     }
 
-    fun updateAppSections(appSections: List<List<App>>, activity: Activity) {
+    fun updateAppSections(
+        appSections: List<List<App>>,
+        activity: Activity,
+        controller: ScrollbarController
+    ) {
         val newItems = LinkedList<DrawerItem>()
         for (section in appSections) {
-            newItems.add(SectionHeaderItem(section[0].label[0].uppercaseChar().toString()))
+            controller.createSectionHeaderItem(newItems, section)
             section.mapTo(newItems) { AppItem(it) }
         }
         items = newItems.toTypedArray()
-        savedSections = Array(appSections.size) { appSections[it][0].label[0].uppercaseChar() }
+        controller.updateAdapterIndexer(this, appSections)
         activity.runOnUiThread(::notifyDataSetChanged)
-    }
-
-    private var savedSections = emptyArray<Char>()
-    override fun getSections(): Array<Char> = savedSections
-    override fun getSectionForPosition(i: Int): Int = savedSections.indexOf(items[i].label[0].uppercaseChar())
-    override fun getPositionForSection(i: Int): Int {
-        return items.indexOfFirst { it.label[0] == savedSections[i] }
-    }
-
-    private var highlightI = -1
-
-    override fun highlight(i: Int) {
-        val oldI = highlightI
-        highlightI = i
-        if (oldI != i) {
-            notifyDataSetChanged()
-        }
-    }
-
-    override fun unhighlight() {
-        highlightI = -1
-        notifyDataSetChanged()
     }
 
     companion object {
