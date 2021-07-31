@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
+import io.posidon.android.cintalauncher.data.feed.items.formatTimeAgo
 import io.posidon.android.cintalauncher.ui.feed.items.ActionsAdapter
 import posidon.android.conveniencelib.dp
 
 open class FeedItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val source = itemView.findViewById<TextView>(R.id.source)!!
+    val time = itemView.findViewById<TextView>(R.id.time)!!
     val title = itemView.findViewById<TextView>(R.id.title)!!
     val description = itemView.findViewById<TextView>(R.id.description)!!
     val icon = itemView.findViewById<ImageView>(R.id.icon)!!
@@ -51,6 +53,7 @@ fun bindFeedItemViewHolder(
         }
         holder.actions.adapter = ActionsAdapter(item.actions, ColorTheme.actionButtonFG(item.color.let { if (it == 0) ColorTheme.accentColor else it }), actionsBG)
     }
+    holder.time.text = item.formatTimeAgo(holder.itemView.resources)
     styleFeedItemViewHolder(holder, color)
 }
 
@@ -63,6 +66,7 @@ fun styleFeedItemViewHolder(
     holder.card.setCardBackgroundColor(ColorTheme.feedCardBG)
     holder.title.setTextColor(ColorTheme.feedCardTitle)
     holder.description.setTextColor(ColorTheme.feedCardDescription)
+    holder.time.setTextColor(ColorTheme.feedCardDescription)
 }
 
 inline fun <T: View, R> applyIfNotNull(view: T, value: R, block: (T, R) -> Unit) {

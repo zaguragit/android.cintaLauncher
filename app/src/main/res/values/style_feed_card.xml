@@ -12,6 +12,13 @@
         <item name="android:paddingHorizontal">8dp</item>
     </style>
 
+    <style name="Theme.CintaLauncher.FeedCard.Time" parent="Theme.CintaLauncher">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/feed_card_text_dark_description</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:paddingHorizontal">8dp</item>
+    </style>
+
     <style name="Theme.CintaLauncher.FeedCard.Source" parent="Theme.CintaLauncher">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/feed_card_text_dark_description</item>

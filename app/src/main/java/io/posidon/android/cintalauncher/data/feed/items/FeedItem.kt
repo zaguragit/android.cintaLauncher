@@ -1,7 +1,9 @@
 package io.posidon.android.cintalauncher.data.feed.items
 
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.view.View
+import io.posidon.android.cintalauncher.R
 import java.time.Instant
 
 interface FeedItem {
@@ -39,4 +41,22 @@ fun String.longHash(): Long {
         h = 31 * h + this[i].code.toLong()
     }
     return h
+}
+
+fun FeedItem.formatTimeAgo(resources: Resources): String {
+    val now = System.currentTimeMillis()
+    val passed = now - instant.toEpochMilli()
+    val seconds = passed / 1000
+    if (seconds < 60) {
+        return resources.getString(R.string.now)
+    }
+    val minutes = seconds / 60
+    if (minutes < 60) {
+        return "${minutes}m"
+    }
+    val hours = minutes / 60
+    if (hours < 24) {
+        return "${hours}h"
+    }
+    return "${hours / 24}d"
 }
