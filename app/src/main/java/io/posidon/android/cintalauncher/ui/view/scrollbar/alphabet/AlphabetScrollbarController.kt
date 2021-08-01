@@ -18,11 +18,15 @@ class AlphabetScrollbarController(
 
     private val paint by scrollbar::paint
 
-    var textColor = 0
+    var textColor = 0x88ffffff.toInt()
         set(value) {
             field = value
             paint.color = value
         }
+
+    init {
+        paint.color = textColor
+    }
 
     var highlightColor = 0
 
@@ -57,9 +61,8 @@ class AlphabetScrollbarController(
         paint.apply {
             textSize = context.dp(16)
         }
-        scrollbar.invalidate()
-        textColor = 0x88ffffff.toInt()
         highlightColor = ColorTheme.accentColor
+        scrollbar.invalidate()
     }
 
     override fun loadSections(apps: AppCollection) {

@@ -30,7 +30,11 @@ class PalleteTintedColorTheme(
         y
     }, 0.1f)
 
-    override val feedCardBG = run {
+    override val uiTitle = titleColorForBG(context, uiBG)
+    override val uiDescription = textColorForBG(context, uiBG)
+    override val uiHint = hintColorForBG(context, uiBG)
+
+    override val cardBG = run {
         val dom = wallpaper.dominantSwatch ?: wallpaper.vibrantSwatch ?: return@run context.getColor(R.color.default_card_bg)
         val domHsl = dom.hsl
         val l = domHsl[2]
@@ -48,8 +52,8 @@ class PalleteTintedColorTheme(
         }
     }
 
-    override val feedCardTitle = titleColorForBG(context, feedCardBG)
-    override val feedCardDescription = textColorForBG(context, feedCardBG)
+    override val cardTitle = titleColorForBG(context, cardBG)
+    override val cardDescription = textColorForBG(context, cardBG)
 
     override val appDrawerColor = run {
         val swatch = wallpaper.dominantSwatch ?: return@run context.getColor(R.color.drawer_bg)

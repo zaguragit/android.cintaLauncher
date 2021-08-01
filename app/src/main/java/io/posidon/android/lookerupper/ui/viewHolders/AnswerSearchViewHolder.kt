@@ -36,11 +36,11 @@ class AnswerSearchViewHolder(itemView: View) : SearchViewHolder(itemView) {
         result as InstantAnswerResult
         //icon.setImageDrawable(result.icon)
 
-        source.setTextColor(ColorTheme.feedCardDescription)
-        card.setCardBackgroundColor(ColorTheme.feedCardBG)
-        title.setTextColor(ColorTheme.feedCardTitle)
-        description.setTextColor(ColorTheme.feedCardDescription)
-        icon.imageTintList = ColorStateList.valueOf(ColorTheme.feedCardDescription)
+        source.setTextColor(ColorTheme.cardDescription)
+        card.setCardBackgroundColor(ColorTheme.cardBG)
+        title.setTextColor(ColorTheme.cardTitle)
+        description.setTextColor(ColorTheme.cardDescription)
+        icon.imageTintList = ColorStateList.valueOf(ColorTheme.cardDescription)
 
         title.text = result.title
         description.text = result.description
@@ -51,8 +51,8 @@ class AnswerSearchViewHolder(itemView: View) : SearchViewHolder(itemView) {
         actionContainer.setOnClickListener(result::search)
         actionText.setText(R.string.search_in_duckduckgo)
 
-        actionContainer.background = generateActionButtonBG(itemView.context, ColorTheme.feedCardBG)
-        actionText.setTextColor(ColorTheme.feedCardDescription)
+        actionContainer.background = generateActionButtonBG(itemView.context, ColorTheme.cardBG)
+        actionText.setTextColor(ColorTheme.cardDescription)
     }
 
     fun generateActionButtonBG(context: Context, color: Int): Drawable {

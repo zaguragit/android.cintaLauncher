@@ -64,7 +64,6 @@ class AppDrawer(
         closeButton.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
         closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))
         scrollBar.recycler = this@AppDrawer.recycler
-        scrollBar.controller.updateTheme(view.context)
     }
 
     val isOpen get() = view.isVisible

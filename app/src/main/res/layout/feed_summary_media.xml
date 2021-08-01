@@ -21,8 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/feed_card_padding"
-        android:paddingTop="@dimen/feed_card_padding"
+        android:paddingHorizontal="@dimen/media_card_padding"
+        android:paddingTop="@dimen/media_card_padding"
         android:layout_marginEnd="64dp">
         <TextView
             style="@style/Theme.CintaLauncher.MediaSummaryItem.Title"

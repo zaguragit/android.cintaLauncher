@@ -21,12 +21,12 @@ class ContactSearchViewHolder(itemView: View) : SearchViewHolder(itemView) {
         Glide.with(itemView)
             .load(result.iconUri)
             .placeholder(ContextCompat.getDrawable(itemView.context, R.drawable.placeholder_contact)!!.apply {
-                setTint(ColorTheme.hintColorForBG(itemView.context, ColorTheme.uiBG))
+                setTint(ColorTheme.uiHint)
             })
             .apply(RequestOptions.circleCropTransform())
             .into(icon)
         text.text = result.title
-        text.setTextColor(ColorTheme.titleColorForBG(itemView.context, ColorTheme.uiBG))
+        text.setTextColor(ColorTheme.uiTitle)
         itemView.setOnClickListener(result::open)
     }
 }

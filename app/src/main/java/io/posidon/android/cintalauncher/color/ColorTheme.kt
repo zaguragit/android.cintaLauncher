@@ -1,6 +1,7 @@
 package io.posidon.android.cintalauncher.color
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.WallpaperColors
 import android.app.WallpaperManager
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.storage.COLOR_THEME_WALLPAPER_TINT
@@ -24,10 +26,13 @@ interface ColorTheme {
     val accentColor: Int
 
     val uiBG: Int
+    val uiTitle: Int
+    val uiDescription: Int
+    val uiHint: Int
 
-    val feedCardBG: Int
-    val feedCardTitle: Int
-    val feedCardDescription: Int
+    val cardBG: Int
+    val cardTitle: Int
+    val cardDescription: Int
 
     val appDrawerColor: Int
     val appDrawerBottomBarColor: Int
@@ -41,8 +46,38 @@ interface ColorTheme {
     val searchBarFG: Int
 
     fun forCardBackground(color: Int): Int
-    fun actionButtonBG(color: Int): Int
-    fun actionButtonFG(color: Int): Int
+
+    fun actionButtonBG(color: Int): Int {
+        val cardHSL = FloatArray(3)
+        ColorUtils.colorToHSL(cardBG, cardHSL)
+        val cardLAB = DoubleArray(3)
+        ColorUtils.colorToLAB(cardBG, cardLAB)
+        return if (Colors.getLuminance(cardBG) > .7f) {
+            val hsl = floatArrayOf(0f, 0f, 0f)
+            ColorUtils.colorToHSL(color, hsl)
+            hsl[2] = hsl[2].coerceAtLeast(.5f)
+            Colors.blend(cardBG, ColorUtils.HSLToColor(hsl), .8f)
+        } else {
+            val lab = doubleArrayOf(0.0, 0.0, 0.0)
+            ColorUtils.colorToLAB(color, lab)
+            lab[0] = lab[0].coerceAtLeast(cardLAB[0] - .05f)
+                .coerceAtMost(cardLAB[0] + .05f)
+            ColorUtils.LABToColor(lab[0], lab[1], lab[2])
+        }
+    }
+
+    @SuppressLint("Range")
+    fun actionButtonFG(color: Int): Int {
+        return if (Colors.getLuminance(color) > .7f) {
+            val lab = doubleArrayOf(0.0, 0.0, 0.0)
+            ColorUtils.colorToLAB(color, lab)
+            ColorUtils.LABToColor(lab[0] * .5 - 10.0, lab[1].coerceAtMost(75.0), lab[2])
+        } else {
+            val lab = doubleArrayOf(0.0, 0.0, 0.0)
+            ColorUtils.colorToLAB(color, lab)
+            ColorUtils.LABToColor(lab[0] * 1.5 + 30 + lab[1].coerceAtLeast(0.0) * .25, lab[1].coerceAtMost(60.0), lab[2])
+        }
+    }
 
     fun tintAppDrawerItem(color: Int): Int {
         return Colors.blend(appDrawerItemBase, color, .7f)
@@ -153,12 +188,18 @@ interface ColorTheme {
             get() = colorThemeInstance.accentColor
         override val uiBG: Int
             get() = colorThemeInstance.uiBG
-        override val feedCardBG: Int
-            get() = colorThemeInstance.feedCardBG
-        override val feedCardTitle: Int
-            get() = colorThemeInstance.feedCardTitle
-        override val feedCardDescription: Int
-            get() = colorThemeInstance.feedCardDescription
+        override val uiTitle: Int
+            get() = colorThemeInstance.uiTitle
+        override val uiDescription: Int
+            get() = colorThemeInstance.uiDescription
+        override val uiHint: Int
+            get() = colorThemeInstance.uiHint
+        override val cardBG: Int
+            get() = colorThemeInstance.cardBG
+        override val cardTitle: Int
+            get() = colorThemeInstance.cardTitle
+        override val cardDescription: Int
+            get() = colorThemeInstance.cardDescription
         override val appDrawerColor: Int
             get() = colorThemeInstance.appDrawerColor
         override val appDrawerBottomBarColor: Int

@@ -70,8 +70,8 @@ class StackTraceActivity : FragmentActivity() {
                 window.decorView.setBackgroundColor(colorTheme.uiBG)
                 send.backgroundTintList = ColorStateList.valueOf(colorTheme.appDrawerItemBase)
                 send.setTextColor(colorTheme.titleColorForBG(this, colorTheme.appDrawerItemBase))
-                title.setTextColor(colorTheme.titleColorForBG(this, colorTheme.uiBG))
-                stackTrace.setTextColor(colorTheme.textColorForBG(this, colorTheme.uiBG))
+                title.setTextColor(colorTheme.uiTitle)
+                stackTrace.setTextColor(colorTheme.uiDescription)
             } catch (e: Throwable) {
                 e.printStackTrace()
             }

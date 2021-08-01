@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isInvisible
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
@@ -20,7 +21,6 @@ import io.posidon.android.cintalauncher.ui.feed.home.HomeViewHolder
 import io.posidon.android.cintalauncher.ui.feed.home.bindHomeViewHolder
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.*
 import posidon.android.conveniencelib.Graphics
-import posidon.android.conveniencelib.dp
 import posidon.android.conveniencelib.toBitmap
 
 class FeedAdapter(
@@ -90,9 +90,10 @@ class FeedAdapter(
         }
         holder as FeedItemViewHolder
         if (i == 1) {
-            (holder.card.layoutParams as ViewGroup.MarginLayoutParams).topMargin = context.dp(8).toInt()
+            holder.separator.isInvisible = true
         } else {
-            (holder.card.layoutParams as ViewGroup.MarginLayoutParams).topMargin = 0
+            holder.separator.isInvisible = false
+            holder.separator.setBackgroundColor(ColorTheme.uiHint and 0x00ffffff or 0x24ffffff)
         }
     }
 

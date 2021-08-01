@@ -15,7 +15,7 @@ interface TintedColorTheme : ColorTheme {
     val appDrawerItemBaseHSL: FloatArray
 
     override fun forCardBackground(color: Int): Int {
-        return if (Colors.getLuminance(feedCardBG) > .7f) {
+        return if (Colors.getLuminance(cardBG) > .7f) {
             val hsv = floatArrayOf(0f, 0f, 0f)
             Color.colorToHSV(color, hsv)
             hsv[2] = hsv[2].coerceAtMost(hsv[1] + .15f)
@@ -25,38 +25,6 @@ interface TintedColorTheme : ColorTheme {
             val hsl = floatArrayOf(0f, 0f, 0f)
             ColorUtils.colorToHSL(color, hsl)
             hsl[2] = hsl[2].coerceAtLeast(.92f - hsl[1] * .2f)
-            ColorUtils.HSLToColor(hsl)
-        }
-    }
-
-    override fun actionButtonBG(color: Int): Int {
-        val cardHSL = FloatArray(3)
-        ColorUtils.colorToHSL(feedCardBG, cardHSL)
-        return if (Colors.getLuminance(feedCardBG) > .7f) {
-            val hsl = floatArrayOf(0f, 0f, 0f)
-            ColorUtils.colorToHSL(color, hsl)
-            hsl[2] = hsl[2].coerceAtLeast(.5f)
-            Colors.blend(feedCardBG, ColorUtils.HSLToColor(hsl), .8f)
-        } else {
-            val hsl = floatArrayOf(0f, 0f, 0f)
-            ColorUtils.colorToHSL(color, hsl)
-            hsl[2] = hsl[2].coerceAtLeast(cardHSL[2] - .05f)
-                .coerceAtMost(cardHSL[2] + .05f)
-            ColorUtils.HSLToColor(hsl)
-        }
-    }
-
-    override fun actionButtonFG(color: Int): Int {
-        return if (Colors.getLuminance(feedCardBG) > .7f) {
-            val hsv = floatArrayOf(0f, 0f, 0f)
-            Color.colorToHSV(color, hsv)
-            hsv[2] = hsv[2].coerceAtMost(.35f)
-            hsv[1] = hsv[1].coerceAtLeast(.3f)
-            Color.HSVToColor(hsv)
-        } else {
-            val hsl = floatArrayOf(0f, 0f, 0f)
-            ColorUtils.colorToHSL(color, hsl)
-            hsl[2] = hsl[2].coerceAtLeast(1f - hsl[1] * .2f)
             ColorUtils.HSLToColor(hsl)
         }
     }

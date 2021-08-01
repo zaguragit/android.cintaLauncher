@@ -25,8 +25,8 @@ class FeedChooserAdapter(
         val url = feedUrls[i]
         holder.text.text = url
 
-        holder.card.backgroundTintList = ColorStateList.valueOf(ColorTheme.feedCardBG)
-        holder.text.setTextColor(ColorTheme.feedCardDescription)
+        holder.card.backgroundTintList = ColorStateList.valueOf(ColorTheme.cardBG)
+        holder.text.setTextColor(ColorTheme.cardDescription)
         holder.text.setOnLongClickListener {
             FeedSourcesChooserActivity.sourceEditPopup(it.context, settings, feedUrls, this, i)
             true

@@ -24,8 +24,11 @@ class AndroidOMR1WallColorTheme(
 
     override val accentColor = (tertiary ?: secondary ?: primary).toArgb()
     override val uiBG = primary.toArgb() and 0xffffff or (context.getColor(R.color.feed_bg) and 0xff000000.toInt())
+    override val uiTitle = titleColorForBG(context, uiBG)
+    override val uiDescription = textColorForBG(context, uiBG)
+    override val uiHint = hintColorForBG(context, uiBG)
 
-    override val feedCardBG = run {
+    override val cardBG = run {
         val dom = (secondary ?: primary).toArgb()
         val hsl = FloatArray(3)
         ColorUtils.colorToHSL(dom, hsl)
@@ -44,8 +47,8 @@ class AndroidOMR1WallColorTheme(
         }
     }
 
-    override val feedCardTitle = titleColorForBG(context, feedCardBG)
-    override val feedCardDescription = textColorForBG(context, feedCardBG)
+    override val cardTitle = titleColorForBG(context, cardBG)
+    override val cardDescription = textColorForBG(context, cardBG)
 
     override val appDrawerColor = run {
         val rgb = primary.toArgb()

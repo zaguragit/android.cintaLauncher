@@ -3,6 +3,7 @@ package io.posidon.android.cintalauncher.ui.feed.items.viewHolders
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
+import androidx.cardview.widget.CardView
 import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -14,10 +15,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
 import io.posidon.android.cintalauncher.R
+import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
 
 class FeedItemBigImageViewHolder(itemView: View) : FeedItemViewHolder(itemView) {
     val image = itemView.findViewById<ImageView>(R.id.image)!!
+    val card = itemView.findViewById<CardView>(R.id.card)!!
     val requestOptions = RequestOptions()
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .downsample(DownsampleStrategy.AT_MOST)
@@ -56,6 +59,7 @@ fun bindFeedItemBigImageViewHolder(
     color: Int
 ) {
     bindFeedItemViewHolder(holder, item, color)
+    holder.card.setCardBackgroundColor(ColorTheme.cardBG)
     Glide.with(holder.itemView.context)
         .load(item.image)
         .apply(holder.requestOptions)

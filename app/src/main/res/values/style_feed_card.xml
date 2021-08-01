@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.CintaLauncher.FeedCard.Card" parent="Theme.CintaLauncher">
-        <item name="cardCornerRadius">@dimen/feed_card_radius</item>
+
+    <style name="Theme.CintaLauncher.FeedCard.ImageCard" parent="Theme.CintaLauncher">
+        <item name="cardCornerRadius">8dp</item>
         <item name="cardElevation">4dp</item>
         <item name="cardPreventCornerOverlap">true</item>
         <item name="cardUseCompatPadding">true</item>
@@ -9,7 +10,8 @@
     </style>
 
     <style name="Theme.CintaLauncher.FeedCard.CardBehind" parent="Theme.CintaLauncher">
-        <item name="android:paddingHorizontal">8dp</item>
+        <item name="android:paddingHorizontal">@dimen/feed_card_padding</item>
+        <item name="android:paddingBottom">@dimen/feed_card_padding_vertical</item>
     </style>
 
     <style name="Theme.CintaLauncher.FeedCard.Time" parent="Theme.CintaLauncher">
@@ -45,10 +47,15 @@
         <item name="android:padding">@dimen/feed_card_spacing</item>
     </style>
 
+    <style name="Theme.CintaLauncher.FeedCard.Actions.Container" parent="Theme.CintaLauncher">
+        <item name="android:layout_marginHorizontal">6dp</item>
+        <item name="cardCornerRadius">6dp</item>
+    </style>
+
     <style name="Theme.CintaLauncher.FeedCard.Action.Container" parent="Theme.CintaLauncher">
         <item name="android:paddingVertical">6dp</item>
         <item name="android:paddingHorizontal">12dp</item>
-        <item name="android:layout_marginHorizontal">6dp</item>
+        <item name="android:background">@drawable/ripple</item>
     </style>
 
     <style name="Theme.CintaLauncher.FeedCard.Action.Text" parent="Theme.CintaLauncher">

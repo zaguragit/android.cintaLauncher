@@ -8,8 +8,7 @@ import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.*
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -106,12 +105,12 @@ class LauncherActivity : FragmentActivity() {
         launcherApps.registerCallback(AppCallback(::loadApps))
 
         loadApps()
-        updateColorTheme(this, ColorTheme)
+        updateColorTheme(ColorTheme)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             wallpaperManager.addOnColorsChangedListener(::onColorsChangedListener, feedRecycler.handler)
             thread(name = "onCreate color update", isDaemon = true) {
-                ColorTheme.onColorsChanged(this, settings.colorTheme, ::updateColorTheme) {
+                ColorTheme.onColorsChanged(this, settings.colorTheme, LauncherActivity::updateColorTheme) {
                     wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
                 }
             }
@@ -138,12 +137,12 @@ class LauncherActivity : FragmentActivity() {
         blurBG.background = LayerDrawable(arrayOf(
             BitmapDrawable(resources, blurBitmap)
         )).apply { setLayerInsetBottom(0, -scrollBarContainer.measuredHeight) }
-
     }
 
-    private fun updateColorTheme(a: LauncherActivity, new: ColorTheme) {
-        a.feedAdapter.updateColorTheme()
-        a.appDrawer.updateColorTheme()
+    private fun updateColorTheme(new: ColorTheme) {
+        feedAdapter.updateColorTheme()
+        appDrawer.updateColorTheme()
+        scrollBar.controller.updateTheme(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.O_MR1)
@@ -153,7 +152,7 @@ class LauncherActivity : FragmentActivity() {
     ) {
         if (which and WallpaperManager.FLAG_SYSTEM != 0) {
             onWallpaperChanged()
-            ColorTheme.onColorsChanged(this, settings.colorTheme, ::updateColorTheme) { colors }
+            ColorTheme.onColorsChanged(this, settings.colorTheme, LauncherActivity::updateColorTheme) { colors }
         }
     }
 
@@ -169,14 +168,14 @@ class LauncherActivity : FragmentActivity() {
         notificationProvider.update()
         val shouldUpdate = settings.reload(applicationContext)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
-            ColorTheme.onResumePreOMR1(this, settings.colorTheme, ::updateColorTheme)
+            ColorTheme.onResumePreOMR1(this, settings.colorTheme, LauncherActivity::updateColorTheme)
             onWallpaperChanged()
         } else {
             if (blurBitmap == null) {
                 loadBlur()
             }
             if (shouldUpdate) {
-                ColorTheme.onColorsChanged(this, settings.colorTheme, ::updateColorTheme) { wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM) }
+                ColorTheme.onColorsChanged(this, settings.colorTheme, LauncherActivity::updateColorTheme) { wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM) }
             }
         }
         val current = System.currentTimeMillis()
@@ -205,6 +204,7 @@ class LauncherActivity : FragmentActivity() {
                 }
             }
         }
+        scrollBar.controller.updateTheme(this)
     }
 
     override fun onPause() {

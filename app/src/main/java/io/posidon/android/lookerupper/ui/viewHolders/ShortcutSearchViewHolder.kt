@@ -19,8 +19,8 @@ class ShortcutSearchViewHolder(itemView: View) : SearchViewHolder(itemView) {
         icon.setImageDrawable(result.icon)
         text.text = result.title
         subtitle.text = result.app.title
-        text.setTextColor(ColorTheme.titleColorForBG(itemView.context, ColorTheme.uiBG))
-        subtitle.setTextColor(ColorTheme.textColorForBG(itemView.context, ColorTheme.uiBG))
+        text.setTextColor(ColorTheme.uiTitle)
+        subtitle.setTextColor(ColorTheme.uiDescription)
         itemView.setOnClickListener(result::open)
     }
 }
