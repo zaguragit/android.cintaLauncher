@@ -84,7 +84,7 @@ object NotificationCreator {
         }
     }
 
-    fun create(context: Context, notification: StatusBarNotification): FeedItem {
+    fun create(context: Context, notification: StatusBarNotification, notificationService: NotificationService): FeedItem {
 
         val extras = notification.notification.extras
 
@@ -120,6 +120,10 @@ object NotificationCreator {
             "⍾$id"
             else "${notification.packageName}⍾${notification.id}"
 
+        val isDismissible = notification.isClearable
+
+        val autoCancel = notification.notification.flags and Notification.FLAG_AUTO_CANCEL != 0
+
         if (importance == -1) {
             return object : FeedItemSmall {
                 override val color = color
@@ -132,11 +136,19 @@ object NotificationCreator {
                 override val importance = importance.coerceAtLeast(0)
                 override val isNotification = true
                 override fun onTap(view: View) {
-                    try { notification.notification.contentIntent?.send() }
+                    try {
+                        notification.notification.contentIntent?.send()
+                        if (autoCancel)
+                            notificationService.cancelNotification(notification.key)
+                    }
                     catch (e: Exception) {
-                        notification.notification.deleteIntent?.send()
+                        notificationService.cancelNotification(notification.key)
                         e.printStackTrace()
                     }
+                }
+                override val isDismissible = isDismissible
+                override fun onDismiss(view: View) {
+                    notificationService.cancelNotification(notification.key)
                 }
                 override val uid = uid
                 override val id = id
@@ -158,11 +170,19 @@ object NotificationCreator {
                 override val importance = importance
                 override val isNotification = true
                 override fun onTap(view: View) {
-                    try { notification.notification.contentIntent?.send() }
+                    try {
+                        notification.notification.contentIntent?.send()
+                        if (autoCancel)
+                            notificationService.cancelNotification(notification.key)
+                    }
                     catch (e: Exception) {
-                        notification.notification.deleteIntent?.send()
+                        notificationService.cancelNotification(notification.key)
                         e.printStackTrace()
                     }
+                }
+                override val isDismissible = isDismissible
+                override fun onDismiss(view: View) {
+                    notificationService.cancelNotification(notification.key)
                 }
                 override val uid = uid
                 override val id = id
@@ -184,11 +204,19 @@ object NotificationCreator {
                 override val importance = importance
                 override val isNotification = true
                 override fun onTap(view: View) {
-                    try { notification.notification.contentIntent?.send() }
+                    try {
+                        notification.notification.contentIntent?.send()
+                        if (autoCancel)
+                            notificationService.cancelNotification(notification.key)
+                    }
                     catch (e: Exception) {
-                        notification.notification.deleteIntent?.send()
+                        notificationService.cancelNotification(notification.key)
                         e.printStackTrace()
                     }
+                }
+                override val isDismissible = isDismissible
+                override fun onDismiss(view: View) {
+                    notificationService.cancelNotification(notification.key)
                 }
                 override val uid = uid
                 override val id = id
@@ -206,11 +234,19 @@ object NotificationCreator {
             override val importance = importance
             override val isNotification = true
             override fun onTap(view: View) {
-                try { notification.notification.contentIntent?.send() }
+                try {
+                    notification.notification.contentIntent?.send()
+                    if (autoCancel)
+                        notificationService.cancelNotification(notification.key)
+                }
                 catch (e: Exception) {
-                    notification.notification.deleteIntent?.send()
+                    notificationService.cancelNotification(notification.key)
                     e.printStackTrace()
                 }
+            }
+            override val isDismissible = isDismissible
+            override fun onDismiss(view: View) {
+                notificationService.cancelNotification(notification.key)
             }
             override val uid = uid
             override val id = id

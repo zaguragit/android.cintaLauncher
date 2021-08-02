@@ -22,6 +22,9 @@ interface FeedItem {
 
     fun onTap(view: View)
 
+    val isDismissible: Boolean
+    fun onDismiss(view: View) {}
+
     val shouldTintIcon get() = true
 
     /**

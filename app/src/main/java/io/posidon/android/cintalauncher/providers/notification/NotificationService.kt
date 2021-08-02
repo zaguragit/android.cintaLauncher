@@ -84,7 +84,7 @@ class NotificationService : NotificationListenerService() {
                             if (messagingStyle != null) {
                                 tmpMessageNotifications += notification
                             }
-                            tmpNotifications += NotificationCreator.create(applicationContext, notification)
+                            tmpNotifications += NotificationCreator.create(applicationContext, notification, this)
                         }
                         i++
                     }

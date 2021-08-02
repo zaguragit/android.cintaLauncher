@@ -17,9 +17,11 @@ import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.items.formatTimeAgo
 import io.posidon.android.cintalauncher.ui.feed.items.ActionsAdapter
 import io.posidon.android.cintalauncher.ui.view.DividerItemDecorator
+import io.posidon.android.cintalauncher.ui.view.SwipeableLayout
 import posidon.android.conveniencelib.dp
 
-open class FeedItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+open class FeedItemViewHolder(itemView: View) : RecyclerView.ViewHolder(SwipeableLayout(itemView)) {
+    val swipeableLayout = this.itemView as SwipeableLayout
     val source = itemView.findViewById<TextView>(R.id.source)!!
     val separator = itemView.findViewById<View>(R.id.separator)!!
     val time = itemView.findViewById<TextView>(R.id.time)!!
@@ -34,6 +36,10 @@ open class FeedItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
     val actions = itemView.findViewById<RecyclerView>(R.id.actions_recycler)!!.apply {
         layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         addItemDecoration(DividerItemDecorator(itemView.context, DividerItemDecoration.HORIZONTAL, separatorDrawable))
+        setOnTouchListener { v, _ ->
+            v.parent.requestDisallowInterceptTouchEvent(true)
+            false
+        }
     }
     val actionButtonShape = run {
         val r = itemView.dp(128)
@@ -46,6 +52,7 @@ fun bindFeedItemViewHolder(
     item: FeedItem,
     color: Int
 ) {
+    holder.swipeableLayout.reset()
     holder.title.text = item.title
     applyIfNotNull(holder.icon, item.sourceIcon, ImageView::setImageDrawable)
     applyIfNotNull(holder.source, item.source, TextView::setText)
@@ -63,6 +70,8 @@ fun bindFeedItemViewHolder(
         holder.separatorDrawable.setColor(ColorTheme.hintColorForBG(holder.itemView.context, bg))
     }
     holder.time.text = item.formatTimeAgo(holder.itemView.resources)
+    holder.swipeableLayout.onSwipeAway = item::onDismiss
+    holder.swipeableLayout.isSwipeable = item.isDismissible
     styleFeedItemViewHolder(holder, color)
 }
 
@@ -75,6 +84,8 @@ fun styleFeedItemViewHolder(
     holder.title.setTextColor(ColorTheme.uiTitle)
     holder.description.setTextColor(ColorTheme.uiDescription)
     holder.time.setTextColor(ColorTheme.uiDescription)
+    holder.swipeableLayout.setSwipeColor(ColorTheme.cardBG)
+    holder.swipeableLayout.setIconColor(ColorTheme.cardTitle)
 }
 
 inline fun <T: View, R> applyIfNotNull(view: T, value: R, block: (T, R) -> Unit) {

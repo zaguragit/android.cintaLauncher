@@ -43,6 +43,7 @@ object RssProvider : FeedItemProvider() {
                     override fun onTap(view: View) {
                         view.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uid)))
                     }
+                    override val isDismissible = false
                     override val shouldTintIcon = false
                     override val uid = it.link.trim { it <= ' ' }
                     override val id = id
@@ -59,6 +60,7 @@ object RssProvider : FeedItemProvider() {
                     override fun onTap(view: View) {
                         view.context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uid)))
                     }
+                    override val isDismissible = false
                     override val shouldTintIcon = false
                     override val uid = it.link.trim { it <= ' ' }
                     override val id = id
