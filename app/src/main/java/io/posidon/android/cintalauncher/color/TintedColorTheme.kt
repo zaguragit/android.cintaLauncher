@@ -11,8 +11,6 @@ import kotlin.math.min
 
 interface TintedColorTheme : ColorTheme {
 
-    val appDrawerItemBaseHSL: FloatArray
-
     override fun adjustColorForContrast(base: Int, tint: Int): Int {
         return if (Colors.getLuminance(base) > .7f) {
             val hsv = floatArrayOf(0f, 0f, 0f)

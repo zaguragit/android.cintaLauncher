@@ -35,12 +35,10 @@ class AndroidOMR1WallColorTheme(
         val l = hsl[2]
         when {
             l < .22f -> {
-                //val hsl = (wallpaper.darkVibrantSwatch ?: wallpaper.darkMutedSwatch ?: dom).hsl
                 hsl[2] = min(hsl[2], .24f)
                 ColorUtils.HSLToColor(hsl)
             }
             else -> {
-                //val hsl = (wallpaper.lightVibrantSwatch ?: wallpaper.lightMutedSwatch ?: dom).hsl
                 hsl[2] = max(hsl[2], .96f - hsl[1] * .1f)
                 ColorUtils.HSLToColor(hsl)
             }
@@ -68,16 +66,14 @@ class AndroidOMR1WallColorTheme(
         ColorUtils.HSLToColor(hsl)
     }
 
-    //override val appDrawerBottomBarColor = primary.toArgb() and 0xffffff or (context.getColor(R.color.drawer_bottom_bar) and 0xff000000.toInt())
-    //override val appDrawerButtonColor = secondary?.toArgb() ?: baseTheme.appDrawerButtonColor
-
     override val appDrawerBottomBarColor = run {
         val isLight = Colors.getLuminance(appDrawerColor) > .7f
-        val hsl = FloatArray(3)
-        ColorUtils.colorToHSL(appDrawerColor, hsl)
-        hsl[2] *= if (isLight) .8f else 1.2f
-        ColorUtils.HSLToColor(hsl) and 0xffffff or 0x88000000.toInt()
+        val lab = DoubleArray(3)
+        ColorUtils.colorToLAB(appDrawerColor, lab)
+        lab[0] *= if (isLight) .8 else 1.2
+        ColorUtils.LABToColor(lab[0], lab[1], lab[2]) and 0xffffff or 0x88000000.toInt()
     }
+
     override val buttonColor = run {
         val swatch = tertiary ?: secondary ?: primary
         val hsl = FloatArray(3)
@@ -88,7 +84,7 @@ class AndroidOMR1WallColorTheme(
 
     override val appDrawerSectionColor = textColorForBG(context, appDrawerColor)
 
-    override val appDrawerItemBaseHSL = run {
+    override val appDrawerItemBase = ColorUtils.HSLToColor(run {
         val hsl = FloatArray(3)
         ColorUtils.colorToHSL(appDrawerColor, hsl)
         if (Colors.getLuminance(appDrawerColor) > .6f) {
@@ -105,12 +101,9 @@ class AndroidOMR1WallColorTheme(
             }
         }
         hsl
-    }
-    override val appDrawerItemBase = ColorUtils.HSLToColor(appDrawerItemBaseHSL)
+    })
 
-    override val searchBarBG = run {
-        appDrawerItemBase
-    }
+    override val searchBarBG = appDrawerItemBase
 
     override val searchBarFG = titleColorForBG(context, searchBarBG)
 }

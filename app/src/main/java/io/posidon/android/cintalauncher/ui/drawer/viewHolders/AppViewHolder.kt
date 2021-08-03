@@ -98,9 +98,9 @@ fun bindAppViewHolder(
     if (notification == null) {
         holder.iconSmall.isVisible = false
         holder.notificationView.isVisible = false
+        holder.imageView.isVisible = false
         holder.icon.isVisible = true
         holder.icon.setImageDrawable(item.icon)
-        holder.imageView.setImageDrawable(null)
     } else {
         holder.iconSmall.isVisible = true
         holder.notificationView.isVisible = true
@@ -108,12 +108,16 @@ fun bindAppViewHolder(
         holder.iconSmall.setImageDrawable(item.icon)
         holder.notificationView.text = notification.description
         val image = (notification as? FeedItemWithBigImage)?.image
-        if (image == null) holder.imageView.setImageDrawable(null)
-        else Glide.with(holder.itemView.context)
-            .load(image)
-            .apply(holder.requestOptions)
-            .listener(holder.imageRequestListener)
-            .into(holder.imageView)
+        if (image == null) holder.imageView.isVisible = false
+        else {
+            holder.imageView.isVisible = true
+            holder.imageView.setImageDrawable(null)
+            Glide.with(holder.itemView.context)
+                .load(image)
+                .apply(holder.requestOptions)
+                .listener(holder.imageRequestListener)
+                .into(holder.imageView)
+        }
     }
 
     holder.itemView.setOnClickListener {

@@ -66,9 +66,14 @@ class PalleteTintedColorTheme(
         ColorUtils.colorToLAB(rgb, lab)
         val lum = Colors.getLuminance(rgb)
         when {
-            lum > .7f -> lab[0] = lab[0].coerceAtLeast(89.0)
-            lum > .4f -> lab[0] = lab[0].coerceAtMost(26.0)
-            else -> lab[0] = lab[0].coerceAtMost(9.0)
+            lum > .6f -> {
+                val oldL = lab[0]
+                lab[0] = lab[0].coerceAtLeast(89.0)
+                val ld = lab[0] - oldL
+                lab[1] *= 1.0 + ld / 100 * 1.6
+                lab[2] *= 1.0 + ld / 100 * 1.6
+            }
+            else -> lab[0] = lab[0].coerceAtMost(10.0)
         }
         ColorUtils.LABToColor(lab[0], lab[1], lab[2])
     }
@@ -89,7 +94,7 @@ class PalleteTintedColorTheme(
 
     override val appDrawerSectionColor = textColorForBG(context, appDrawerColor)
 
-    override val appDrawerItemBaseHSL = run {
+    override val appDrawerItemBase = ColorUtils.HSLToColor(run {
         val hsl = FloatArray(3)
         ColorUtils.colorToHSL(appDrawerColor, hsl)
         if (Colors.getLuminance(appDrawerColor) > .6f) {
@@ -104,12 +109,9 @@ class PalleteTintedColorTheme(
             }
         }
         hsl
-    }
-    override val appDrawerItemBase = ColorUtils.HSLToColor(appDrawerItemBaseHSL)
+    })
 
-    override val searchBarBG = run {
-        appDrawerItemBase
-    }
+    override val searchBarBG = appDrawerItemBase
 
     override val searchBarFG = titleColorForBG(context, searchBarBG)
 }
