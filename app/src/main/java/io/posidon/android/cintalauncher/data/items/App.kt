@@ -12,6 +12,8 @@ import android.os.Process
 import android.os.UserHandle
 import android.view.View
 import androidx.palette.graphics.Palette
+import io.posidon.android.cintalauncher.data.feed.items.FeedItem
+import io.posidon.android.cintalauncher.providers.notification.NotificationService
 import posidon.android.conveniencelib.isInstalled
 import posidon.android.conveniencelib.toBitmap
 import java.util.*
@@ -24,7 +26,9 @@ class App(
     override val icon: Drawable
 ) : LauncherItem {
 
-    override var notificationCount = 0
+    fun getNotifications(): List<FeedItem> {
+        return NotificationService.notifications.filter { it.meta?.sourcePackageName == packageName }
+    }
 
     override fun open(context: Context, view: View?) {
         try {

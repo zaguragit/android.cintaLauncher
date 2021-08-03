@@ -63,6 +63,6 @@ fun bindFeedItemBigImageViewHolder(
     Glide.with(holder.itemView.context)
         .load(item.image)
         .apply(holder.requestOptions)
-        .addListener(holder.imageRequestListener)
+        .listener(holder.imageRequestListener)
         .into(holder.image)
 }

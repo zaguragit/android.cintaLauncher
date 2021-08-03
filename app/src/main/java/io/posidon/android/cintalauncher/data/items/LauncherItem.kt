@@ -21,12 +21,6 @@ interface LauncherItem {
     fun open(context: Context, view: View?)
 
     /**
-     * The number to show in the notification badge
-     * If value is 0, the badge won't be shown
-     */
-    val notificationCount get() = 0
-
-    /**
      * Text representation of the item, used to save it
      */
     override fun toString(): String

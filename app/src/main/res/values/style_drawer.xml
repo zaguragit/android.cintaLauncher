@@ -43,6 +43,24 @@
         <item name="android:layout_height">48dp</item>
     </style>
 
+    <style name="Theme.CintaLauncher.Drawer.Item.Notifications" parent="Theme.CintaLauncher">
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">6dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textColor">@color/feed_card_text_light_description</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Drawer.Item.SmallIcon" parent="Theme.CintaLauncher">
+        <item name="android:layout_width">16dp</item>
+        <item name="android:layout_height">16dp</item>
+        <item name="android:layout_marginEnd">6dp</item>
+    </style>
+
     <style name="Theme.CintaLauncher.Drawer.SectionHeader" parent="Theme.CintaLauncher">
         <item name="android:paddingVertical">6dp</item>
         <item name="android:paddingStart">8dp</item>

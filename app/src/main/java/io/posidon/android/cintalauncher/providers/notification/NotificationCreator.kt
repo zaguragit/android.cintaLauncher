@@ -124,6 +124,12 @@ object NotificationCreator {
 
         val autoCancel = notification.notification.flags and Notification.FLAG_AUTO_CANCEL != 0
 
+        val meta = FeedItemMeta(
+            sourcePackageName = notification.packageName,
+            importance = importance.coerceAtLeast(0),
+            isNotification = true
+        )
+
         if (importance == -1) {
             return object : FeedItemSmall {
                 override val color = color
@@ -133,8 +139,6 @@ object NotificationCreator {
                 override val source = source
                 override val actions = actions
                 override val instant = instant
-                override val importance = importance.coerceAtLeast(0)
-                override val isNotification = true
                 override fun onTap(view: View) {
                     try {
                         notification.notification.contentIntent?.send()
@@ -152,6 +156,7 @@ object NotificationCreator {
                 }
                 override val uid = uid
                 override val id = id
+                override val meta = meta
             }
         }
 
@@ -167,8 +172,6 @@ object NotificationCreator {
                 override val source = source
                 override val actions = actions
                 override val instant = instant
-                override val importance = importance
-                override val isNotification = true
                 override fun onTap(view: View) {
                     try {
                         notification.notification.contentIntent?.send()
@@ -186,6 +189,7 @@ object NotificationCreator {
                 }
                 override val uid = uid
                 override val id = id
+                override val meta = meta
             }
         }
 
@@ -201,8 +205,6 @@ object NotificationCreator {
                 override val source = source
                 override val actions = actions
                 override val instant = instant
-                override val importance = importance
-                override val isNotification = true
                 override fun onTap(view: View) {
                     try {
                         notification.notification.contentIntent?.send()
@@ -220,6 +222,7 @@ object NotificationCreator {
                 }
                 override val uid = uid
                 override val id = id
+                override val meta = meta
             }
         }
 
@@ -231,8 +234,6 @@ object NotificationCreator {
             override val source = source
             override val actions = actions
             override val instant = instant
-            override val importance = importance
-            override val isNotification = true
             override fun onTap(view: View) {
                 try {
                     notification.notification.contentIntent?.send()
@@ -250,6 +251,7 @@ object NotificationCreator {
             }
             override val uid = uid
             override val id = id
+            override val meta = meta
         }
     }
 }

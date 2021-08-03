@@ -16,9 +16,6 @@ interface FeedItem {
     val actions: Array<FeedItemAction> get() = emptyArray()
 
     val instant: Instant
-    val importance get() = 0
-
-    val isNotification get() = false
 
     fun onTap(view: View)
 
@@ -36,6 +33,8 @@ interface FeedItem {
      * Identifier (should be unique to this feed item, but that's not guaranteed)
      */
     val id: Long
+
+    val meta: FeedItemMeta? get() = null
 }
 
 fun String.longHash(): Long {
