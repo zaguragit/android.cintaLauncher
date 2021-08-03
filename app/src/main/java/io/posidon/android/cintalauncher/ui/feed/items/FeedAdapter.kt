@@ -80,7 +80,7 @@ class FeedAdapter(
                     Palette.from(item.sourceIcon!!.toBitmap()).generate().getDominantColor(accent)
                 }
             }
-            ColorTheme.forCardBackground(color)
+            ColorTheme.adjustColorForContrast(ColorTheme.uiBG, color)
         }
         when (holder.itemViewType) {
             TYPE_PLAIN -> bindFeedItemViewHolder(holder as FeedItemViewHolder, item, color)

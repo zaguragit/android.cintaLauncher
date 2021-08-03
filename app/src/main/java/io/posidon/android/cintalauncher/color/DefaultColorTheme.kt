@@ -2,7 +2,9 @@ package io.posidon.android.cintalauncher.color
 
 import android.content.Context
 import android.graphics.Color
+import androidx.core.graphics.ColorUtils
 import io.posidon.android.cintalauncher.R
+import posidon.android.conveniencelib.Colors
 
 class DefaultColorTheme(context: Context) : ColorTheme {
 
@@ -29,12 +31,19 @@ class DefaultColorTheme(context: Context) : ColorTheme {
     override val searchBarBG get() = appDrawerItemBase
     override val searchBarFG = textColorForBG(context, searchBarBG)
 
-    override fun forCardBackground(color: Int): Int {
-        val hsv = floatArrayOf(0f, 0f, 0f)
-        Color.colorToHSV(color, hsv)
-        hsv[2] = hsv[2].coerceAtMost(hsv[1] + .15f)
-        hsv[1] = hsv[1].coerceAtLeast(hsv[2] - .5f)
-        return Color.HSVToColor(hsv)
+    override fun adjustColorForContrast(base: Int, tint: Int): Int {
+        return if (Colors.getLuminance(base) > .7f) {
+            val hsv = floatArrayOf(0f, 0f, 0f)
+            Color.colorToHSV(tint, hsv)
+            hsv[2] = hsv[2].coerceAtMost(hsv[1] + .15f)
+            hsv[1] = hsv[1].coerceAtLeast(hsv[2] - .5f)
+            Color.HSVToColor(hsv)
+        } else {
+            val hsl = floatArrayOf(0f, 0f, 0f)
+            ColorUtils.colorToHSL(tint, hsl)
+            hsl[2] = hsl[2].coerceAtLeast(.92f - hsl[1] * .2f)
+            ColorUtils.HSLToColor(hsl)
+        }
     }
 
     companion object {

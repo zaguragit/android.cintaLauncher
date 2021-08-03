@@ -45,7 +45,7 @@ interface ColorTheme {
     val searchBarBG: Int
     val searchBarFG: Int
 
-    fun forCardBackground(color: Int): Int
+    fun adjustColorForContrast(base: Int, tint: Int): Int
 
     fun actionButtonBG(color: Int): Int {
         val cardHSL = FloatArray(3)
@@ -215,8 +215,8 @@ interface ColorTheme {
         override val searchBarFG: Int
             get() = colorThemeInstance.searchBarFG
 
-        override fun forCardBackground(color: Int): Int =
-            colorThemeInstance.forCardBackground(color)
+        override fun adjustColorForContrast(base: Int, tint: Int): Int =
+            colorThemeInstance.adjustColorForContrast(base, tint)
 
         override fun actionButtonBG(color: Int): Int =
             colorThemeInstance.actionButtonBG(color)

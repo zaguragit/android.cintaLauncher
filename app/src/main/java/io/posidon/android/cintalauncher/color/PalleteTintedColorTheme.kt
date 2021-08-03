@@ -22,10 +22,14 @@ class PalleteTintedColorTheme(
 
     override val uiBG = tintWithSwatch(context, R.color.feed_bg, run {
         val dm = wallpaper.darkMutedSwatch
+        val lm = wallpaper.lightMutedSwatch
         val dv = wallpaper.darkVibrantSwatch
+        val lv = wallpaper.lightVibrantSwatch
         val dom = wallpaper.dominantSwatch
         var y = dv
         if (y == null || dm != null && dm.population > y.population) y = dm
+        if (y == null || lm != null && lm.population > y.population) y = lm
+        if (y == null || lv != null && lv.population > y.population) y = lv
         if (y == null || dom != null && dom.population > y.population) y = dom
         y
     }, 0.1f)
@@ -58,27 +62,23 @@ class PalleteTintedColorTheme(
     override val appDrawerColor = run {
         val swatch = wallpaper.dominantSwatch ?: return@run context.getColor(R.color.drawer_bg)
         val rgb = swatch.rgb
-        val hsl = swatch.hsl
+        val lab = DoubleArray(3)
+        ColorUtils.colorToLAB(rgb, lab)
         val lum = Colors.getLuminance(rgb)
         when {
-            lum > .7f -> {
-                val oldL = hsl[2]
-                hsl[2] = oldL.coerceAtLeast(.89f)
-                val ld = hsl[2] - oldL
-                hsl[1] *= 1f + ld * 1.6f
-            }
-            lum > .4f -> hsl[2] = hsl[2].coerceAtMost(.26f)
-            else -> hsl[2] = hsl[2].coerceAtMost(.09f)
+            lum > .7f -> lab[0] = lab[0].coerceAtLeast(89.0)
+            lum > .4f -> lab[0] = lab[0].coerceAtMost(26.0)
+            else -> lab[0] = lab[0].coerceAtMost(9.0)
         }
-        ColorUtils.HSLToColor(hsl)
+        ColorUtils.LABToColor(lab[0], lab[1], lab[2])
     }
 
     override val appDrawerBottomBarColor = run {
         val isLight = Colors.getLuminance(appDrawerColor) > .7f
-        val hsl = FloatArray(3)
-        ColorUtils.colorToHSL(appDrawerColor, hsl)
-        hsl[2] *= if (isLight) .8f else 1.2f
-        ColorUtils.HSLToColor(hsl) and 0xffffff or 0x88000000.toInt()
+        val lab = DoubleArray(3)
+        ColorUtils.colorToLAB(appDrawerColor, lab)
+        lab[0] *= if (isLight) .8 else 1.2
+        ColorUtils.LABToColor(lab[0], lab[1], lab[2]) and 0xffffff or 0x88000000.toInt()
     }
     override val buttonColor = run {
         val swatch = wallpaper.vibrantSwatch ?: wallpaper.dominantSwatch ?: return@run context.getColor(R.color.button_bg)

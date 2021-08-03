@@ -21,7 +21,6 @@ import io.posidon.android.cintalauncher.ui.feed.home.summary.SummaryAdapter
 import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.lookerupper.ui.SearchActivity
 import posidon.android.conveniencelib.dp
-import posidon.android.conveniencelib.getStatusBarHeight
 
 class HomeViewHolder(
     scrollIndicator: ImageView,
@@ -61,7 +60,7 @@ class HomeViewHolder(
             itemView.post(::updateSummary)
         }
         itemView.layoutParams.apply {
-            height = parentView.measuredHeight - itemView.context.getStatusBarHeight()
+            height = parentView.measuredHeight - parentView.paddingBottom - parentView.paddingTop
         }
         val s = itemView.dp(24).toInt()
         vertical.addView(scrollIndicator, 4, LinearLayout.LayoutParams(s, s).apply {
