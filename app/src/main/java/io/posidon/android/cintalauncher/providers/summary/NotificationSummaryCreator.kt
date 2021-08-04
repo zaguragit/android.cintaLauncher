@@ -19,7 +19,7 @@ object NotificationSummaryCreator {
         val extras = notification.notification.extras
 
         val source = messagingStyle.conversationTitle?.toString() ?: NotificationCreator.getSource(context, notification)
-        val text = NotificationCreator.getText(extras) ?: NotificationCreator.getTitle(context, notification, extras)
+        val text = NotificationCreator.getText(extras) ?: NotificationCreator.getTitle(extras)
         val icon = NotificationCreator.getSmallIcon(context, notification)
         val instant = Instant.ofEpochMilli(notification.postTime)
         val color = NotificationCreator.getColor(notification)

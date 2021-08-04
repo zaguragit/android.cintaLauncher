@@ -56,10 +56,16 @@ class SwipeableLayout(
     }
 
     private val onAnimEndListener = object : Animator.AnimatorListener {
+        private var isCanceled = false
         override fun onAnimationRepeat(animation: Animator?) {}
-        override fun onAnimationCancel(animation: Animator?) {}
-        override fun onAnimationStart(animation: Animator?) {}
+        override fun onAnimationCancel(animation: Animator?) {
+            isCanceled = true
+        }
+        override fun onAnimationStart(animation: Animator?) {
+            isCanceled = false
+        }
         override fun onAnimationEnd(animation: Animator?) {
+            if (isCanceled) return
             if (isSwipeable) {
                 onSwipeAway?.invoke(this@SwipeableLayout)
             }
@@ -77,28 +83,33 @@ class SwipeableLayout(
         backView.visibility = GONE
     }
 
+    private var currentAnimator: ValueAnimator? = null
     private fun bounceBack() {
-        ValueAnimator.ofInt(xOffset.toInt(), 0).apply {
+        currentAnimator?.cancel()
+        currentAnimator = ValueAnimator.ofFloat(xOffset, 0f).apply {
             addUpdateListener {
-                val n = it.animatedValue as Int
+                val f = it.animatedValue as Float
                 backView.clipBounds = when {
-                    n > 0 -> Rect(0, 0, n, measuredHeight)
-                    n < 0 -> Rect(measuredWidth + n, 0, measuredWidth, measuredHeight)
+                    f > 0 -> Rect(0, 0, f.toInt(), measuredHeight)
+                    f < 0 -> Rect(measuredWidth + f.toInt(), 0, measuredWidth, measuredHeight)
                     else -> Rect(0, 0, 0, 0)
                 }
+                frontView.translationX = f
+                xOffset = f
             }
             interpolator = SpringInterpolator()
-            duration = 350L
+            duration = 420L
             onEnd {
                 backView.clipBounds = Rect(0, 0, 0, 0)
                 backView.visibility = GONE
             }
-        }.start()
-        frontView.animate().translationX(0f).setInterpolator(SpringInterpolator()).setListener(null).duration = 350L
+            start()
+        }
     }
 
     private fun sashayAway(direction: Int) {
-        ValueAnimator.ofFloat(frontView.translationX, measuredWidth * direction.toFloat()).apply {
+        currentAnimator?.cancel()
+        currentAnimator = ValueAnimator.ofFloat(frontView.translationX, measuredWidth * direction.toFloat()).apply {
             addUpdateListener {
                 val f = it.animatedValue as Float
                 if (direction == 1)
@@ -106,11 +117,13 @@ class SwipeableLayout(
                 else
                     backView.clipBounds = Rect(f.toInt() + measuredWidth, 0, measuredWidth, measuredHeight)
                 frontView.translationX = f
+                xOffset = f
             }
             interpolator = DecelerateInterpolator()
             duration = 110L
             addListener(onAnimEndListener)
-        }.start()
+            start()
+        }
     }
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
@@ -118,6 +131,7 @@ class SwipeableLayout(
             MotionEvent.ACTION_MOVE -> {
                 xOffset = ev.x - initX
                 parent.requestDisallowInterceptTouchEvent(true)
+                currentAnimator?.cancel()
                 frontView.translationX = xOffset
                 backView.clipBounds =
                     if (xOffset > 0) {
@@ -130,6 +144,7 @@ class SwipeableLayout(
                         closeIcon.translationY = (measuredHeight - dp(32)) / 2
                         Rect(measuredWidth + xOffset.toInt() - cornerRadiusCompensation.toInt(), 0, measuredWidth, measuredHeight)
                     }
+                backView.visibility = VISIBLE
                 return true
             }
             MotionEvent.ACTION_UP -> {
@@ -171,7 +186,7 @@ class SwipeableLayout(
         } else true
         else -> {
             if (ev.action == MotionEvent.ACTION_DOWN) {
-                initX = ev.x
+                initX = ev.x - xOffset
                 initY = ev.y
                 backView.visibility = VISIBLE
             }

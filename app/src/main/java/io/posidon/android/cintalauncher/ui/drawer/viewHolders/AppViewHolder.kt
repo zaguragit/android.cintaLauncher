@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.ViewTarget
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
+import io.posidon.android.cintalauncher.data.feed.items.formatForAppCard
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
@@ -27,7 +28,6 @@ import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter.Companion.APP_ITEM
 import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
 import posidon.android.conveniencelib.toBitmap
-
 
 class AppViewHolder(
     val card: CardView
@@ -94,7 +94,7 @@ fun bindAppViewHolder(
     holder.notificationView.setTextColor(ColorTheme.textColorForBG(holder.itemView.context, backgroundColor))
 
     val notifications = (item as? App)?.getNotifications()
-    val notification = notifications?.filter { it.description != null }?.let(FeedSorter::getMostRelevant)
+    val notification = notifications?.let(FeedSorter::getMostRelevant)
     if (notification == null) {
         holder.iconSmall.isVisible = false
         holder.notificationView.isVisible = false
@@ -106,7 +106,7 @@ fun bindAppViewHolder(
         holder.notificationView.isVisible = true
         holder.icon.isVisible = false
         holder.iconSmall.setImageDrawable(item.icon)
-        holder.notificationView.text = notification.description
+        holder.notificationView.text = notification.formatForAppCard(item)
         val image = (notification as? FeedItemWithBigImage)?.image
         if (image == null) holder.imageView.isVisible = false
         else {

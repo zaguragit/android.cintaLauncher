@@ -11,15 +11,14 @@
         android:layout_height="1dp"
         android:layout_marginBottom="@dimen/feed_card_padding_vertical"/>
     <LinearLayout
+        style="@style/Theme.CintaLauncher.FeedCard.Header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical">
         <ImageView
             style="@style/Theme.CintaLauncher.FeedCard.SourceIcon"
-            android:id="@+id/icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"/>
+            android:id="@+id/icon"/>
         <TextView
             style="@style/Theme.CintaLauncher.FeedCard.Source"
             android:id="@+id/source"

@@ -32,17 +32,15 @@ object NotificationCreator {
         return n.notification.color
     }
 
-    inline fun getTitle(context: Context, n: StatusBarNotification, extras: Bundle): CharSequence? {
-        var title = extras.getCharSequence(Notification.EXTRA_TITLE)
+    inline fun getTitle(extras: Bundle): CharSequence? {
+        val title = extras.getCharSequence(Notification.EXTRA_TITLE)
         if (title == null || title.toString().replace(" ", "").isEmpty()) {
-            try { title = context.packageManager.getApplicationLabel(context.packageManager.getApplicationInfo(n.packageName, 0)) }
-            catch (e: Exception) { e.printStackTrace() }
+            return null
         }
         return title
     }
 
     inline fun getText(extras: Bundle): CharSequence? {
-        //if (isSummary) return extras.getCharSequence(Notification.EXTRA_TEXT)
         val messages = extras.getParcelableArray(Notification.EXTRA_MESSAGES)
         return if (messages == null) {
             extras.getCharSequence(Notification.EXTRA_BIG_TEXT)
@@ -88,8 +86,12 @@ object NotificationCreator {
 
         val extras = notification.notification.extras
 
-        val title = getTitle(context, notification, extras)
-        val text = getText(extras)
+        var title = getTitle(extras)
+        var text = getText(extras)
+        if (title == null) {
+            title = text
+            text = null
+        }
         val icon = getSmallIcon(context, notification)
         val source = getSource(context, notification)
 
@@ -133,7 +135,7 @@ object NotificationCreator {
         if (importance == -1) {
             return object : FeedItemSmall {
                 override val color = color
-                override val title = title.toString()
+                override val title = title?.toString() ?: ""
                 override val sourceIcon = icon
                 override val description = text?.toString()
                 override val source = source
@@ -166,7 +168,7 @@ object NotificationCreator {
                 override val progress = progress
                 override val isIntermediate = intermediate
                 override val color = color
-                override val title = title.toString()
+                override val title = title?.toString() ?: ""
                 override val sourceIcon = icon
                 override val description = text?.toString()
                 override val source = source
@@ -199,7 +201,7 @@ object NotificationCreator {
             return object : FeedItemWithBigImage {
                 override val image: Drawable = bigPic
                 override val color = color
-                override val title = title.toString()
+                override val title = title?.toString() ?: ""
                 override val sourceIcon = icon
                 override val description = text?.toString()
                 override val source = source
@@ -228,7 +230,7 @@ object NotificationCreator {
 
         return object : FeedItem {
             override val color = color
-            override val title = title.toString()
+            override val title = title?.toString() ?: ""
             override val sourceIcon = icon
             override val description = text?.toString()
             override val source = source

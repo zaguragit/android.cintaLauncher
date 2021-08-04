@@ -26,9 +26,8 @@ class App(
     override val icon: Drawable
 ) : LauncherItem {
 
-    fun getNotifications(): List<FeedItem> {
-        return NotificationService.notifications.filter { it.meta?.sourcePackageName == packageName }
-    }
+    inline fun getNotifications(): List<FeedItem> =
+        NotificationService.notifications.filter { it.meta?.sourcePackageName == packageName }
 
     override fun open(context: Context, view: View?) {
         try {

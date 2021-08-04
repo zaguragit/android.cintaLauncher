@@ -33,7 +33,7 @@ open class FeedItemViewHolder(itemView: View) : RecyclerView.ViewHolder(Swipeabl
         shape = GradientDrawable.RECTANGLE
         setSize(itemView.dp(1).toInt(), 0)
     }
-    val actions = itemView.findViewById<RecyclerView>(R.id.actions_recycler)!!.apply {
+    val actions = actionsContainer.findViewById<RecyclerView>(R.id.actions_recycler)!!.apply {
         layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         addItemDecoration(DividerItemDecorator(itemView.context, DividerItemDecoration.HORIZONTAL, separatorDrawable))
         setOnTouchListener { v, _ ->
@@ -54,15 +54,15 @@ fun bindFeedItemViewHolder(
 ) {
     holder.swipeableLayout.reset()
     holder.title.text = item.title
+    applyIfNotNull(holder.description, item.description, TextView::setText)
     applyIfNotNull(holder.icon, item.sourceIcon, ImageView::setImageDrawable)
     applyIfNotNull(holder.source, item.source, TextView::setText)
-    applyIfNotNull(holder.description, item.description, TextView::setText)
     holder.itemView.setOnClickListener(item::onTap)
     holder.icon.imageTintList = if (item.shouldTintIcon) ColorStateList.valueOf(color) else null
     if (item.actions.isEmpty()) {
-        holder.actions.isVisible = false
+        holder.actionsContainer.isVisible = false
     } else {
-        holder.actions.isVisible = true
+        holder.actionsContainer.isVisible = true
         val bg = ColorTheme.actionButtonBG(item.color.let { if (it == 0) ColorTheme.accentColor else it })
         holder.actionsContainer.setCardBackgroundColor(bg)
         val fg = ColorTheme.actionButtonFG(bg)
@@ -84,8 +84,9 @@ fun styleFeedItemViewHolder(
     holder.title.setTextColor(ColorTheme.uiTitle)
     holder.description.setTextColor(ColorTheme.uiDescription)
     holder.time.setTextColor(ColorTheme.uiDescription)
-    holder.swipeableLayout.setSwipeColor(ColorTheme.cardBG)
-    holder.swipeableLayout.setIconColor(ColorTheme.cardTitle)
+    val bg = (ColorTheme.uiBG and 0xff000000.toInt()) or (ColorTheme.accentColor and 0x00ffffff)
+    holder.swipeableLayout.setSwipeColor(bg)
+    holder.swipeableLayout.setIconColor(ColorTheme.titleColorForBG(holder.itemView.context, bg))
 }
 
 inline fun <T: View, R> applyIfNotNull(view: T, value: R, block: (T, R) -> Unit) {
