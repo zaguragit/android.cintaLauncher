@@ -32,7 +32,6 @@
     <!-- swipe up indicator -->
 
     <LinearLayout
-        style="@style/Theme.CintaLauncher.Summary"
         android:id="@+id/summary_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

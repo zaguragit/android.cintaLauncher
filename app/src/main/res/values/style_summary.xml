@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.CintaLauncher.Summary" parent="Theme.CintaLauncher">
-        <item name="cardBackgroundColor">@color/default_card_bg</item>
-        <item name="cardCornerRadius">@dimen/feed_card_radius</item>
-    </style>
 
     <style name="Theme.CintaLauncher.SummaryItem.Container" parent="Theme.CintaLauncher">
         <item name="android:padding">6dp</item>
@@ -32,7 +28,7 @@
     <style name="Theme.CintaLauncher.MediaSummaryItem.Container" parent="Theme.CintaLauncher">
         <item name="cardCornerRadius">@dimen/item_card_radius</item>
 
-        <item name="cardElevation">2dp</item>
+        <item name="cardElevation">@dimen/item_card_elevation</item>
         <item name="cardUseCompatPadding">true</item>
     </style>
 

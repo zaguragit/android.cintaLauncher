@@ -5,7 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.lookerupper.data.results.*
-import io.posidon.android.lookerupper.ui.viewHolders.*
+import io.posidon.android.lookerupper.ui.viewHolders.AppSearchViewHolder
+import io.posidon.android.lookerupper.ui.viewHolders.ContactSearchViewHolder
+import io.posidon.android.lookerupper.ui.viewHolders.SearchViewHolder
+import io.posidon.android.lookerupper.ui.viewHolders.ShortcutSearchViewHolder
+import io.posidon.android.lookerupper.ui.viewHolders.instantAnswer.AnswerSearchViewHolder
 
 class SearchAdapter(val navbarHeight: Int) : RecyclerView.Adapter<SearchViewHolder>() {
     private var results = emptyList<SearchResult>()

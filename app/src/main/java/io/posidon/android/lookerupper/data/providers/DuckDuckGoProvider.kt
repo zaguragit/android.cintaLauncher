@@ -4,7 +4,7 @@ import android.app.Activity
 import io.posidon.android.lookerupper.data.SearchQuery
 import io.posidon.android.lookerupper.data.Searcher
 import io.posidon.android.lookerupper.data.results.InstantAnswerResult
-import posidon.android.loader.DuckInstantAnswer
+import posidon.android.loader.duckduckgo.DuckInstantAnswer
 
 class DuckDuckGoProvider(searcher: Searcher) : AsyncSearchProvider(searcher) {
 
@@ -21,7 +21,8 @@ class DuckDuckGoProvider(searcher: Searcher) : AsyncSearchProvider(searcher) {
                         it.description,
                         it.sourceName,
                         it.sourceUrl,
-                        it.searchUrl
+                        it.searchUrl,
+                        it.infoTable?.filter { a -> a.dataType == "string" }?.map { a -> a.label + ':' to a.value }?.takeIf(List<*>::isNotEmpty)
                     )
                 ))
             }

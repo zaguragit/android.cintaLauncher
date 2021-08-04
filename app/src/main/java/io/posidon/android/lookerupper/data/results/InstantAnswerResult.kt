@@ -14,6 +14,7 @@ class InstantAnswerResult(
     val sourceName: String,
     val sourceUrl: String,
     val searchUrl: String,
+    val infoTable: List<Pair<String, String>>?
 ) : SearchResult {
     override var relevance = Relevance(max(
         FuzzySearch.tokenSortPartialRatio(query.toString(), title),
