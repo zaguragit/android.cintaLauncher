@@ -48,18 +48,43 @@ class MediaSummaryViewHolder(
             val b = c.toBitmap()
             val paint = Paint().apply {
                 this.shader = LinearGradient(
-                    0f,
-                    0f,
                     b.width.toFloat() / 2f,
                     0f,
-                    0,
-                    0xff000000.toInt(),
+                    b.width.toFloat(),
+                    0f,
+                    intArrayOf(
+                        0,
+                        0x33000000.toInt(),
+                        0x88000000.toInt(),
+                        0xdd000000.toInt(),
+                        0xff000000.toInt()
+                    ),
+                    floatArrayOf(
+                        0f, .25f, .5f, .75f, 1f
+                    ),
                     Shader.TileMode.CLAMP
                 )
                 this.xfermode = PorterDuff.Mode.DST_IN.toXfermode()
             }
-            val bitmap = Bitmap.createBitmap(b).applyCanvas {
-                drawRect(0f, 0f, width.toFloat(), width.toFloat(), paint)
+            val paint2 = Paint().apply {
+                this.shader = LinearGradient(
+                    0f,
+                    0f,
+                    b.width.toFloat() * 1.5f,
+                    0f,
+                    0,
+                    summary.color,
+                    Shader.TileMode.CLAMP
+                )
+                this.alpha = 100
+                this.xfermode = PorterDuff.Mode.DST_OVER.toXfermode()
+            }
+            val w = b.width * 1.5f
+            val bitmap = Bitmap.createBitmap(w.toInt(), b.height, b.config).applyCanvas {
+                val x = (width - b.width).toFloat()
+                drawBitmap(b, x, 0f, paint2)
+                drawRect(x, 0f, b.width.toFloat(), height.toFloat(), paint)
+                drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint2)
             }
             cover.setImageBitmap(bitmap)
         }

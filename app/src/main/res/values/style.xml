@@ -22,7 +22,7 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:fontFamily">@font/barlow_regular</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingStart">32dp</item>
     </style>
 
     <style name="Theme.CintaLauncher.Date" parent="Theme.CintaLauncher">
@@ -30,7 +30,7 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:fontFamily">@font/barlow_regular</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingStart">34dp</item>
     </style>
 
     <style name="Theme.CintaLauncher.BottomSheetPopup" parent="Theme.Design.BottomSheetDialog">

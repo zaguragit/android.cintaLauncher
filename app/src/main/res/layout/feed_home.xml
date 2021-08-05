@@ -7,18 +7,21 @@
     android:orientation="vertical"
     android:id="@+id/vertical">
     <TextClock
+        android:id="@+id/week_day"
         style="@style/Theme.CintaLauncher.WeekDay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:format24Hour="cccc"
         android:format12Hour="cccc"/>
     <TextClock
+        android:id="@+id/time"
         style="@style/Theme.CintaLauncher.Time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:format24Hour="H:mm"
         android:format12Hour="h:mm"/>
     <TextClock
+        android:id="@+id/date"
         style="@style/Theme.CintaLauncher.Date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +30,8 @@
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:visibility="invisible"/>
 
     <!-- swipe up indicator -->
 

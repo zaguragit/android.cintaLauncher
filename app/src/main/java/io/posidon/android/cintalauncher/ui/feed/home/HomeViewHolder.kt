@@ -26,11 +26,15 @@ import io.posidon.android.lookerupper.ui.SearchActivity
 import posidon.android.conveniencelib.dp
 
 class HomeViewHolder(
-    scrollIndicator: ImageView,
+    val scrollIndicator: ImageView,
     parentView: ViewGroup,
     val launcherActivity: LauncherActivity,
     itemView: View,
 ) : RecyclerView.ViewHolder(itemView) {
+
+    val weekDay = itemView.findViewById<TextView>(R.id.week_day)!!
+    val time = itemView.findViewById<TextView>(R.id.time)!!
+    val date = itemView.findViewById<TextView>(R.id.date)!!
 
     val summaryCard = itemView.findViewById<View>(R.id.summary_card)!!
     val summaryAdapter = SummaryAdapter()
@@ -111,4 +115,8 @@ fun bindHomeViewHolder(
     holder.searchIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
     holder.searchText.setTextColor(ColorTheme.searchBarFG)
     holder.blurBG.drawable = acrylicBlur?.smoothBlur?.let { BitmapDrawable(holder.itemView.resources, it) }
+    holder.time.setTextColor(ColorTheme.uiTitle)
+    holder.date.setTextColor(ColorTheme.uiDescription)
+    holder.weekDay.setTextColor(ColorTheme.uiDescription)
+    holder.scrollIndicator.imageTintList = ColorStateList.valueOf(ColorTheme.uiHint)
 }
