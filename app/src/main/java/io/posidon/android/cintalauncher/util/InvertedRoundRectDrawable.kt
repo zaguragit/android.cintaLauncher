@@ -12,30 +12,30 @@ class InvertedRoundRectDrawable(
      * Border/padding around the transparent area
      */
     private val border: Float,
-    color: Int,
-    contentColor: Int? = null
+    outerColor: Int,
+    innerColor: Int? = null
 ) : Drawable() {
 
-    var color = color
+    var outerColor = outerColor
         set(value) {
             field = value
-            paint.color = value
+            outerPaint.color = value
         }
 
-    var contentColor = contentColor
+    var innerColor = innerColor
         set(value) {
             field = value
-            paint2.color = value ?: 0
+            innerPaint.color = value ?: 0
         }
 
-    private var paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    val outerPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
-        this.color = this@InvertedRoundRectDrawable.color
+        this.color = this@InvertedRoundRectDrawable.outerColor
     }
 
-    private var paint2: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    val innerPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         isAntiAlias = true
-        contentColor?.let {
+        innerColor?.let {
             this.color = it
         }
     }
@@ -62,22 +62,22 @@ class InvertedRoundRectDrawable(
 
         val s = canvas.save()
         canvas.clipPath(path)
-        canvas.drawPaint(paint)
+        canvas.drawPaint(outerPaint)
 
-        contentColor?.let {
+        innerColor?.let {
             canvas.restoreToCount(s)
             path.fillType = Path.FillType.EVEN_ODD
             canvas.clipPath(path)
-            canvas.drawPaint(paint2)
+            canvas.drawPaint(innerPaint)
         }
     }
 
     override fun setAlpha(alpha: Int) {
-        paint.alpha = alpha
+        outerPaint.alpha = alpha
     }
 
     override fun setColorFilter(colorFilter: ColorFilter?) {
-        paint.colorFilter = colorFilter
+        outerPaint.colorFilter = colorFilter
     }
 
     override fun getOpacity(): Int {

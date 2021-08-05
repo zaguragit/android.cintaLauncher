@@ -7,10 +7,10 @@
     <color name="feed_card_text_dark_description">#d2000000</color>
     <color name="feed_card_text_dark_hint">#55000000</color>
     <color name="feed_card_text_light_title">#ffe2e2e2</color>
-    <color name="feed_card_text_light_description">#d2e0e0e0</color>
-    <color name="feed_card_text_light_hint">#55e0e0e0</color>
+    <color name="feed_card_text_light_description">#d2e2e2e2</color>
+    <color name="feed_card_text_light_hint">#55e2e2e2</color>
     <color name="accent">#ff9249</color>
-    <color name="feed_bg">#88121212</color>
+    <color name="feed_bg">#bc252525</color>
 
     <color name="drawer_bg">@color/card_bg_dark</color>
     <color name="drawer_bottom_bar">#dd252525</color>

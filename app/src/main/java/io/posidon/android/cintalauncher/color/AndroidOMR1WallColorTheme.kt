@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.graphics.ColorUtils
 import io.posidon.android.cintalauncher.R
 import posidon.android.conveniencelib.Colors
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
@@ -50,20 +51,24 @@ class AndroidOMR1WallColorTheme(
 
     override val appDrawerColor = run {
         val rgb = primary.toArgb()
-        val hsl = FloatArray(3)
-        ColorUtils.colorToHSL(rgb, hsl)
+        val lab = DoubleArray(3)
+        ColorUtils.colorToLAB(rgb, lab)
         val lum = Colors.getLuminance(rgb)
         when {
-            lum > .7f -> {
-                val oldL = hsl[2]
-                hsl[2] = oldL.coerceAtLeast(.89f)
-                val ld = hsl[2] - oldL
-                hsl[1] *= 1f + ld * 1.6f
+            lum > .6f -> {
+                val oldL = lab[0]
+                lab[0] = lab[0].coerceAtLeast(89.0)
+                val ld = lab[0] - oldL
+                lab[1] *= 1.0 + ld / 100 * 1.6
+                lab[2] *= 1.0 + ld / 100 * 1.6
             }
-            lum > .4f -> hsl[2] = hsl[2].coerceAtMost(.26f)
-            else -> hsl[2] = hsl[2].coerceAtMost(.09f)
+            else -> {
+                lab[0] = lab[0].coerceAtMost(5.0 - abs(lab[1]) / 128 + lab[2].coerceAtMost(0.0) / 128)
+                lab[1] = (lab[1] / 3.0).coerceAtLeast(-50.0).coerceAtMost(50.0)
+                lab[2] = (lab[2] / 3.0).coerceAtLeast(-45.0).coerceAtMost(70.0)
+            }
         }
-        ColorUtils.HSLToColor(hsl)
+        ColorUtils.LABToColor(lab[0], lab[1], lab[2])
     }
 
     override val appDrawerBottomBarColor = run {
@@ -102,6 +107,18 @@ class AndroidOMR1WallColorTheme(
         }
         hsl
     })
+
+    override val scrollBarDefaultBG = run {
+        val rgb = primary.toArgb()
+        val lab = DoubleArray(3)
+        ColorUtils.colorToLAB(rgb, lab)
+        val drawerLab = DoubleArray(3)
+        ColorUtils.colorToLAB(appDrawerColor, lab)
+        lab[0] = lab[0].coerceAtMost(drawerLab[0] - 5.0)
+        ColorUtils.LABToColor(lab[0], lab[1], lab[2])
+    }
+
+    override val scrollBarTintBG = scrollBarDefaultBG and 0x00ffffff or 0xcc000000.toInt()
 
     override val searchBarBG = appDrawerItemBase
 

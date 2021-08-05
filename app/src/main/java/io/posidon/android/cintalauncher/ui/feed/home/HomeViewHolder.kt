@@ -2,6 +2,7 @@ package io.posidon.android.cintalauncher.ui.feed.home
 
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.drawable.BitmapDrawable
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,9 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.providers.summary.NotificationSummariesProvider
 import io.posidon.android.cintalauncher.ui.LauncherActivity
+import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.feed.home.summary.SummaryAdapter
+import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.lookerupper.ui.SearchActivity
 import posidon.android.conveniencelib.dp
@@ -50,8 +53,9 @@ class HomeViewHolder(
             )
         }
     }
-    val searchIcon = itemView.findViewById<ImageView>(R.id.search_bar_icon)!!
-    val searchText = itemView.findViewById<TextView>(R.id.search_bar_text)!!
+    val searchIcon = searchCard.findViewById<ImageView>(R.id.search_bar_icon)!!
+    val searchText = searchCard.findViewById<TextView>(R.id.search_bar_text)!!
+    val blurBG = searchCard.findViewById<SeeThoughView>(R.id.blur_bg)!!
 
     val vertical = itemView.findViewById<LinearLayout>(R.id.vertical)!!
 
@@ -90,6 +94,11 @@ class HomeViewHolder(
             recentlyOpenedAdapter.updateItems(recent)
         }
     }
+
+    fun onScroll() {
+        blurBG.invalidate()
+        summaryAdapter.onScroll()
+    }
 }
 
 fun bindHomeViewHolder(
@@ -97,9 +106,9 @@ fun bindHomeViewHolder(
 ) {
     holder.updateSummary()
     holder.updateRecents()
-    (holder.itemView.background as InvertedRoundRectDrawable).color = ColorTheme.uiBG
-    holder.recentlyOpenedAdapter.notifyDataSetChanged()
+    (holder.itemView.background as InvertedRoundRectDrawable).outerColor = ColorTheme.uiBG
     holder.searchCard.setCardBackgroundColor(ColorTheme.searchBarBG)
     holder.searchIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
     holder.searchText.setTextColor(ColorTheme.searchBarFG)
+    holder.blurBG.drawable = acrylicBlur?.smoothBlur?.let { BitmapDrawable(holder.itemView.resources, it) }
 }

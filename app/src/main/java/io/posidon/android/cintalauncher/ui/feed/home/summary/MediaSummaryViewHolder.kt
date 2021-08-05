@@ -1,18 +1,20 @@
 package io.posidon.android.cintalauncher.ui.feed.home.summary
 
 import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
-import android.opengl.GLES30
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import com.appspell.shaderview.ShaderView
-import com.appspell.shaderview.gl.params.ShaderParamsBuilder
+import androidx.core.graphics.applyCanvas
+import androidx.core.graphics.toXfermode
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
 import io.posidon.android.cintalauncher.data.feed.summary.media.MediaSummary
+import io.posidon.android.cintalauncher.ui.acrylicBlur
+import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import posidon.android.conveniencelib.Colors
 import posidon.android.conveniencelib.toBitmap
 import posidon.android.conveniencelib.vibrate
@@ -31,62 +33,45 @@ class MediaSummaryViewHolder(
     val play = card.findViewById<ImageView>(R.id.button_play)!!
     val next = card.findViewById<ImageView>(R.id.button_next)!!
 
-    val shaderView = card.findViewById<ShaderView>(R.id.shader_view)!!
-
-    init {
-        shaderView.shaderParams = ShaderParamsBuilder()
-            .addTexture2D("albedo", textureSlot = GLES30.GL_TEXTURE0)
-            .addColor("background_color", 0)
-            .addVec2f("resolution", floatArrayOf(shaderView.width.toFloat(), shaderView.height.toFloat()))
-            .build()
-    }
-
-    private var lastCover: Drawable? = null
-    private var lastUid: String? = null
-    private var lastWidth: Int = -1
-    private var lastHeight: Int = -1
+    val blurBG = card.findViewById<SeeThoughView>(R.id.blur_bg)!!
 
     override fun onBind(summary: SummaryItem) {
         summary as MediaSummary
         title.text = summary.description
         description.text = summary.subtitle
 
+
+        val c = summary.cover
+        if (c == null)
+            cover.setImageDrawable(null)
+        else {
+            val b = c.toBitmap()
+            val paint = Paint().apply {
+                this.shader = LinearGradient(
+                    0f,
+                    0f,
+                    b.width.toFloat() / 2f,
+                    0f,
+                    0,
+                    0xff000000.toInt(),
+                    Shader.TileMode.CLAMP
+                )
+                this.xfermode = PorterDuff.Mode.DST_IN.toXfermode()
+            }
+            val bitmap = Bitmap.createBitmap(b).applyCanvas {
+                drawRect(0f, 0f, width.toFloat(), width.toFloat(), paint)
+            }
+            cover.setImageBitmap(bitmap)
+        }
+
+
         cover.setOnClickListener(summary.onTap)
         title.setOnClickListener(summary.onTap)
         description.setOnClickListener(summary.onTap)
 
-        val backgroundColor = summary.color
+        val backgroundColor = Colors.blend(summary.color, ColorTheme.appDrawerItemBase, .4f)
         val titleColor = ColorTheme.titleColorForBG(itemView.context, backgroundColor)
         val textColor = ColorTheme.textColorForBG(itemView.context, backgroundColor)
-
-        if (lastUid != summary.uid || summary.uid == null && summary.cover != lastCover) {
-            lastCover = summary.cover
-            lastUid = summary.uid
-            shaderView.shaderParams?.updateValue(
-                "albedo",
-                summary.cover?.toBitmap(duplicateIfBitmapDrawable = true),
-                textureSlot = GLES30.GL_TEXTURE0,
-                needToRecycle = false
-            )
-            shaderView.shaderParams?.updateValue(
-                "background_color",
-                floatArrayOf(
-                    Colors.red(backgroundColor) / 255f,
-                    Colors.green(backgroundColor) / 255f,
-                    Colors.blue(backgroundColor) / 255f,
-                    Colors.alpha(backgroundColor) / 255f
-                )
-            )
-        }
-
-        if (shaderView.width != lastWidth || shaderView.height != lastHeight) {
-            lastWidth = shaderView.width
-            lastHeight = shaderView.height
-            shaderView.shaderParams?.updateValue(
-                "resolution",
-                floatArrayOf(shaderView.width.toFloat(), shaderView.height.toFloat())
-            )
-        }
 
         val titleTintList = ColorStateList.valueOf(titleColor)
 
@@ -98,6 +83,8 @@ class MediaSummaryViewHolder(
         previous.imageTintList = titleTintList
         play.imageTintList = titleTintList
         next.imageTintList = titleTintList
+
+        blurBG.drawable = acrylicBlur?.fullBlur?.let { BitmapDrawable(itemView.resources, it) }
 
         play.setImageResource(if (summary.isPlaying()) R.drawable.ic_pause else R.drawable.ic_play)
 

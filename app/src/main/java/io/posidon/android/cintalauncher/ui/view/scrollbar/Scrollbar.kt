@@ -124,8 +124,12 @@ open class Scrollbar : View {
 
     val onScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            currentScrolledSectionStart = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstCompletelyVisibleItemPosition().let { controller.indexer.getSectionForPosition(it) }
-            currentScrolledSectionEnd = (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition().let { controller.indexer.getSectionForPosition(it) }
+            currentScrolledSectionStart = (recyclerView.layoutManager as LinearLayoutManager?)!!
+                .findFirstCompletelyVisibleItemPosition()
+                .let { if (it == -1) -1 else controller.indexer.getSectionForPosition(it) }
+            currentScrolledSectionEnd = (recyclerView.layoutManager as LinearLayoutManager?)!!
+                .findLastCompletelyVisibleItemPosition()
+                .let { if (it == -1) -1 else controller.indexer.getSectionForPosition(it) }
             invalidate()
         }
     }

@@ -34,6 +34,9 @@ class SwipeableLayout(
     }
 
     fun setSwipeColor(color: Int) = backView.setBackgroundColor(color)
+    fun setIconColor(value: Int) {
+        closeIcon.imageTintList = ColorStateList.valueOf(value)
+    }
 
     var isSwipeable = true
     
@@ -55,6 +58,23 @@ class SwipeableLayout(
         }
     }
 
+    fun reset() {
+        currentAnimator?.cancel()
+        frontView.translationX = 0f
+        backView.clipBounds = Rect(0, 0, 0, 0)
+        backView.visibility = GONE
+    }
+
+    private var currentAnimator: ValueAnimator? = null
+    private var state: State? = null
+
+    private class State(
+        var initX: Float = 0f,
+        var initY: Float = 0f,
+    ) {
+        var xOffset = 0f
+    }
+
     private val onAnimEndListener = object : Animator.AnimatorListener {
         private var isCanceled = false
         override fun onAnimationRepeat(animation: Animator?) {}
@@ -65,6 +85,8 @@ class SwipeableLayout(
             isCanceled = false
         }
         override fun onAnimationEnd(animation: Animator?) {
+            state = null
+            currentAnimator = null
             if (isCanceled) return
             if (isSwipeable) {
                 onSwipeAway?.invoke(this@SwipeableLayout)
@@ -73,20 +95,9 @@ class SwipeableLayout(
         }
     }
 
-    private var initX = 0f
-    private var initY = 0f
-    private var xOffset = 0f
-
-    fun reset() {
-        frontView.translationX = 0f
-        backView.clipBounds = Rect(0, 0, 0, 0)
-        backView.visibility = GONE
-    }
-
-    private var currentAnimator: ValueAnimator? = null
     private fun bounceBack() {
         currentAnimator?.cancel()
-        currentAnimator = ValueAnimator.ofFloat(xOffset, 0f).apply {
+        currentAnimator = ValueAnimator.ofFloat(state!!.xOffset, 0f).apply {
             addUpdateListener {
                 val f = it.animatedValue as Float
                 backView.clipBounds = when {
@@ -95,13 +106,15 @@ class SwipeableLayout(
                     else -> Rect(0, 0, 0, 0)
                 }
                 frontView.translationX = f
-                xOffset = f
+                state!!.xOffset = f
             }
             interpolator = SpringInterpolator()
             duration = 420L
             onEnd {
                 backView.clipBounds = Rect(0, 0, 0, 0)
                 backView.visibility = GONE
+                currentAnimator = null
+                state = null
             }
             start()
         }
@@ -117,7 +130,7 @@ class SwipeableLayout(
                 else
                     backView.clipBounds = Rect(f.toInt() + measuredWidth, 0, measuredWidth, measuredHeight)
                 frontView.translationX = f
-                xOffset = f
+                state!!.xOffset = f
             }
             interpolator = DecelerateInterpolator()
             duration = 110L
@@ -128,40 +141,40 @@ class SwipeableLayout(
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         when (ev.action) {
+            MotionEvent.ACTION_CANCEL -> bounceBack()
             MotionEvent.ACTION_MOVE -> {
-                xOffset = ev.x - initX
+                state!!.xOffset = ev.x - state!!.initX
                 parent.requestDisallowInterceptTouchEvent(true)
                 currentAnimator?.cancel()
-                frontView.translationX = xOffset
+                frontView.translationX = state!!.xOffset
                 backView.clipBounds =
-                    if (xOffset > 0) {
+                    if (state!!.xOffset > 0) {
                         closeIcon.translationX = dp(18)
                         closeIcon.translationY = (measuredHeight - dp(32)) / 2
-                        Rect(0, 0, xOffset.toInt() + cornerRadiusCompensation.toInt(), measuredHeight)
+                        Rect(0, 0, state!!.xOffset.toInt() + cornerRadiusCompensation.toInt(), measuredHeight)
                     }
                     else {
                         closeIcon.translationX = measuredWidth - dp(50)
                         closeIcon.translationY = (measuredHeight - dp(32)) / 2
-                        Rect(measuredWidth + xOffset.toInt() - cornerRadiusCompensation.toInt(), 0, measuredWidth, measuredHeight)
+                        Rect(measuredWidth + state!!.xOffset.toInt() - cornerRadiusCompensation.toInt(), 0, measuredWidth, measuredHeight)
                     }
                 backView.visibility = VISIBLE
                 return true
             }
             MotionEvent.ACTION_UP -> {
                 when {
-                    xOffset > measuredWidth/7*3 ||
-                    xOffset > dp(64) && ev.eventTime - ev.downTime < 160 -> {
+                    state!!.xOffset > measuredWidth/7*3 ||
+                            state!!.xOffset > dp(64) && ev.eventTime - ev.downTime < 160 -> {
                         if (isSwipeable) sashayAway(1)
                         else bounceBack()
                     }
-                    xOffset < -measuredWidth/7*3 ||
-                    xOffset < -dp((64)) && ev.eventTime - ev.downTime < 160 -> {
+                    state!!.xOffset < -measuredWidth/7*3 ||
+                    state!!.xOffset < -dp((64)) && ev.eventTime - ev.downTime < 160 -> {
                         if (isSwipeable) sashayAway(-1)
                         else bounceBack()
                     }
                     else -> bounceBack()
                 }
-                xOffset = 0f
                 return true
             }
         }
@@ -169,32 +182,33 @@ class SwipeableLayout(
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent) = when (ev.action) {
+        MotionEvent.ACTION_CANCEL -> {
+            bounceBack()
+            super.onInterceptTouchEvent(ev)
+        }
         MotionEvent.ACTION_MOVE -> {
-            xOffset = ev.x - initX
-            val absYOffset = abs(ev.y - initY)
-            val absXOffset = abs(xOffset)
+            state!!.xOffset = ev.x - state!!.initX
+            val absYOffset = abs(ev.y - state!!.initY)
+            val absXOffset = abs(state!!.xOffset)
             if (abs(absXOffset - absYOffset) > context.dp(2) && absXOffset > absYOffset && !(frontView is ViewGroup && checkForHorizontalScroll(ev, frontView))) {
                 true
             } else {
-                initX = ev.x
-                initY = ev.y
                 super.onInterceptTouchEvent(ev)
             }
         }
-        MotionEvent.ACTION_UP -> if (abs(xOffset) < context.dp(12) || frontView is ViewGroup && checkForHorizontalScroll(ev, frontView)) {
+        MotionEvent.ACTION_UP -> if (abs(state!!.xOffset) < context.dp(12) || frontView is ViewGroup && checkForHorizontalScroll(ev, frontView)) {
             super.onInterceptTouchEvent(ev)
         } else true
         else -> {
             if (ev.action == MotionEvent.ACTION_DOWN) {
-                initX = ev.x - xOffset
-                initY = ev.y
+                val o = (state?.xOffset ?: 0f)
+                currentAnimator?.cancel()
+                state = State(ev.x - o, ev.y)
                 backView.visibility = VISIBLE
             }
             super.onInterceptTouchEvent(ev)
         }
     }
-
-    fun setIconColor(value: Int) { closeIcon.imageTintList = ColorStateList.valueOf(value) }
 
     companion object {
         private tailrec fun checkForHorizontalScroll(ev: MotionEvent, viewGroup: ViewGroup): Boolean {

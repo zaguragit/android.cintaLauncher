@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
     buildToolsVersion = "30.0.3"
 
     defaultConfig {
         applicationId = "io.posidon.android.cintalauncher"
-        minSdkVersion(26)
-        targetSdkVersion(30)
+        minSdk = 26
+        targetSdk = 30
         versionCode = 1
         versionName = "1.0"
 
@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         this["release"].apply {
-            minifyEnabled(false)
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -34,12 +34,10 @@ android {
 
 dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
-    implementation("com.appspell:ShaderView:0.8.2")
     implementation("io.posidon:android.launcherUtils:master-SNAPSHOT")
     implementation("io.posidon:android.loader:master-SNAPSHOT")
     implementation("io.posidon:android.convenienceLib:master-SNAPSHOT")
     implementation("com.willowtreeapps:fuzzywuzzy-kotlin-jvm:0.9.0")
-    implementation("com.pixplicity.sharp:library:1.1.0")
     implementation("androidx.palette:palette-ktx:1.0.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.21")
     implementation("androidx.core:core-ktx:1.6.0")

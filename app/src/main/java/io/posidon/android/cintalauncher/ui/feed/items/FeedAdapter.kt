@@ -121,6 +121,13 @@ class FeedAdapter(
         homeViewHolder?.updateRecents()
     }
 
+    fun onScroll(scrollY: Int) {
+        val h = homeViewHolder
+        if (h != null && scrollY < h.itemView.height) {
+            h.onScroll()
+        }
+    }
+
     companion object {
         private const val TYPE_HOME = 0
         private const val TYPE_PLAIN = 1

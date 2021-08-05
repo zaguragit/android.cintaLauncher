@@ -17,10 +17,10 @@ const val COLOR_THEME_DEFAULT = COLOR_THEME_WALLPAPER_TINT
 
 
 val Settings.scrollbarController: Int
-    get() = get(KEY_SCROLLBAR_CONTROLLER, COLOR_THEME_DEFAULT)
+    get() = get(KEY_SCROLLBAR_CONTROLLER, SCROLLBAR_CONTROLLER_DEFAULT)
 
 var Settings.SettingsEditor.scrollbarController: Int
-    get() = settings[KEY_SCROLLBAR_CONTROLLER, COLOR_THEME_DEFAULT]
+    get() = settings[KEY_SCROLLBAR_CONTROLLER, SCROLLBAR_CONTROLLER_DEFAULT]
     set(value) = KEY_SCROLLBAR_CONTROLLER set value
 
 private const val KEY_SCROLLBAR_CONTROLLER = "scrollbar_controller"

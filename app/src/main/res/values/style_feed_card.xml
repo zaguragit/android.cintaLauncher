@@ -56,9 +56,11 @@
     </style>
 
     <style name="Theme.CintaLauncher.FeedCard.Actions.Container" parent="Theme.CintaLauncher">
-        <item name="android:layout_marginHorizontal">@dimen/feed_card_spacing</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="cardCornerRadius">6dp</item>
+        <item name="cardElevation">@dimen/item_card_elevation</item>
+        <item name="cardPreventCornerOverlap">true</item>
+        <item name="cardUseCompatPadding">true</item>
     </style>
 
     <style name="Theme.CintaLauncher.FeedCard.Action.Container" parent="Theme.CintaLauncher">

@@ -7,7 +7,7 @@ import android.content.Intent
 import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.Bitmap
+import android.graphics.*
 import android.graphics.drawable.*
 import android.os.Build
 import android.os.Bundle
@@ -41,11 +41,15 @@ import io.posidon.android.cintalauncher.ui.view.scrollbar.alphabet.AlphabetScrol
 import io.posidon.android.cintalauncher.ui.view.scrollbar.hue.HueScrollbarController
 import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.cintalauncher.util.StackTraceActivity
+import io.posidon.android.cintalauncher.util.blur.AcrylicBlur
 import io.posidon.android.launcherutils.AppLoader
 import io.posidon.android.launcherutils.GestureNavContract
 import io.posidon.android.launcherutils.LiveWallpaper
 import posidon.android.conveniencelib.*
 import kotlin.concurrent.thread
+
+var acrylicBlur: AcrylicBlur? = null
+    private set
 
 class LauncherActivity : FragmentActivity() {
 
@@ -87,9 +91,7 @@ class LauncherActivity : FragmentActivity() {
         feedAdapter.setHasStableIds(true)
         feedRecycler.setItemViewCacheSize(20)
         feedRecycler.adapter = feedAdapter
-        val r = resources.getDimension(R.dimen.dock_corner_radius)
-        findViewById<View>(R.id.home_container).foreground = InvertedRoundRectDrawable(
-            floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r), 0f, 0xff000000.toInt())
+        feedRecycler.setOnScrollChangeListener { _, _, scrollY, _, _ -> feedAdapter.onScroll(scrollY) }
 
         feed.init(settings, notificationProvider, RssProvider, onUpdate = this::loadFeed) {
             runOnUiThread {
@@ -128,15 +130,51 @@ class LauncherActivity : FragmentActivity() {
             runOnUiThread(::updateBlur)
             return@thread
         }
-        val b = wallpaperManager.drawable.toBitmap(Device.screenWidth(this) / 3, Device.screenHeight(this) / 3)
-        blurBitmap = Graphics.fastBlur(b, dp(1).toInt())
-        runOnUiThread(::updateBlur)
+        AcrylicBlur.blurWallpaper(this, wallpaperManager.drawable) {
+            acrylicBlur = it
+            blurBitmap = it.fullBlur
+            runOnUiThread(::updateBlur)
+        }
     }
 
     private fun updateBlur() {
+        val b = acrylicBlur
+        val r = resources.getDimension(R.dimen.dock_corner_radius)
+        if (b == null) {
+            blurBG.background = null
+            scrollBarContainer.background = ColorDrawable(ColorTheme.scrollBarDefaultBG)
+            findViewById<View>(R.id.home_container).foreground = InvertedRoundRectDrawable(
+                floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r), 0f, ColorTheme.scrollBarDefaultBG)
+            return
+        }
         blurBG.background = LayerDrawable(arrayOf(
-            BitmapDrawable(resources, blurBitmap)
-        )).apply { setLayerInsetBottom(0, -scrollBarContainer.measuredHeight) }
+            BitmapDrawable(resources, b.partialBlurSmall),
+            BitmapDrawable(resources, b.partialBlurMedium),
+            BitmapDrawable(resources, b.fullBlur),
+        )).apply {
+            setLayerInsetBottom(0, -scrollBarContainer.measuredHeight)
+            setLayerInsetBottom(1, -scrollBarContainer.measuredHeight)
+            setLayerInsetBottom(2, -scrollBarContainer.measuredHeight)
+        }
+        scrollBarContainer.background = LayerDrawable(arrayOf(
+            BitmapDrawable(resources, b.fullBlur),
+            ColorDrawable(ColorTheme.scrollBarTintBG)
+        )).apply { setLayerInsetTop(0, scrollBarContainer.measuredHeight - Device.screenHeight(this@LauncherActivity)) }
+        findViewById<View>(R.id.home_container).foreground = LayerDrawable(arrayOf(
+            InvertedRoundRectDrawable(
+                floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r),
+                0f,
+                0xff000000.toInt()
+            ).apply {
+                outerPaint.shader = BitmapShader(b.fullBlur, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+            },
+            InvertedRoundRectDrawable(
+                floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r),
+                0f,
+                ColorTheme.scrollBarTintBG
+            )
+        ))
+
     }
 
     private fun updateColorTheme(new: ColorTheme) {

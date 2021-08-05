@@ -20,6 +20,8 @@ class SummaryAdapter : RecyclerView.Adapter<SummaryViewHolder>() {
         }
     }
 
+    var mediaSummaryViewHolder: MediaSummaryViewHolder? = null
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -28,7 +30,7 @@ class SummaryAdapter : RecyclerView.Adapter<SummaryViewHolder>() {
             NOTIFICATION -> NotificationSummaryViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_summary_notification, parent, false))
             MEDIA -> MediaSummaryViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.feed_summary_media, parent, false))
+                .inflate(R.layout.feed_summary_media, parent, false)).also { mediaSummaryViewHolder = it }
             else -> throw Exception("Wrong view type")
         }
     }
@@ -43,6 +45,10 @@ class SummaryAdapter : RecyclerView.Adapter<SummaryViewHolder>() {
     fun updateSummaries(summaries: List<SummaryItem>) {
         this.summaries = summaries
         notifyDataSetChanged()
+    }
+
+    fun onScroll() {
+        mediaSummaryViewHolder?.blurBG?.invalidate()
     }
 
     companion object {

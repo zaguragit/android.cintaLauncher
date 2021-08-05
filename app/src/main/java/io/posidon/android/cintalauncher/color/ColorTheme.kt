@@ -42,6 +42,9 @@ interface ColorTheme {
     val appDrawerSectionColor: Int
     val appDrawerItemBase: Int
 
+    val scrollBarDefaultBG: Int
+    val scrollBarTintBG: Int
+
     val searchBarBG: Int
     val searchBarFG: Int
 
@@ -84,19 +87,19 @@ interface ColorTheme {
     }
 
     fun textColorForBG(context: Context, background: Int): Int {
-        return if (Colors.getLuminance(background) > .7f)
+        return if (Colors.getLuminance(background) > .6f)
             context.getColor(R.color.feed_card_text_dark_description)
         else context.getColor(R.color.feed_card_text_light_description)
     }
 
     fun titleColorForBG(context: Context, background: Int): Int {
-        return if (Colors.getLuminance(background) > .7f)
+        return if (Colors.getLuminance(background) > .6f)
             context.getColor(R.color.feed_card_text_dark_title)
         else context.getColor(R.color.feed_card_text_light_title)
     }
 
     fun hintColorForBG(context: Context, background: Int): Int {
-        return if (Colors.getLuminance(background) > .7f)
+        return if (Colors.getLuminance(background) > .6f)
             context.getColor(R.color.feed_card_text_dark_hint)
         else context.getColor(R.color.feed_card_text_light_hint)
     }
@@ -210,6 +213,10 @@ interface ColorTheme {
             get() = colorThemeInstance.appDrawerSectionColor
         override val appDrawerItemBase: Int
             get() = colorThemeInstance.appDrawerItemBase
+        override val scrollBarDefaultBG: Int
+            get() = colorThemeInstance.scrollBarDefaultBG
+        override val scrollBarTintBG: Int
+            get() = colorThemeInstance.scrollBarTintBG
         override val searchBarBG: Int
             get() = colorThemeInstance.searchBarBG
         override val searchBarFG: Int

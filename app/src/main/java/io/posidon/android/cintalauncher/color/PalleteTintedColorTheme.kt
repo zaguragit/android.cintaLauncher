@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.TintedColorTheme.Companion.tintWithSwatch
 import posidon.android.conveniencelib.Colors
 import kotlin.math.*
 
@@ -20,19 +19,39 @@ class PalleteTintedColorTheme(
         ColorUtils.HSLToColor(hsl)
     }
 
-    override val uiBG = tintWithSwatch(context, R.color.feed_bg, run {
-        val dm = wallpaper.darkMutedSwatch
-        val lm = wallpaper.lightMutedSwatch
-        val dv = wallpaper.darkVibrantSwatch
-        val lv = wallpaper.lightVibrantSwatch
-        val dom = wallpaper.dominantSwatch
-        var y = dv
-        if (y == null || dm != null && dm.population > y.population) y = dm
-        if (y == null || lm != null && lm.population > y.population) y = lm
-        if (y == null || lv != null && lv.population > y.population) y = lv
-        if (y == null || dom != null && dom.population > y.population) y = dom
-        y
-    }, 0.1f)
+    override val uiBG = run {
+        val base = context.getColor(R.color.feed_bg)
+        val swatch = run {
+            val dm = wallpaper.darkMutedSwatch
+            val lm = wallpaper.lightMutedSwatch
+            val dv = wallpaper.darkVibrantSwatch
+            val lv = wallpaper.lightVibrantSwatch
+            val dom = wallpaper.dominantSwatch
+            var y = dv
+            if (y == null || dm != null && dm.population > y.population) y = dm
+            if (y == null || lm != null && lm.population > y.population) y = lm
+            if (y == null || lv != null && lv.population > y.population) y = lv
+            if (y == null || dom != null && dom.population > y.population) y = dom
+            y
+        } ?: return@run base
+        val rgb = swatch.rgb
+        val lab = DoubleArray(3)
+        ColorUtils.colorToLAB(rgb, lab)
+        val lum = Colors.getLuminance(rgb)
+        when {
+            lum > .7f -> {
+                lab[0] = lab[0].coerceAtLeast(92.0)
+                lab[1] = (lab[1] / 3.0).coerceAtLeast(-30.0).coerceAtMost(75.0)
+                lab[2] = (lab[2] / 3.0).coerceAtLeast(-90.0).coerceAtMost(45.0)
+            }
+            else -> {
+                lab[0] = lab[0].coerceAtLeast(3.0).coerceAtMost(12.0)
+                lab[1] = (lab[1] / 3.0).coerceAtLeast(-50.0).coerceAtMost(50.0)
+                lab[2] = (lab[2] / 3.0).coerceAtLeast(-45.0).coerceAtMost(70.0)
+            }
+        }
+        ColorUtils.LABToColor(lab[0], lab[1], lab[2]) and 0xffffff or 0xbc000000.toInt()
+    }
 
     override val uiTitle = titleColorForBG(context, uiBG)
     override val uiDescription = textColorForBG(context, uiBG)
@@ -73,7 +92,11 @@ class PalleteTintedColorTheme(
                 lab[1] *= 1.0 + ld / 100 * 1.6
                 lab[2] *= 1.0 + ld / 100 * 1.6
             }
-            else -> lab[0] = lab[0].coerceAtMost(10.0)
+            else -> {
+                lab[0] = lab[0].coerceAtMost(5.0 - abs(lab[1]) / 128 + lab[2].coerceAtMost(0.0) / 128)
+                lab[1] = (lab[1] / 3.0).coerceAtLeast(-50.0).coerceAtMost(50.0)
+                lab[2] = (lab[2] / 3.0).coerceAtLeast(-45.0).coerceAtMost(70.0)
+            }
         }
         ColorUtils.LABToColor(lab[0], lab[1], lab[2])
     }
@@ -110,6 +133,18 @@ class PalleteTintedColorTheme(
         }
         hsl
     })
+
+    override val scrollBarDefaultBG = run {
+        val rgb = (wallpaper.darkMutedSwatch ?: wallpaper.darkVibrantSwatch)?.rgb ?: appDrawerColor
+        val lab = DoubleArray(3)
+        ColorUtils.colorToLAB(rgb, lab)
+        val drawerLab = DoubleArray(3)
+        ColorUtils.colorToLAB(appDrawerColor, lab)
+        lab[0] = lab[0].coerceAtMost(drawerLab[0] - 10.0)
+        ColorUtils.LABToColor(lab[0], lab[1], lab[2])
+    }
+
+    override val scrollBarTintBG = scrollBarDefaultBG and 0x00ffffff or 0xcc000000.toInt()
 
     override val searchBarBG = appDrawerItemBase
 

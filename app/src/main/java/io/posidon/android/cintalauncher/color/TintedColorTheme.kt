@@ -1,23 +1,19 @@
 package io.posidon.android.cintalauncher.color
 
 import android.content.Context
-import android.graphics.Color
 import androidx.core.graphics.ColorUtils
-import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.R
 import posidon.android.conveniencelib.Colors
 import kotlin.math.abs
-import kotlin.math.min
 
 interface TintedColorTheme : ColorTheme {
 
     override fun adjustColorForContrast(base: Int, tint: Int): Int {
         return if (Colors.getLuminance(base) > .7f) {
-            val hsv = floatArrayOf(0f, 0f, 0f)
-            Color.colorToHSV(tint, hsv)
-            hsv[2] = hsv[2].coerceAtMost(hsv[1] + .15f)
-            hsv[1] = hsv[1].coerceAtLeast(hsv[2] - .5f)
-            Color.HSVToColor(hsv)
+            val lab = DoubleArray(3)
+            ColorUtils.colorToLAB(tint, lab)
+            lab[0] = lab[0].coerceAtMost(20.0)
+            ColorUtils.LABToColor(lab[0], lab[1], lab[2])
         } else {
             val hsl = floatArrayOf(0f, 0f, 0f)
             ColorUtils.colorToHSL(tint, hsl)
@@ -69,19 +65,6 @@ interface TintedColorTheme : ColorTheme {
             ColorUtils.colorToHSL(base, baseHSL)
             tintHSL[2] = baseHSL[2]
             return ColorUtils.HSLToColor(tintHSL) and 0xffffff or (base and 0xff000000.toInt())
-        }
-
-        fun tintWithSwatch(
-            context: Context,
-            colorRes: Int,
-            swatch: Palette.Swatch?,
-            baseLightness: Float
-        ): Int {
-            val base = context.getColor(colorRes)
-            if (swatch == null) return base
-            val hsl = swatch.hsl
-            hsl[2] = min(hsl[2], baseLightness)
-            return ColorUtils.HSLToColor(hsl) and 0xffffff or (base and 0xff000000.toInt())
         }
 
         fun splitTint(base: Int, color: Int, accent: Int): Int {

@@ -1,6 +1,8 @@
 package io.posidon.android.cintalauncher.ui.drawer
 
+import android.animation.ValueAnimator
 import android.content.res.ColorStateList
+import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
@@ -68,7 +70,10 @@ class AppDrawer(
 
     val isOpen get() = view.isVisible
 
+    private var currentValueAnimator: ValueAnimator? = null
+
     fun open(v: View) {
+        if (isOpen) return
         val sbh = v.context.getStatusBarHeight()
         recycler.setPadding(recycler.paddingLeft, sbh, recycler.paddingRight, recycler.paddingBottom)
         view.isVisible = true
@@ -91,11 +96,25 @@ class AppDrawer(
             .setInterpolator(DecelerateInterpolator())
             .onEnd { view.isVisible = true }
         activity.blurBG.isVisible = true
-        activity.blurBG.animate()
-            .alpha(1f)
-            .setInterpolator(DecelerateInterpolator())
-            .setDuration(100)
-            .onEnd { activity.blurBG.isVisible = true }
+        val s = currentValueAnimator?.animatedValue as Float? ?: 0f
+        currentValueAnimator?.cancel()
+        activity.blurBG.isVisible = true
+        currentValueAnimator = ValueAnimator.ofFloat(s, 3f).apply {
+            addUpdateListener {
+                val l = activity.blurBG.background as? LayerDrawable ?: return@addUpdateListener
+                val x = it.animatedValue as Float
+                l.getDrawable(0).alpha = (255 * (x).coerceAtMost(1f)).toInt()
+                l.getDrawable(1).alpha = (255 * (x - 1f).coerceAtLeast(0f).coerceAtMost(1f)).toInt()
+                l.getDrawable(2).alpha = (255 * (x - 2f).coerceAtLeast(0f)).toInt()
+            }
+            interpolator = DecelerateInterpolator()
+            duration = 200
+            onEnd {
+                currentValueAnimator = null
+                activity.blurBG.isVisible = true
+            }
+            start()
+        }
     }
 
     fun close(v: View? = null) {
@@ -117,10 +136,24 @@ class AppDrawer(
             .setDuration(100)
             .setInterpolator(AccelerateInterpolator())
             .onEnd { view.isVisible = false }
-        activity.blurBG.animate()
-            .alpha(0f)
-            .setInterpolator(AccelerateInterpolator())
-            .setDuration(100)
-            .onEnd { activity.blurBG.isVisible = false }
+        val s = currentValueAnimator?.animatedValue as Float? ?: 3f
+        currentValueAnimator?.cancel()
+        activity.blurBG.isVisible = true
+        currentValueAnimator = ValueAnimator.ofFloat(s, 0f).apply {
+            addUpdateListener {
+                val l = activity.blurBG.background as? LayerDrawable ?: return@addUpdateListener
+                val x = it.animatedValue as Float
+                l.getDrawable(0).alpha = (255 * (x).coerceAtMost(1f)).toInt()
+                l.getDrawable(1).alpha = (255 * (x - 1f).coerceAtLeast(0f).coerceAtMost(1f)).toInt()
+                l.getDrawable(2).alpha = (255 * (x - 2f).coerceAtLeast(0f)).toInt()
+            }
+            interpolator = AccelerateInterpolator()
+            duration = 135
+            onEnd {
+                currentValueAnimator = null
+                activity.blurBG.isVisible = false
+            }
+            start()
+        }
     }
 }

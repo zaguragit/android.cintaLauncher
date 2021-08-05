@@ -24,9 +24,11 @@ class DefaultColorTheme(context: Context) : ColorTheme {
 
     override val buttonColor = context.getColor(R.color.button_bg)
 
+    override val appDrawerSectionColor = context.getColor(R.color.feed_card_text_light_description)
     override val appDrawerItemBase get() = DEFAULT_DRAWER_ITEM_BASE
 
-    override val appDrawerSectionColor = context.getColor(R.color.feed_card_text_light_description)
+    override val scrollBarDefaultBG = 0xff000000.toInt()
+    override val scrollBarTintBG = 0xcc000000.toInt()
 
     override val searchBarBG get() = appDrawerItemBase
     override val searchBarFG = textColorForBG(context, searchBarBG)
