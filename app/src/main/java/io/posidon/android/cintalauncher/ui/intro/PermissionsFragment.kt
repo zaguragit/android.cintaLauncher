@@ -44,7 +44,7 @@ class PermissionsFragment : FragmentWithNext(R.layout.intro_permissions) {
         ) {
             findViewById<View>(R.id.button_storage)!!.isVisible = false
             tickStorage.isVisible = true
-            ColorTheme.loadWallColorTheme(requireActivity() as IntroActivity) { a, _ ->
+            ColorTheme.loadWallColorTheme(requireActivity() as IntroActivity) { a ->
                 val tl = ColorStateList.valueOf(ColorTheme.accentColor)
                 tickStorage.imageTintList = tl
                 tickContacts.imageTintList = tl

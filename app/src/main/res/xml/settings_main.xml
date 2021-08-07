@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ListPreference
         app:key="color_theme"
@@ -7,9 +8,11 @@
         app:entries="@array/color_theme_gens"
         android:entryValues="@array/color_theme_gens_data"
         android:summary="%s"
-        app:defaultValue="1"/>
+        app:defaultValue="1"
+        android:icon="@drawable/ic_color_dropper"/>
     <Preference
-        app:title="@string/rss_sources">
+        app:title="@string/rss_sources"
+        android:icon="@drawable/ic_news">
         <intent
             android:targetPackage="io.posidon.android.cintalauncher"
             android:targetClass="io.posidon.android.cintalauncher.ui.settings.feedChooser.FeedSourcesChooserActivity"/>
@@ -21,10 +24,18 @@
         android:entryValues="@array/scrollbar_controllers_data"
         android:summary="%s"
         app:defaultValue="0"/>
-    <Preference
-        app:title="@string/icon_packs">
-        <intent
-            android:targetPackage="io.posidon.android.cintalauncher"
-            android:targetClass="io.posidon.android.cintalauncher.ui.settings.iconPackPicker.IconPackPickerActivity"/>
-    </Preference>
+    <PreferenceCategory
+        android:title="@string/icons">
+        <Preference
+            app:title="@string/icon_packs">
+            <intent
+                android:targetPackage="io.posidon.android.cintalauncher"
+                android:targetClass="io.posidon.android.cintalauncher.ui.settings.iconPackPicker.IconPackPickerActivity"/>
+        </Preference>
+        <SwitchPreference
+            android:title="@string/reshape_adaptive_icons"
+            android:defaultValue="false"
+            android:key="icons:reshape_adaptive"
+            android:summary="@string/reshape_adaptive_icons_explanation"/>
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -1,5 +1,6 @@
 package io.posidon.android.cintalauncher.ui.drawer.viewHolders
 
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import android.widget.TextView
@@ -24,13 +25,16 @@ import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
 import io.posidon.android.cintalauncher.providers.FeedSorter
+import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter.Companion.APP_ITEM
 import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
+import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import posidon.android.conveniencelib.toBitmap
 
 class AppViewHolder(
-    val card: CardView
+    val card: CardView,
+    val map: HashMap<LauncherItem, () -> Unit>
 ) : RecyclerView.ViewHolder(card) {
     val icon = itemView.findViewById<ImageView>(R.id.icon_image)!!
     val label = itemView.findViewById<TextView>(R.id.icon_text)!!
@@ -38,6 +42,8 @@ class AppViewHolder(
     val iconSmall = itemView.findViewById<ImageView>(R.id.icon_image_small)!!
     val notificationView = itemView.findViewById<TextView>(R.id.icon_notifications)!!
     val imageView = itemView.findViewById<ImageView>(R.id.background_image)!!
+
+    val blurBG = itemView.findViewById<SeeThoughView>(R.id.blur_bg)!!
 
     val requestOptions = RequestOptions()
         .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -86,6 +92,9 @@ fun bindAppViewHolder(
     suggestionsManager: AppSuggestionsManager,
     navbarHeight: Int,
 ) {
+    holder.blurBG.drawable = BitmapDrawable(holder.itemView.resources, acrylicBlur?.smoothBlur)
+    holder.map[item] = holder.blurBG::invalidate
+
     val backgroundColor = ColorTheme.tintAppDrawerItem(item.getColor())
     holder.card.setCardBackgroundColor(backgroundColor)
     holder.card.alpha = if (isDimmed) .3f else 1f

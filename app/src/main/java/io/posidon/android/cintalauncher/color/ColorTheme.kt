@@ -13,8 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.storage.COLOR_THEME_WALLPAPER_TINT
-import io.posidon.android.cintalauncher.storage.COLOR_THEME_WALLPAPER_TINT_SYSTEM_ASSISTED
+import io.posidon.android.cintalauncher.storage.ColorThemeSetting
 import posidon.android.conveniencelib.Colors
 import posidon.android.conveniencelib.Device
 import posidon.android.conveniencelib.toBitmap
@@ -115,14 +114,16 @@ interface ColorTheme {
             }
         }
         
-        fun <A : Activity> loadWallColorTheme(activity: A, onFinished: (A, ColorTheme) -> Unit) {
+        fun <A : Activity> loadWallColorTheme(activity: A, onFinished: (A) -> Unit) {
             if (ActivityCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED) {
                 if (colorThemeInstance !is DefaultColorTheme) {
                     colorThemeInstance = DefaultColorTheme(activity)
-                    onFinished(activity, colorThemeInstance)
+                    activity.runOnUiThread {
+                        onFinished(activity)
+                    }
                 }
                 return
             }
@@ -132,11 +133,12 @@ interface ColorTheme {
                 min(d.intrinsicWidth, Device.screenWidth(activity) / 4),
                 min(d.intrinsicHeight, Device.screenHeight(activity) / 4)
             )
-            Palette.from(wall).generate {
-                val newColorTheme = it?.let { p -> PalleteTintedColorTheme(p, activity) } ?: DefaultColorTheme(activity)
-                if (newColorTheme != colorThemeInstance) {
-                    colorThemeInstance = newColorTheme
-                    onFinished(activity, newColorTheme)
+            val pallete = Palette.from(wall).generate()
+            val newColorTheme = PalleteTintedColorTheme(pallete, activity)
+            if (newColorTheme != colorThemeInstance) {
+                colorThemeInstance = newColorTheme
+                activity.runOnUiThread {
+                    onFinished(activity)
                 }
             }
         }
@@ -144,17 +146,21 @@ interface ColorTheme {
         @RequiresApi(Build.VERSION_CODES.O_MR1)
         fun <A : Activity> loadSystemWallColorTheme(
             activity: A,
-            onFinished: (A, ColorTheme) -> Unit,
+            onFinished: (A) -> Unit,
             colors: WallpaperColors
         ) {
             colorThemeInstance = AndroidOMR1WallColorTheme(activity, colors)
-            onFinished(activity, colorThemeInstance)
+            activity.runOnUiThread {
+                onFinished(activity)
+            }
         }
 
-        private fun <A : Activity> loadDefaultColorTheme(activity: A, onFinished: (A, ColorTheme) -> Unit) {
+        private fun <A : Activity> loadDefaultColorTheme(activity: A, onFinished: (A) -> Unit) {
             if (colorThemeInstance !is DefaultColorTheme) {
                 colorThemeInstance = DefaultColorTheme(activity)
-                onFinished(activity, colorThemeInstance)
+                activity.runOnUiThread {
+                    onFinished(activity)
+                }
             }
         }
 
@@ -162,15 +168,15 @@ interface ColorTheme {
         fun <A : Activity> onColorsChanged(
             activity: A,
             colorTheme: Int,
-            onFinished: (A, ColorTheme) -> Unit,
+            onFinished: (A) -> Unit,
             colors: () -> WallpaperColors?,
         ) {
             when (colorTheme) {
-                COLOR_THEME_WALLPAPER_TINT -> loadWallColorTheme(activity, onFinished)
-                COLOR_THEME_WALLPAPER_TINT_SYSTEM_ASSISTED -> colors()?.let {
+                ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT -> loadWallColorTheme(activity, onFinished)
+                ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT_SYSTEM_ASSISTED -> colors()?.let {
                     loadSystemWallColorTheme(activity, onFinished, it)
                     println(it)
-                } ?: loadDefaultColorTheme(activity, onFinished)
+                } ?: loadWallColorTheme(activity, onFinished)
                 else -> loadDefaultColorTheme(activity, onFinished)
             }
         }
@@ -178,12 +184,12 @@ interface ColorTheme {
         fun <A : Activity> onResumePreOMR1(
             activity: A,
             colorTheme: Int,
-            onFinished: (A, ColorTheme) -> Unit,
+            onFinished: (A) -> Unit,
         ) {
             when (colorTheme) {
-                COLOR_THEME_WALLPAPER_TINT_SYSTEM_ASSISTED,
-                COLOR_THEME_WALLPAPER_TINT -> loadWallColorTheme(activity, onFinished)
-                else -> DefaultColorTheme(activity)
+                ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT_SYSTEM_ASSISTED,
+                ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT -> loadWallColorTheme(activity, onFinished)
+                else -> loadDefaultColorTheme(activity, onFinished)
             }
         }
 

@@ -109,7 +109,7 @@ class MediaSummaryViewHolder(
         play.imageTintList = titleTintList
         next.imageTintList = titleTintList
 
-        blurBG.drawable = acrylicBlur?.fullBlur?.let { BitmapDrawable(itemView.resources, it) }
+        blurBG.drawable = acrylicBlur?.smoothBlur?.let { BitmapDrawable(itemView.resources, it) }
 
         play.setImageResource(if (summary.isPlaying()) R.drawable.ic_pause else R.drawable.ic_play)
 

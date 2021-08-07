@@ -1,9 +1,11 @@
 package io.posidon.android.cintalauncher.ui.feed.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.drawable.BitmapDrawable
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -20,10 +22,12 @@ import io.posidon.android.cintalauncher.providers.summary.NotificationSummariesP
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.feed.home.summary.SummaryAdapter
+import io.posidon.android.cintalauncher.ui.popup.home.HomeLongPressPopup
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.lookerupper.ui.SearchActivity
 import posidon.android.conveniencelib.dp
+import posidon.android.conveniencelib.getNavigationBarHeight
 
 class HomeViewHolder(
     val scrollIndicator: ImageView,
@@ -102,9 +106,11 @@ class HomeViewHolder(
     fun onScroll() {
         blurBG.invalidate()
         summaryAdapter.onScroll()
+        recentlyOpenedAdapter.onScroll()
     }
 }
 
+@SuppressLint("ClickableViewAccessibility")
 fun bindHomeViewHolder(
     holder: HomeViewHolder
 ) {
@@ -119,4 +125,20 @@ fun bindHomeViewHolder(
     holder.date.setTextColor(ColorTheme.uiDescription)
     holder.weekDay.setTextColor(ColorTheme.uiDescription)
     holder.scrollIndicator.imageTintList = ColorStateList.valueOf(ColorTheme.uiHint)
+    var x = 0f
+    var y = 0f
+    holder.itemView.setOnTouchListener { _, e ->
+        val action: Int = e.action
+        when (action and MotionEvent.ACTION_MASK) {
+            MotionEvent.ACTION_DOWN -> {
+                x = e.rawX
+                y = e.rawY
+            }
+        }
+        false
+    }
+    holder.itemView.setOnLongClickListener {
+        HomeLongPressPopup.show(it, x, y, holder.launcherActivity.getNavigationBarHeight(), holder.launcherActivity.settings, holder.launcherActivity::reloadColorThemeSync)
+        true
+    }
 }

@@ -42,9 +42,7 @@ class IntroActivity : FragmentActivity() {
         }
 
         updateColorTheme()
-        ColorTheme.loadWallColorTheme(this) { a, _ ->
-            a.updateColorTheme()
-        }
+        ColorTheme.loadWallColorTheme(this, IntroActivity::updateColorTheme)
     }
 
     override fun onResume() {

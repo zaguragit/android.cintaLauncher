@@ -1,11 +1,15 @@
 package io.posidon.android.cintalauncher.ui.settings
 
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.fragment.app.FragmentActivity
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.storage.Settings
+import io.posidon.android.cintalauncher.ui.acrylicBlur
 
 abstract class SettingsActivity : FragmentActivity() {
 
@@ -26,6 +30,9 @@ abstract class SettingsActivity : FragmentActivity() {
     abstract fun init(savedInstanceState: Bundle?)
 
     private fun loadColors() {
-        window.decorView.setBackgroundColor(ColorTheme.uiBG)
+        window.decorView.background = LayerDrawable(arrayOf(
+            BitmapDrawable(resources, acrylicBlur?.fullBlur),
+            ColorDrawable(ColorTheme.uiBG),
+        ))
     }
 }

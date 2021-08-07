@@ -28,4 +28,7 @@
     <string name="system">System</string>
     <string name="scrollbar_controller">App sorting</string>
     <string name="now">now</string>
+    <string name="reshape_adaptive_icons">Reshape adaptive icons</string>
+    <string name="reshape_adaptive_icons_explanation">Attempts to remove icon background to create a shapeless icon</string>
+    <string name="icons">Icons</string>
 </resources>

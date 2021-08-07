@@ -50,7 +50,14 @@ class AppProvider(
         }
     }
 
-    private fun makeAppResult(packageName: String, name: String, profile: UserHandle, label: String, icon: Drawable) = AppResult(App(packageName, name, profile, label, icon))
+    private fun makeAppResult(packageName: String, name: String, profile: UserHandle, label: String, icon: Drawable) = AppResult(App(
+        packageName,
+        name,
+        profile,
+        label,
+        icon,
+        searcher.settings
+    ))
 
     val appLoader = AppLoader(::makeAppResult, ::AppCollection)
     var apps = emptyList<AppResult>()

@@ -3,8 +3,6 @@ package io.posidon.android.cintalauncher.ui.popup.drawerItem
 import android.content.Context
 import android.content.pm.LauncherApps
 import android.content.res.ColorStateList
-import android.graphics.drawable.ColorDrawable
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -18,8 +16,7 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.data.items.showProperties
-import posidon.android.conveniencelib.Device
-import posidon.android.conveniencelib.dp
+import io.posidon.android.cintalauncher.ui.popup.PopupUtils
 import posidon.android.conveniencelib.vibrate
 
 object ItemLongPress {
@@ -41,8 +38,6 @@ object ItemLongPress {
         window.setOnDismissListener {
             currentPopup = null
         }
-        window.setBackgroundDrawable(ColorDrawable(0x0))
-        window.elevation = content.dp(12)
 
         val propertiesButton = content.findViewById<View>(R.id.properties_item)
         val propertiesText = propertiesButton.findViewById<TextView>(R.id.properties_text)
@@ -71,47 +66,11 @@ object ItemLongPress {
     ) {
         if (currentPopup == null) {
             context.vibrate(14)
-            val (x, y, gravity) = getPopupLocationFromView(view, navbarHeight)
+            val (x, y, gravity) = PopupUtils.getPopupLocationFromView(view, navbarHeight)
             val popupWindow = makePopupWindow(context, item, backgroundColor, textColor) {
                 item.showProperties(view, backgroundColor, textColor)
             }
             popupWindow.showAtLocation(view, gravity, x, y)
         }
-    }
-
-    /**
-     * @return Triple(x, y, gravity)
-     */
-    inline fun getPopupLocationFromView(
-        view: View,
-        navbarHeight: Int,
-    ): Triple<Int, Int, Int> {
-
-        val location = IntArray(2).also {
-            view.getLocationOnScreen(it)
-        }
-
-        var gravity: Int
-
-        val screenWidth = Device.screenWidth(view.context)
-        val screenHeight = Device.screenHeight(view.context)
-
-        val x = if (location[0] > screenWidth / 2) {
-            gravity = Gravity.END
-            screenWidth - location[0] - view.measuredWidth
-        } else {
-            gravity = Gravity.START
-            location[0]
-        }
-
-        val y = if (location[1] < screenHeight / 2) {
-            gravity = gravity or Gravity.TOP
-            location[1] + view.measuredHeight
-        } else {
-            gravity = gravity or Gravity.BOTTOM
-            screenHeight - location[1] + navbarHeight
-        }
-
-        return Triple(x, y, gravity)
     }
 }

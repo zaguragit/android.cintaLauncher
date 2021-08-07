@@ -15,6 +15,7 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.LauncherActivity
+import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
 import posidon.android.conveniencelib.getStatusBarHeight
 import posidon.android.conveniencelib.onEnd
@@ -48,6 +49,7 @@ class AppDrawer(
             }
         }
         recycler.adapter = adapter
+        recycler.setOnScrollChangeListener { _, _, _, _, _ -> adapter.onScroll() }
         scrollBar.onStartScroll = ::open
     }
 
@@ -74,6 +76,7 @@ class AppDrawer(
 
     fun open(v: View) {
         if (isOpen) return
+        ItemLongPress.currentPopup?.dismiss()
         val sbh = v.context.getStatusBarHeight()
         recycler.setPadding(recycler.paddingLeft, sbh, recycler.paddingRight, recycler.paddingBottom)
         view.isVisible = true
@@ -118,6 +121,7 @@ class AppDrawer(
     }
 
     fun close(v: View? = null) {
+        ItemLongPress.currentPopup?.dismiss()
         scrollBar.controller.showSelection = false
         activity.feedRecycler.isInvisible = false
         activity.feedRecycler.animate()
@@ -152,6 +156,7 @@ class AppDrawer(
             onEnd {
                 currentValueAnimator = null
                 activity.blurBG.isVisible = false
+                activity.updateBlur()
             }
             start()
         }

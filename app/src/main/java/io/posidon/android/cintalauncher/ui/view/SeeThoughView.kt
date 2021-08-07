@@ -42,4 +42,23 @@ class SeeThoughView : View {
             d.draw(canvas)
         }
     }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        setMeasuredDimension(
+            calculate(suggestedMinimumWidth, widthMeasureSpec).also { println("wwwww") },
+            calculate(suggestedMinimumHeight, heightMeasureSpec).also { println("hhhhh") }
+        )
+    }
+
+    fun calculate(minSize: Int, measureSpec: Int): Int {
+        var result = minSize
+        val mode = MeasureSpec.getMode(measureSpec)
+        val specSize = MeasureSpec.getSize(measureSpec)
+        when (mode) {
+            MeasureSpec.UNSPECIFIED -> result = minSize
+            MeasureSpec.AT_MOST -> result = minSize
+            MeasureSpec.EXACTLY -> result = specSize
+        }
+        return result
+    }
 }

@@ -34,8 +34,12 @@ import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.providers.notification.NotificationProvider
 import io.posidon.android.cintalauncher.providers.rss.RssProvider
 import io.posidon.android.cintalauncher.storage.*
+import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
+import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.SCROLLBAR_CONTROLLER_BY_HUE
+import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.scrollbarController
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
 import io.posidon.android.cintalauncher.ui.feed.items.FeedAdapter
+import io.posidon.android.cintalauncher.ui.popup.home.HomeLongPressPopup
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
 import io.posidon.android.cintalauncher.ui.view.scrollbar.alphabet.AlphabetScrollbarController
 import io.posidon.android.cintalauncher.ui.view.scrollbar.hue.HueScrollbarController
@@ -73,7 +77,7 @@ class LauncherActivity : FragmentActivity() {
 
     lateinit var wallpaperManager: WallpaperManager
 
-    val appLoader = AppLoader(::App, ::AppCollection)
+    val appLoader = AppLoader({ packageName, name, profile, label, icon -> App(packageName, name, profile, label, icon, settings) }, ::AppCollection)
 
     var blurBitmap: Bitmap? = null
 
@@ -107,7 +111,7 @@ class LauncherActivity : FragmentActivity() {
         launcherApps.registerCallback(AppCallback(::loadApps))
 
         loadApps()
-        updateColorTheme(ColorTheme)
+        updateColorTheme()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             wallpaperManager.addOnColorsChangedListener(::onColorsChangedListener, feedRecycler.handler)
@@ -137,7 +141,7 @@ class LauncherActivity : FragmentActivity() {
         }
     }
 
-    private fun updateBlur() {
+    fun updateBlur() {
         val b = acrylicBlur
         val r = resources.getDimension(R.dimen.dock_corner_radius)
         if (b == null) {
@@ -174,13 +178,14 @@ class LauncherActivity : FragmentActivity() {
                 ColorTheme.scrollBarTintBG
             )
         ))
-
+        feedAdapter.onScroll(feedRecycler.scrollY)
     }
 
-    private fun updateColorTheme(new: ColorTheme) {
+    private fun updateColorTheme() {
         feedAdapter.updateColorTheme()
         appDrawer.updateColorTheme()
         scrollBar.controller.updateTheme(this)
+        updateBlur()
     }
 
     @RequiresApi(Build.VERSION_CODES.O_MR1)
@@ -206,14 +211,20 @@ class LauncherActivity : FragmentActivity() {
         notificationProvider.update()
         val shouldUpdate = settings.reload(applicationContext)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
-            ColorTheme.onResumePreOMR1(this, settings.colorTheme, LauncherActivity::updateColorTheme)
-            onWallpaperChanged()
+            thread (isDaemon = true) {
+                ColorTheme.onResumePreOMR1(
+                    this,
+                    settings.colorTheme,
+                    LauncherActivity::updateColorTheme
+                )
+                onWallpaperChanged()
+            }
         } else {
             if (blurBitmap == null) {
                 loadBlur()
             }
             if (shouldUpdate) {
-                ColorTheme.onColorsChanged(this, settings.colorTheme, LauncherActivity::updateColorTheme) { wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM) }
+                thread(name = "Reloading color theme", isDaemon = true, block = this::reloadColorThemeSync)
             }
         }
         val current = System.currentTimeMillis()
@@ -227,6 +238,14 @@ class LauncherActivity : FragmentActivity() {
         } else {
             suggestionsManager.onResume(this)
         }
+    }
+
+    fun reloadColorThemeSync() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            ColorTheme.onColorsChanged(this, settings.colorTheme, LauncherActivity::updateColorTheme) {
+                wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
+            }
+        } else ColorTheme.onResumePreOMR1(this, settings.colorTheme, LauncherActivity::updateColorTheme)
     }
 
     private fun updateScrollbarController() {
@@ -247,7 +266,10 @@ class LauncherActivity : FragmentActivity() {
 
     override fun onPause() {
         super.onPause()
-        appDrawer.close()
+        if (appDrawer.isOpen) {
+            appDrawer.close()
+        }
+        HomeLongPressPopup.dismiss()
         suggestionsManager.save(settings, this)
     }
 

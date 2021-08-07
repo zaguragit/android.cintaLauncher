@@ -7,13 +7,16 @@ import android.content.pm.LauncherApps
 import android.content.pm.LauncherApps.ShortcutQuery
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutInfo
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.*
 import android.os.Process
 import android.os.UserHandle
 import android.view.View
+import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.providers.notification.NotificationService
+import io.posidon.android.cintalauncher.storage.DoReshapeAdaptiveIconsSetting.doReshapeAdaptiveIcons
+import io.posidon.android.cintalauncher.storage.Settings
 import posidon.android.conveniencelib.isInstalled
 import posidon.android.conveniencelib.toBitmap
 import java.util.*
@@ -23,7 +26,8 @@ class App(
     val name: String,
     val userHandle: UserHandle = Process.myUserHandle(),
     override val label: String,
-    override val icon: Drawable
+    icon: Drawable,
+    settings: Settings
 ) : LauncherItem {
 
     inline fun getNotifications(): List<FeedItem> =
@@ -38,19 +42,70 @@ class App(
 
     val hsl: FloatArray
     private val _color: Int
+    override val icon: Drawable
+
+    private fun scale(fg: Drawable): Drawable {
+        return InsetDrawable(
+            fg,
+            -1 / 3f
+        )
+    }
 
     init {
-        val palette = Palette.from(icon.toBitmap()).generate()
-        val d = palette.dominantSwatch
-        hsl = d?.hsl ?: FloatArray(3)
-        _color = run {
-            val def = super.getColor()
-            var color = (d ?: return@run def).rgb
-            if (hsl[1] < .1f) {
-                color = palette.getVibrantColor(color)
+        var _color = 0
+        var hsl = FloatArray(3)
+
+        if (settings.doReshapeAdaptiveIcons && icon is AdaptiveIconDrawable) {
+            val b = icon.background
+            this.icon = when (b) {
+                is ColorDrawable -> {
+                    _color = b.color
+                    ColorUtils.colorToHSL(_color, hsl)
+                    scale(icon.foreground)
+                }
+                is ShapeDrawable -> {
+                    _color = b.paint.color
+                    ColorUtils.colorToHSL(_color, hsl)
+                    scale(icon.foreground)
+                }
+                is GradientDrawable -> {
+                    _color = b.color?.defaultColor?.also { ColorUtils.colorToHSL(it, hsl) } ?: _color
+                    scale(icon.foreground)
+                }
+                else -> {
+                    if (b != null) {
+                        val palette = Palette.from(b.toBitmap()).generate()
+                        val d = palette.dominantSwatch
+                        hsl = d?.hsl ?: hsl
+                        _color = run {
+                            val def = super.getColor()
+                            var color = (d ?: return@run def).rgb
+                            if (hsl[1] < .1f) {
+                                color = palette.getVibrantColor(color)
+                            }
+                            color
+                        }
+                    }
+                    icon
+                }
             }
-            color
+        } else this.icon = icon
+
+        if (_color == 0) {
+            val palette = Palette.from(icon.toBitmap()).generate()
+            val d = palette.dominantSwatch
+            hsl = d?.hsl ?: hsl
+            _color = run {
+                val def = super.getColor()
+                var color = (d ?: return@run def).rgb
+                if (hsl[1] < .1f) {
+                    color = palette.getVibrantColor(color)
+                }
+                color
+            }
         }
+        this.hsl = hsl
+        this._color = _color
     }
 
     override fun getColor(): Int = _color

@@ -24,7 +24,7 @@ class RecentlyOpenedItemsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
         return AppViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.app_drawer_item, parent, false) as CardView)
+            .inflate(R.layout.app_drawer_item, parent, false) as CardView, map)
     }
 
     override fun onBindViewHolder(holder: AppViewHolder, i: Int) {
@@ -35,5 +35,13 @@ class RecentlyOpenedItemsAdapter(
     fun updateItems(items: List<LauncherItem>) {
         this.items = items
         notifyDataSetChanged()
+    }
+
+    val map = HashMap<LauncherItem, () -> Unit>()
+
+    fun onScroll() {
+        map.forEach {
+            it.value()
+        }
     }
 }
