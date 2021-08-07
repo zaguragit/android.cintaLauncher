@@ -63,7 +63,7 @@ class NotificationService : NotificationListenerService() {
 
     private fun loadNotifications(notifications: Array<StatusBarNotification>?) {
         thread(name = "NotificationService loading thread", isDaemon = true) {
-            val tmpNotifications = ArrayList<FeedItem>()
+            var tmpNotifications: MutableList<FeedItem> = ArrayList()
             val tmpMessageNotifications = ArrayList<StatusBarNotification>()
             val tmpSummaries = ArrayList<SummaryItem>()
             var i = 0
@@ -89,6 +89,7 @@ class NotificationService : NotificationListenerService() {
                         i++
                     }
                 }
+                tmpNotifications = tmpNotifications.distinctBy { it.uid }.toMutableList()
                 tmpMessageNotifications.groupBy {
                     it.groupKey
                 }.flatMapTo(tmpSummaries) { (_, notifications) ->
@@ -150,10 +151,10 @@ class NotificationService : NotificationListenerService() {
             }
         }
 
-        var notifications = ArrayList<FeedItem>()
+        var notifications: MutableList<FeedItem> = ArrayList()
             private set
 
-        var notificationSummaries = ArrayList<SummaryItem>()
+        var notificationSummaries: MutableList<SummaryItem> = ArrayList<SummaryItem>()
             private set
 
         var mediaItem: MediaSummary? = null

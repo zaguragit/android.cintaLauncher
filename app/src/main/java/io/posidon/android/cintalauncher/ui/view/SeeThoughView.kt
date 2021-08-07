@@ -45,8 +45,8 @@ class SeeThoughView : View {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         setMeasuredDimension(
-            calculate(suggestedMinimumWidth, widthMeasureSpec).also { println("wwwww") },
-            calculate(suggestedMinimumHeight, heightMeasureSpec).also { println("hhhhh") }
+            calculate(suggestedMinimumWidth, widthMeasureSpec),
+            calculate(suggestedMinimumHeight, heightMeasureSpec),
         )
     }
 

@@ -114,13 +114,25 @@ object NotificationCreator {
             }
         }?.toTypedArray() ?: emptyArray()
 
-        val id = notification.id.toLong() shl 32 or
+        val id = (notification.id.toLong() shl 32 or
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) notification.uid.toLong()
             else notification.packageName.hashCode().toLong()
+        ) xor (notification.tag?.longHash() ?: 0)
 
-        val uid = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            "⍾$id"
-            else "${notification.packageName}⍾${notification.id}"
+        val uid = buildString {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                append('⍾')
+                append((notification.id.toLong() shl 32 or notification.uid.toLong()).toString(16))
+                append('⍾')
+                append(notification.tag)
+            } else {
+                append(notification.packageName)
+                append('⍾')
+                append(notification.id.toString(16))
+                append('⍾')
+                append(notification.tag)
+            }
+        }
 
         val isDismissible = notification.isClearable
 
