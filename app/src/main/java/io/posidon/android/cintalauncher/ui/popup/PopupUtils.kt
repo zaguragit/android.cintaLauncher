@@ -3,9 +3,21 @@ package io.posidon.android.cintalauncher.ui.popup
 import android.content.Context
 import android.view.Gravity
 import android.view.View
+import android.widget.PopupWindow
 import posidon.android.conveniencelib.Device
 
 object PopupUtils {
+
+    private var currentPopup: PopupWindow? = null
+
+    fun dismissCurrent() = currentPopup?.dismiss()
+    fun setCurrent(popup: PopupWindow) {
+        dismissCurrent()
+        popup.setOnDismissListener {
+            currentPopup = null
+        }
+        currentPopup = popup
+    }
 
     /**
      * @return Triple(x, y, gravity)

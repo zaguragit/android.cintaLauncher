@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../../../layout/custom_preview.xml" value="0.2838541666666667" />
         <entry key="app/src/main/res/drawable/ic_close_app_drawer.xml" value="0.2265625" />
         <entry key="app/src/main/res/drawable/ic_color_dropper.xml" value="0.3890625" />
         <entry key="app/src/main/res/drawable/ic_cross.xml" value="0.2265625" />
@@ -10,6 +11,8 @@
         <entry key="app/src/main/res/drawable/ic_news.xml" value="0.2265625" />
         <entry key="app/src/main/res/drawable/ic_pause.xml" value="0.2265625" />
         <entry key="app/src/main/res/drawable/ic_play.xml" value="0.2265625" />
+        <entry key="app/src/main/res/drawable/ic_shapes.xml" value="0.2703125" />
+        <entry key="app/src/main/res/drawable/ic_sorting.xml" value="0.2703125" />
         <entry key="app/src/main/res/drawable/ripple.xml" value="0.2171875" />
         <entry key="app/src/main/res/layout/activity_launcher.xml" value="0.11296859169199595" />
         <entry key="app/src/main/res/layout/app_drawer.xml" value="0.11296859169199595" />
@@ -23,6 +26,10 @@
         <entry key="app/src/main/res/layout/long_press_home_popup_title.xml" value="0.20104166666666667" />
         <entry key="app/src/main/res/layout/long_press_item_popup.xml" value="0.21041666666666667" />
         <entry key="app/src/main/res/layout/long_press_item_popup_item.xml" value="0.2980072463768116" />
+        <entry key="app/src/main/res/layout/settings_popup.xml" value="0.26875" />
+        <entry key="app/src/main/res/layout/settings_popup_item.xml" value="0.26875" />
+        <entry key="app/src/main/res/layout/settings_popup_switch_item.xml" value="0.25416666666666665" />
+        <entry key="app/src/main/res/layout/settings_popup_title.xml" value="0.26875" />
         <entry key="app/src/main/res/xml/settings_main.xml" value="0.2980072463768116" />
       </map>
     </option>

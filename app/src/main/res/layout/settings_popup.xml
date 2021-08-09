@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/card"
-    style="@style/Theme.CintaLauncher.HomePopup.Container">
+    style="@style/Theme.CintaLauncher.ListPopup.Container">
     <io.posidon.android.cintalauncher.ui.view.SeeThoughView
         android:id="@+id/blur_bg"
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <androidx.recyclerview.widget.RecyclerView
-            style="@style/Theme.CintaLauncher.HomePopup.Recycler"
+            style="@style/Theme.CintaLauncher.ListPopup.Recycler"
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

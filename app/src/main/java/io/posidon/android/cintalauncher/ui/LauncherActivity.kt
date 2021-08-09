@@ -39,7 +39,7 @@ import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.SCROL
 import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.scrollbarController
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
 import io.posidon.android.cintalauncher.ui.feed.items.FeedAdapter
-import io.posidon.android.cintalauncher.ui.popup.home.HomeLongPressPopup
+import io.posidon.android.cintalauncher.ui.popup.PopupUtils
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
 import io.posidon.android.cintalauncher.ui.view.scrollbar.alphabet.AlphabetScrollbarController
 import io.posidon.android.cintalauncher.ui.view.scrollbar.hue.HueScrollbarController
@@ -233,8 +233,7 @@ class LauncherActivity : FragmentActivity() {
             thread (isDaemon = true, block = RssProvider::update)
         }
         if (shouldUpdate) {
-            updateScrollbarController()
-            loadApps()
+            reloadScrollbarController()
         } else {
             suggestionsManager.onResume(this)
         }
@@ -246,6 +245,11 @@ class LauncherActivity : FragmentActivity() {
                 wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
             }
         } else ColorTheme.onResumePreOMR1(this, settings.colorTheme, LauncherActivity::updateColorTheme)
+    }
+
+    fun reloadScrollbarController() {
+        updateScrollbarController()
+        loadApps()
     }
 
     private fun updateScrollbarController() {
@@ -269,7 +273,7 @@ class LauncherActivity : FragmentActivity() {
         if (appDrawer.isOpen) {
             appDrawer.close()
         }
-        HomeLongPressPopup.dismiss()
+        PopupUtils.dismissCurrent()
         suggestionsManager.save(settings, this)
     }
 

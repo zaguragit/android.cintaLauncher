@@ -1,9 +1,13 @@
 package io.posidon.android.cintalauncher.ui.drawer
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.drawable.LayerDrawable
+import android.view.HapticFeedbackConstants
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
@@ -15,10 +19,13 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.LauncherActivity
+import io.posidon.android.cintalauncher.ui.popup.drawer.DrawerLongPressPopup
 import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
+import posidon.android.conveniencelib.getNavigationBarHeight
 import posidon.android.conveniencelib.getStatusBarHeight
 import posidon.android.conveniencelib.onEnd
+import kotlin.math.abs
 
 class AppDrawer(
     private val activity: LauncherActivity,
@@ -36,6 +43,7 @@ class AppDrawer(
         setOnClickListener(::close)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     fun init() {
         recycler.layoutManager = GridLayoutManager(view.context, 3, RecyclerView.VERTICAL, false).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -51,6 +59,53 @@ class AppDrawer(
         recycler.adapter = adapter
         recycler.setOnScrollChangeListener { _, _, _, _, _ -> adapter.onScroll() }
         scrollBar.onStartScroll = ::open
+
+        var x = 0f
+        var y = 0f
+        val onLongPress = Runnable {
+            recycler.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            DrawerLongPressPopup.show(recycler, x, y, activity.getNavigationBarHeight(), activity.settings, activity::reloadScrollbarController, activity::loadApps)
+        }
+        var lastRecyclerViewDownTouchEvent: MotionEvent? = null
+        recycler.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    x = event.rawX
+                    y = event.rawY
+                    if (recycler.findChildViewUnder(event.x, event.y) == null) {
+                        lastRecyclerViewDownTouchEvent = event
+                        v.handler.postDelayed(onLongPress, ViewConfiguration.getLongPressTimeout().toLong())
+                    }
+                }
+                MotionEvent.ACTION_UP ->
+                    v.handler.removeCallbacks(onLongPress)
+                MotionEvent.ACTION_MOVE -> if (lastRecyclerViewDownTouchEvent != null) {
+                    // Check to see if it was a tap or a swipe
+                    val xDelta = abs(lastRecyclerViewDownTouchEvent!!.x - event.x)
+                    val yDelta = abs(lastRecyclerViewDownTouchEvent!!.y - event.y)
+                    if (xDelta >= 30 || yDelta >= 30) {
+                        v.handler.removeCallbacks(onLongPress)
+                    }
+                    lastRecyclerViewDownTouchEvent = null
+                }
+                MotionEvent.ACTION_CANCEL ->
+                    v.handler.removeCallbacks(onLongPress)
+            }
+            false
+        }
+        bottomBar.setOnTouchListener { _, e ->
+            when (e.action and MotionEvent.ACTION_MASK) {
+                MotionEvent.ACTION_DOWN -> {
+                    x = e.rawX
+                    y = e.rawY
+                }
+            }
+            false
+        }
+        bottomBar.setOnLongClickListener {
+            DrawerLongPressPopup.show(it, x, y, activity.getNavigationBarHeight(), activity.settings, activity::reloadScrollbarController, activity::loadApps)
+            true
+        }
     }
 
     var appSections: List<List<App>>? = null

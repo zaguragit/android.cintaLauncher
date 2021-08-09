@@ -5,14 +5,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <TextView
-        style="@style/Theme.CintaLauncher.HomePopup.Title.Label"
+        style="@style/Theme.CintaLauncher.ListPopup.Title.Label"
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:maxLines="1"/>
     <TextView
-        style="@style/Theme.CintaLauncher.HomePopup.Title.Description"
+        style="@style/Theme.CintaLauncher.ListPopup.Title.Description"
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

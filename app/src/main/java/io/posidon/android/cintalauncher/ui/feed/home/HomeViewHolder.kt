@@ -128,8 +128,7 @@ fun bindHomeViewHolder(
     var x = 0f
     var y = 0f
     holder.itemView.setOnTouchListener { _, e ->
-        val action: Int = e.action
-        when (action and MotionEvent.ACTION_MASK) {
+        when (e.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN -> {
                 x = e.rawX
                 y = e.rawY

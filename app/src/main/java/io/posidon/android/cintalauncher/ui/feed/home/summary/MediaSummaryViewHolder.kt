@@ -3,6 +3,7 @@ package io.posidon.android.cintalauncher.ui.feed.home.summary
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
+import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,7 +18,6 @@ import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import posidon.android.conveniencelib.Colors
 import posidon.android.conveniencelib.toBitmap
-import posidon.android.conveniencelib.vibrate
 
 class MediaSummaryViewHolder(
     itemView: View
@@ -114,16 +114,16 @@ class MediaSummaryViewHolder(
         play.setImageResource(if (summary.isPlaying()) R.drawable.ic_pause else R.drawable.ic_play)
 
         previous.setOnClickListener {
-            it.context.vibrate(14)
+            it.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             summary.previous(it)
         }
         next.setOnClickListener {
-            it.context.vibrate(14)
+            it.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             summary.next(it)
         }
         play.setOnClickListener {
             it as ImageView
-            it.context.vibrate(14)
+            it.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             summary.togglePause(it)
         }
     }

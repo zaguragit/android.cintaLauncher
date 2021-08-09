@@ -48,6 +48,7 @@ class AndroidOMR1WallColorTheme(
 
     override val cardTitle = titleColorForBG(context, cardBG)
     override val cardDescription = textColorForBG(context, cardBG)
+    override val cardHint = hintColorForBG(context, cardBG)
 
     override val appDrawerColor = run {
         val rgb = primary.toArgb()

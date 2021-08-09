@@ -77,6 +77,7 @@ class PalleteTintedColorTheme(
 
     override val cardTitle = titleColorForBG(context, cardBG)
     override val cardDescription = textColorForBG(context, cardBG)
+    override val cardHint = hintColorForBG(context, cardBG)
 
     override val appDrawerColor = run {
         val swatch = wallpaper.dominantSwatch ?: return@run context.getColor(R.color.drawer_bg)

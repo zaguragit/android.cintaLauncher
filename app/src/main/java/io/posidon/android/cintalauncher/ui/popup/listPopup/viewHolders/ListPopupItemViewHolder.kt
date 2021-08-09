@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.ui.popup.home.viewHolders
+package io.posidon.android.cintalauncher.ui.popup.listPopup.viewHolders
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
@@ -9,9 +9,9 @@ import android.widget.TextView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.applyIfNotNull
-import io.posidon.android.cintalauncher.ui.popup.home.HomeLongPressPopupItem
+import io.posidon.android.cintalauncher.ui.popup.listPopup.ListPopupItem
 
-class HomePopupItemViewHolder(itemView: View) : HomePopupViewHolder(itemView) {
+class ListPopupItemViewHolder(itemView: View) : ListPopupViewHolder(itemView) {
 
     val icon = itemView.findViewById<ImageView>(R.id.icon)
 
@@ -24,7 +24,7 @@ class HomePopupItemViewHolder(itemView: View) : HomePopupViewHolder(itemView) {
         itemView.background = ripple
     }
 
-    override fun onBind(item: HomeLongPressPopupItem) {
+    override fun onBind(item: ListPopupItem) {
         text.text = item.text
         description.text = item.description
 

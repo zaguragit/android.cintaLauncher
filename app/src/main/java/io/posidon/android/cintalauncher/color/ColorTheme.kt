@@ -32,6 +32,7 @@ interface ColorTheme {
     val cardBG: Int
     val cardTitle: Int
     val cardDescription: Int
+    val cardHint: Int
 
     val appDrawerColor: Int
     val appDrawerBottomBarColor: Int
@@ -209,6 +210,8 @@ interface ColorTheme {
             get() = colorThemeInstance.cardTitle
         override val cardDescription: Int
             get() = colorThemeInstance.cardDescription
+        override val cardHint: Int
+            get() = colorThemeInstance.cardHint
         override val appDrawerColor: Int
             get() = colorThemeInstance.appDrawerColor
         override val appDrawerBottomBarColor: Int

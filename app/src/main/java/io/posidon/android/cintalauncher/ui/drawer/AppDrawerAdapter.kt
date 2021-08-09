@@ -36,8 +36,7 @@ class AppDrawerAdapter(
         return when (viewType) {
             SECTION_HEADER -> SectionHeaderViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.app_drawer_section_header, parent, false))
-            APP_ITEM -> AppViewHolder(
-                LayoutInflater.from(parent.context)
+            APP_ITEM -> AppViewHolder(LayoutInflater.from(parent.context)
                     .inflate(R.layout.app_drawer_item, parent, false) as CardView, map)
             else -> throw RuntimeException("Invalid view holder type")
         }
@@ -46,7 +45,7 @@ class AppDrawerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, i: Int) {
         val item = items[i]
         when (holder.itemViewType) {
-            SECTION_HEADER -> bindSectionHeaderViewHolder(holder as SectionHeaderViewHolder, item as SectionHeaderItem, indexer?.getHighlightI() == i)
+            SECTION_HEADER -> bindSectionHeaderViewHolder(holder as SectionHeaderViewHolder, item as SectionHeaderItem, indexer?.getHighlightI() == i, launcherActivity)
             APP_ITEM -> bindAppViewHolder(holder as AppViewHolder, (item as AppItem).item, indexer?.isDimmed(item.item) ?: false, launcherActivity.suggestionsManager, launcherActivity.getNavigationBarHeight())
         }
     }

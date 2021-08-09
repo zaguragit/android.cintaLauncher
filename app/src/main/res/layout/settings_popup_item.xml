@@ -3,28 +3,27 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    style="@style/Theme.CintaLauncher.ListPopup.Item.Container">
     <ImageView
-        style="@style/Theme.CintaLauncher.HomePopup.Item.Icon"
+        style="@style/Theme.CintaLauncher.ListPopup.Item.Icon"
         android:id="@+id/icon"/>
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginStart="8dp"
+        android:paddingVertical="4dp">
         <TextView
-            style="@style/Theme.CintaLauncher.HomePopup.Item.Label"
+            style="@style/Theme.CintaLauncher.ListPopup.Item.Label"
             android:id="@+id/text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:maxLines="1"/>
+            android:layout_height="wrap_content"/>
         <TextView
-            style="@style/Theme.CintaLauncher.HomePopup.Item.Description"
+            style="@style/Theme.CintaLauncher.ListPopup.Item.Description"
             android:id="@+id/description"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:maxLines="1"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </LinearLayout>

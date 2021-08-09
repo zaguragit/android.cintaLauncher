@@ -18,6 +18,7 @@ class DefaultColorTheme(context: Context) : ColorTheme {
     override val cardBG = context.getColor(R.color.default_card_bg)
     override val cardTitle = context.getColor(R.color.feed_card_text_dark_title)
     override val cardDescription = context.getColor(R.color.feed_card_text_dark_description)
+    override val cardHint = context.getColor(R.color.feed_card_text_dark_hint)
 
     override val appDrawerColor = context.getColor(R.color.drawer_bg)
     override val appDrawerBottomBarColor = context.getColor(R.color.drawer_bottom_bar)

@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.ui.popup.home
+package io.posidon.android.cintalauncher.ui.popup.drawer
 
 import android.content.Context
 import android.content.Intent
@@ -15,20 +15,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
+import io.posidon.android.cintalauncher.storage.DoReshapeAdaptiveIconsSetting.doReshapeAdaptiveIcons
+import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.scrollbarController
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.popup.PopupUtils
 import io.posidon.android.cintalauncher.ui.popup.listPopup.ListPopupAdapter
 import io.posidon.android.cintalauncher.ui.popup.listPopup.ListPopupItem
-import io.posidon.android.cintalauncher.ui.settings.feedChooser.FeedSourcesChooserActivity
+import io.posidon.android.cintalauncher.ui.settings.iconPackPicker.IconPackPickerActivity
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import posidon.android.conveniencelib.Device
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.concurrent.thread
-import kotlin.concurrent.withLock
 
-object HomeLongPressPopup {
+object DrawerLongPressPopup {
 
     fun show(
         parent: View,
@@ -36,7 +34,8 @@ object HomeLongPressPopup {
         touchY: Float,
         navbarHeight: Int,
         settings: Settings,
-        reloadColorTheme: () -> Unit,
+        reloadScrollbarController: () -> Unit,
+        reloadApps: () -> Unit,
     ) {
         val content = LayoutInflater.from(parent.context).inflate(R.layout.settings_popup, null)
         val window = PopupWindow(content, ListPopupWindow.WRAP_CONTENT, ListPopupWindow.WRAP_CONTENT, true)
@@ -44,6 +43,7 @@ object HomeLongPressPopup {
 
         content.findViewById<SeeThoughView>(R.id.blur_bg).run {
             drawable = acrylicBlur?.fullBlur?.let { BitmapDrawable(parent.resources, it) }
+            alpha = 0.1f
         }
 
         val cardView = content.findViewById<CardView>(R.id.card)
@@ -51,19 +51,18 @@ object HomeLongPressPopup {
         content.findViewById<RecyclerView>(R.id.recycler).apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = ListPopupAdapter().apply {
-                val updateLock = ReentrantLock()
                 fun update() {
-                    updateItems(createMainAdapter(parent.context, settings) {
-                        thread(name = "Reloading color theme", isDaemon = true) {
-                            updateLock.withLock {
-                                reloadColorTheme()
-                                cardView.post {
-                                    cardView.setCardBackgroundColor(ColorTheme.cardBG)
-                                    update()
-                                }
+                    updateItems(createMainAdapter(
+                        parent.context,
+                        settings,
+                        reloadScrollbarController = {
+                            cardView.post {
+                                reloadScrollbarController()
+                                update()
                             }
-                        }
-                    })
+                        },
+                        reloadApps = reloadApps,
+                    ))
                 }
                 update()
             }
@@ -78,31 +77,45 @@ object HomeLongPressPopup {
     private fun createMainAdapter(
         context: Context,
         settings: Settings,
-        reloadColorTheme: () -> Unit,
+        reloadScrollbarController: () -> Unit,
+        reloadApps: () -> Unit,
     ): List<ListPopupItem> {
         return listOf(
-            ListPopupItem(context.getString(R.string.launcher_settings), isTitle = true),
+            //ListPopupItem(context.getString(R.string.drawer_settings), isTitle = true),
             ListPopupItem(
-                context.getString(R.string.color_theme_gen),
-                description = context.resources.getStringArray(R.array.color_theme_gens)[settings.colorTheme],
-                icon = ContextCompat.getDrawable(context, R.drawable.ic_color_dropper),
+                context.getString(R.string.scrollbar_controller),
+                description = context.resources.getStringArray(R.array.scrollbar_controllers)[settings.scrollbarController],
+                icon = ContextCompat.getDrawable(context, R.drawable.ic_sorting),
             ) {
                 AlertDialog.Builder(context)
-                    .setSingleChoiceItems(R.array.color_theme_gens, settings.colorTheme) { d, i ->
+                    .setSingleChoiceItems(R.array.scrollbar_controllers, settings.scrollbarController) { d, i ->
                         settings.edit(context) {
-                            colorTheme = context.resources.getStringArray(R.array.color_theme_gens_data)[i].toInt()
-                            reloadColorTheme()
+                            scrollbarController = context.resources.getStringArray(R.array.scrollbar_controllers_data)[i].toInt()
+                            reloadScrollbarController()
                         }
                         d.dismiss()
                     }
                     .show()
             },
+            ListPopupItem(context.getString(R.string.icons), isTitle = true),
             ListPopupItem(
-                context.getString(R.string.rss_sources),
-                icon = ContextCompat.getDrawable(context, R.drawable.ic_news),
+                context.getString(R.string.icon_packs),
+                icon = ContextCompat.getDrawable(context, R.drawable.ic_shapes),
             ) {
-                context.startActivity(Intent(context, FeedSourcesChooserActivity::class.java))
+                context.startActivity(Intent(context, IconPackPickerActivity::class.java))
             },
+            ListPopupItem(
+                context.getString(R.string.reshape_adaptive_icons),
+                description = context.getString(R.string.reshape_adaptive_icons_explanation),
+                icon = ContextCompat.getDrawable(context, R.drawable.ic_shapes),
+                value = settings.doReshapeAdaptiveIcons,
+                onToggle = { v, value ->
+                    settings.edit(context) {
+                        doReshapeAdaptiveIcons = value
+                        reloadApps()
+                    }
+                }
+            ),
         )
     }
 }

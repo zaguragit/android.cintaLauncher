@@ -23,11 +23,13 @@
         app:entries="@array/scrollbar_controllers"
         android:entryValues="@array/scrollbar_controllers_data"
         android:summary="%s"
-        app:defaultValue="0"/>
+        app:defaultValue="0"
+        android:icon="@drawable/ic_sorting"/>
     <PreferenceCategory
         android:title="@string/icons">
         <Preference
-            app:title="@string/icon_packs">
+            app:title="@string/icon_packs"
+            android:icon="@drawable/ic_shapes">
             <intent
                 android:targetPackage="io.posidon.android.cintalauncher"
                 android:targetClass="io.posidon.android.cintalauncher.ui.settings.iconPackPicker.IconPackPickerActivity"/>
@@ -36,6 +38,7 @@
             android:title="@string/reshape_adaptive_icons"
             android:defaultValue="false"
             android:key="icons:reshape_adaptive"
-            android:summary="@string/reshape_adaptive_icons_explanation"/>
+            android:summary="@string/reshape_adaptive_icons_explanation"
+            android:icon="@drawable/ic_shapes"/>
     </PreferenceCategory>
 </PreferenceScreen>
