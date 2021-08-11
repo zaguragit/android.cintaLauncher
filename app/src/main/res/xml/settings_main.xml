@@ -10,6 +10,14 @@
         android:summary="%s"
         app:defaultValue="1"
         android:icon="@drawable/ic_color_dropper"/>
+    <ListPreference
+        app:key="color_theme"
+        app:title="@string/color_theme_day_night"
+        app:entries="@array/color_theme_day_night"
+        android:entryValues="@array/color_theme_day_night_data"
+        android:summary="%s"
+        app:defaultValue="0"
+        android:icon="@drawable/ic_lightness"/>
     <Preference
         app:title="@string/rss_sources"
         android:icon="@drawable/ic_news">

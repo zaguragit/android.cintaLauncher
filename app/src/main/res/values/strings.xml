@@ -31,4 +31,5 @@
     <string name="reshape_adaptive_icons">Reshape adaptive icons</string>
     <string name="reshape_adaptive_icons_explanation">Attempts to remove icon background to create a shapeless icon</string>
     <string name="icons">Icons</string>
+    <string name="color_theme_day_night">Lightness mode</string>
 </resources>

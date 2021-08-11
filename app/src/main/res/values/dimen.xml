@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="feed_card_padding">12dp</dimen>
-    <dimen name="feed_card_padding_vertical">18dp</dimen>
+    <dimen name="feed_card_padding_vertical">20dp</dimen>
     <dimen name="feed_card_spacing">6dp</dimen>
 
     <dimen name="dock_corner_radius">26dp</dimen>

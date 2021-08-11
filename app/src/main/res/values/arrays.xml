@@ -12,6 +12,18 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="color_theme_day_night">
+        <item>Auto</item>
+        <item>Dark</item>
+        <item>Light</item>
+    </string-array>
+
+    <string-array name="color_theme_day_night_data">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string-array name="scrollbar_controllers">
         <item>Alphabetic</item>
         <item>By hue</item>

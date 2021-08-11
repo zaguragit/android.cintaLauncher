@@ -8,6 +8,7 @@ import android.widget.ImageView
 import androidx.fragment.app.FragmentActivity
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.color.ColorThemeOptions
 import java.util.*
 
 class IntroActivity : FragmentActivity() {
@@ -32,7 +33,7 @@ class IntroActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
-        ColorTheme.onCreate(this)
+        ColorTheme.onCreate(ColorThemeOptions(ColorThemeOptions.DayNight.AUTO), this)
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -42,7 +43,7 @@ class IntroActivity : FragmentActivity() {
         }
 
         updateColorTheme()
-        ColorTheme.loadWallColorTheme(this, IntroActivity::updateColorTheme)
+        ColorTheme.loadWallColorTheme(this, ColorThemeOptions(ColorThemeOptions.DayNight.AUTO), IntroActivity::updateColorTheme)
     }
 
     override fun onResume() {

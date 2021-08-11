@@ -6,7 +6,10 @@ import androidx.core.graphics.ColorUtils
 import io.posidon.android.cintalauncher.R
 import posidon.android.conveniencelib.Colors
 
-class DefaultColorTheme(context: Context) : ColorTheme {
+class DefaultColorTheme(
+    context: Context,
+    override val options: ColorThemeOptions
+) : ColorTheme {
 
     override val accentColor = context.getColor(R.color.accent)
 

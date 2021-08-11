@@ -110,6 +110,8 @@ class HomeViewHolder(
     }
 }
 
+private var popupX = 0f
+private var popupY = 0f
 @SuppressLint("ClickableViewAccessibility")
 fun bindHomeViewHolder(
     holder: HomeViewHolder
@@ -125,19 +127,17 @@ fun bindHomeViewHolder(
     holder.date.setTextColor(ColorTheme.uiDescription)
     holder.weekDay.setTextColor(ColorTheme.uiDescription)
     holder.scrollIndicator.imageTintList = ColorStateList.valueOf(ColorTheme.uiHint)
-    var x = 0f
-    var y = 0f
     holder.itemView.setOnTouchListener { _, e ->
         when (e.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN -> {
-                x = e.rawX
-                y = e.rawY
+                popupX = e.rawX
+                popupY = e.rawY
             }
         }
         false
     }
     holder.itemView.setOnLongClickListener {
-        HomeLongPressPopup.show(it, x, y, holder.launcherActivity.getNavigationBarHeight(), holder.launcherActivity.settings, holder.launcherActivity::reloadColorThemeSync)
+        HomeLongPressPopup.show(it, popupX, popupY, holder.launcherActivity.getNavigationBarHeight(), holder.launcherActivity.settings, holder.launcherActivity::reloadColorThemeSync)
         true
     }
 }

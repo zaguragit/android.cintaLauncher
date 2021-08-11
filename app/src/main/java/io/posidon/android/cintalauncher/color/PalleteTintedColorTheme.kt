@@ -9,7 +9,8 @@ import kotlin.math.*
 
 class PalleteTintedColorTheme(
     wallpaper: Palette,
-    context: Context
+    context: Context,
+    override val options: ColorThemeOptions
 ) : TintedColorTheme {
 
     override val accentColor = run {
@@ -37,18 +38,16 @@ class PalleteTintedColorTheme(
         val rgb = swatch.rgb
         val lab = DoubleArray(3)
         ColorUtils.colorToLAB(rgb, lab)
-        val lum = Colors.getLuminance(rgb)
-        when {
-            lum > .7f -> {
-                lab[0] = lab[0].coerceAtLeast(92.0)
-                lab[1] = (lab[1] / 3.0).coerceAtLeast(-30.0).coerceAtMost(75.0)
-                lab[2] = (lab[2] / 3.0).coerceAtLeast(-90.0).coerceAtMost(45.0)
-            }
-            else -> {
-                lab[0] = lab[0].coerceAtLeast(3.0).coerceAtMost(12.0)
-                lab[1] = (lab[1] / 3.0).coerceAtLeast(-50.0).coerceAtMost(50.0)
-                lab[2] = (lab[2] / 3.0).coerceAtLeast(-45.0).coerceAtMost(70.0)
-            }
+        val isDark = options.isDarkModeColor(rgb)
+        if (isDark) {
+            lab[0] = lab[0].coerceAtLeast(3.0).coerceAtMost(12.0)
+            lab[1] = (lab[1] / 3.0).coerceAtLeast(-50.0).coerceAtMost(50.0)
+            lab[2] = (lab[2] / 3.0).coerceAtLeast(-45.0).coerceAtMost(70.0)
+        }
+        else {
+            lab[0] = lab[0].coerceAtLeast(92.0)
+            lab[1] = (lab[1] / 3.0).coerceAtLeast(-30.0).coerceAtMost(75.0)
+            lab[2] = (lab[2] / 3.0).coerceAtLeast(-90.0).coerceAtMost(45.0)
         }
         ColorUtils.LABToColor(lab[0], lab[1], lab[2]) and 0xffffff or 0xbc000000.toInt()
     }
@@ -59,19 +58,15 @@ class PalleteTintedColorTheme(
 
     override val cardBG = run {
         val dom = wallpaper.dominantSwatch ?: wallpaper.vibrantSwatch ?: return@run context.getColor(R.color.default_card_bg)
-        val domHsl = dom.hsl
-        val l = domHsl[2]
-        when {
-            l < .22f -> {
-                val hsl = (wallpaper.darkVibrantSwatch ?: wallpaper.darkMutedSwatch ?: dom).hsl
-                hsl[2] = min(hsl[2], .24f)
-                ColorUtils.HSLToColor(hsl)
-            }
-            else -> {
-                val hsl = (wallpaper.lightVibrantSwatch ?: wallpaper.lightMutedSwatch ?: dom).hsl
-                hsl[2] = max(hsl[2], .96f - hsl[1] * .1f)
-                ColorUtils.HSLToColor(hsl)
-            }
+        if (options.isDarkModeCardColor(dom.rgb)) {
+            val hsl = (wallpaper.darkVibrantSwatch ?: wallpaper.darkMutedSwatch ?: dom).hsl
+            hsl[2] = min(hsl[2], .24f)
+            ColorUtils.HSLToColor(hsl)
+        }
+        else {
+            val hsl = (wallpaper.lightVibrantSwatch ?: wallpaper.lightMutedSwatch ?: dom).hsl
+            hsl[2] = max(hsl[2], .96f - hsl[1] * .1f)
+            ColorUtils.HSLToColor(hsl)
         }
     }
 
@@ -84,20 +79,18 @@ class PalleteTintedColorTheme(
         val rgb = swatch.rgb
         val lab = DoubleArray(3)
         ColorUtils.colorToLAB(rgb, lab)
-        val lum = Colors.getLuminance(rgb)
-        when {
-            lum > .6f -> {
-                val oldL = lab[0]
-                lab[0] = lab[0].coerceAtLeast(89.0)
-                val ld = lab[0] - oldL
-                lab[1] *= 1.0 + ld / 100 * 1.6
-                lab[2] *= 1.0 + ld / 100 * 1.6
-            }
-            else -> {
-                lab[0] = lab[0].coerceAtMost(5.0 - abs(lab[1]) / 128 + lab[2].coerceAtMost(0.0) / 128)
-                lab[1] = (lab[1] / 3.0).coerceAtLeast(-50.0).coerceAtMost(50.0)
-                lab[2] = (lab[2] / 3.0).coerceAtLeast(-45.0).coerceAtMost(70.0)
-            }
+        val isDark = options.isDarkModeColor(rgb)
+        if (isDark) {
+            lab[0] = lab[0].coerceAtMost(5.0 - abs(lab[1]) / 128 + lab[2].coerceAtMost(0.0) / 128)
+            lab[1] = (lab[1] / 3.0).coerceAtLeast(-50.0).coerceAtMost(50.0)
+            lab[2] = (lab[2] / 3.0).coerceAtLeast(-45.0).coerceAtMost(70.0)
+        }
+        else {
+            val oldL = lab[0]
+            lab[0] = lab[0].coerceAtLeast(89.0)
+            val ld = lab[0] - oldL
+            lab[1] *= 1.0 + ld / 100 * 1.6
+            lab[2] *= 1.0 + ld / 100 * 1.6
         }
         ColorUtils.LABToColor(lab[0], lab[1], lab[2])
     }

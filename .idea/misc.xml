@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/drawable/ic_color_dropper.xml" value="0.3890625" />
         <entry key="app/src/main/res/drawable/ic_cross.xml" value="0.2265625" />
         <entry key="app/src/main/res/drawable/ic_info.xml" value="0.2265625" />
+        <entry key="app/src/main/res/drawable/ic_lightness.xml" value="0.21510416666666668" />
         <entry key="app/src/main/res/drawable/ic_news.xml" value="0.2265625" />
         <entry key="app/src/main/res/drawable/ic_pause.xml" value="0.2265625" />
         <entry key="app/src/main/res/drawable/ic_play.xml" value="0.2265625" />
@@ -19,6 +20,7 @@
         <entry key="app/src/main/res/layout/app_drawer_item.xml" value="0.21041666666666667" />
         <entry key="app/src/main/res/layout/feed_home.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/layout/feed_home_search_bar.xml" value="0.24322916666666666" />
+        <entry key="app/src/main/res/layout/feed_item_plain.xml" value="0.20742753623188406" />
         <entry key="app/src/main/res/layout/feed_summary_media.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/layout/feed_summary_notification.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/layout/long_press_home_popup.xml" value="0.3729166666666667" />

@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.color.ColorThemeOptions
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
@@ -34,6 +35,7 @@ import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.providers.notification.NotificationProvider
 import io.posidon.android.cintalauncher.providers.rss.RssProvider
 import io.posidon.android.cintalauncher.storage.*
+import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
 import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
 import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.SCROLLBAR_CONTROLLER_BY_HUE
 import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.scrollbarController
@@ -81,13 +83,16 @@ class LauncherActivity : FragmentActivity() {
 
     var blurBitmap: Bitmap? = null
 
+    var colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         StackTraceActivity.init(applicationContext)
         setContentView(R.layout.activity_launcher)
         configureWindow()
         settings.init(applicationContext)
-        ColorTheme.onCreate(this)
+        colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
+        ColorTheme.onCreate(colorThemeOptions, this)
         wallpaperManager = WallpaperManager.getInstance(this)
 
         feedRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -116,7 +121,7 @@ class LauncherActivity : FragmentActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             wallpaperManager.addOnColorsChangedListener(::onColorsChangedListener, feedRecycler.handler)
             thread(name = "onCreate color update", isDaemon = true) {
-                ColorTheme.onColorsChanged(this, settings.colorTheme, LauncherActivity::updateColorTheme) {
+                ColorTheme.onColorsChanged(this, settings.colorTheme, colorThemeOptions, LauncherActivity::updateColorTheme) {
                     wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
                 }
             }
@@ -195,7 +200,7 @@ class LauncherActivity : FragmentActivity() {
     ) {
         if (which and WallpaperManager.FLAG_SYSTEM != 0) {
             onWallpaperChanged()
-            ColorTheme.onColorsChanged(this, settings.colorTheme, LauncherActivity::updateColorTheme) { colors }
+            ColorTheme.onColorsChanged(this, settings.colorTheme, colorThemeOptions, LauncherActivity::updateColorTheme) { colors }
         }
     }
 
@@ -215,6 +220,7 @@ class LauncherActivity : FragmentActivity() {
                 ColorTheme.onResumePreOMR1(
                     this,
                     settings.colorTheme,
+                    colorThemeOptions,
                     LauncherActivity::updateColorTheme
                 )
                 onWallpaperChanged()
@@ -240,11 +246,12 @@ class LauncherActivity : FragmentActivity() {
     }
 
     fun reloadColorThemeSync() {
+        colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            ColorTheme.onColorsChanged(this, settings.colorTheme, LauncherActivity::updateColorTheme) {
+            ColorTheme.onColorsChanged(this, settings.colorTheme, colorThemeOptions, LauncherActivity::updateColorTheme) {
                 wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
             }
-        } else ColorTheme.onResumePreOMR1(this, settings.colorTheme, LauncherActivity::updateColorTheme)
+        } else ColorTheme.onResumePreOMR1(this, settings.colorTheme, colorThemeOptions, LauncherActivity::updateColorTheme)
     }
 
     fun reloadScrollbarController() {

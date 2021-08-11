@@ -22,6 +22,9 @@ import kotlin.math.min
 private lateinit var colorThemeInstance: ColorTheme
 
 interface ColorTheme {
+
+    val options: ColorThemeOptions
+
     val accentColor: Int
 
     val uiBG: Int
@@ -108,20 +111,20 @@ interface ColorTheme {
         var isInitialized = false
             private set
 
-        fun onCreate(activity: Activity) {
+        fun onCreate(colorThemeOptions: ColorThemeOptions, activity: Activity) {
             if (!isInitialized) {
-                colorThemeInstance = DefaultColorTheme(activity)
+                colorThemeInstance = DefaultColorTheme(activity, colorThemeOptions)
                 isInitialized = true
             }
         }
         
-        fun <A : Activity> loadWallColorTheme(activity: A, onFinished: (A) -> Unit) {
+        fun <A : Activity> loadWallColorTheme(activity: A, colorThemeOptions: ColorThemeOptions, onFinished: (A) -> Unit) {
             if (ActivityCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED) {
-                if (colorThemeInstance !is DefaultColorTheme) {
-                    colorThemeInstance = DefaultColorTheme(activity)
+                if (colorThemeInstance !is DefaultColorTheme || colorThemeInstance.options != colorThemeOptions) {
+                    colorThemeInstance = DefaultColorTheme(activity, colorThemeOptions)
                     activity.runOnUiThread {
                         onFinished(activity)
                     }
@@ -135,7 +138,7 @@ interface ColorTheme {
                 min(d.intrinsicHeight, Device.screenHeight(activity) / 4)
             )
             val pallete = Palette.from(wall).generate()
-            val newColorTheme = PalleteTintedColorTheme(pallete, activity)
+            val newColorTheme = PalleteTintedColorTheme(pallete, activity, colorThemeOptions)
             if (newColorTheme != colorThemeInstance) {
                 colorThemeInstance = newColorTheme
                 activity.runOnUiThread {
@@ -147,18 +150,19 @@ interface ColorTheme {
         @RequiresApi(Build.VERSION_CODES.O_MR1)
         fun <A : Activity> loadSystemWallColorTheme(
             activity: A,
+            colorThemeOptions: ColorThemeOptions,
             onFinished: (A) -> Unit,
             colors: WallpaperColors
         ) {
-            colorThemeInstance = AndroidOMR1WallColorTheme(activity, colors)
+            colorThemeInstance = AndroidOMR1WallColorTheme(activity, colors, colorThemeOptions)
             activity.runOnUiThread {
                 onFinished(activity)
             }
         }
 
-        private fun <A : Activity> loadDefaultColorTheme(activity: A, onFinished: (A) -> Unit) {
-            if (colorThemeInstance !is DefaultColorTheme) {
-                colorThemeInstance = DefaultColorTheme(activity)
+        private fun <A : Activity> loadDefaultColorTheme(activity: A, colorThemeOptions: ColorThemeOptions, onFinished: (A) -> Unit) {
+            if (colorThemeInstance !is DefaultColorTheme || colorThemeInstance.options != colorThemeOptions) {
+                colorThemeInstance = DefaultColorTheme(activity, colorThemeOptions)
                 activity.runOnUiThread {
                     onFinished(activity)
                 }
@@ -169,31 +173,35 @@ interface ColorTheme {
         fun <A : Activity> onColorsChanged(
             activity: A,
             colorTheme: Int,
+            colorThemeOptions: ColorThemeOptions,
             onFinished: (A) -> Unit,
             colors: () -> WallpaperColors?,
         ) {
             when (colorTheme) {
-                ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT -> loadWallColorTheme(activity, onFinished)
+                ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT -> loadWallColorTheme(activity, colorThemeOptions, onFinished)
                 ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT_SYSTEM_ASSISTED -> colors()?.let {
-                    loadSystemWallColorTheme(activity, onFinished, it)
+                    loadSystemWallColorTheme(activity, colorThemeOptions, onFinished, it)
                     println(it)
-                } ?: loadWallColorTheme(activity, onFinished)
-                else -> loadDefaultColorTheme(activity, onFinished)
+                } ?: loadWallColorTheme(activity, colorThemeOptions, onFinished)
+                else -> loadDefaultColorTheme(activity, colorThemeOptions, onFinished)
             }
         }
         
         fun <A : Activity> onResumePreOMR1(
             activity: A,
             colorTheme: Int,
+            colorThemeOptions: ColorThemeOptions,
             onFinished: (A) -> Unit,
         ) {
             when (colorTheme) {
                 ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT_SYSTEM_ASSISTED,
-                ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT -> loadWallColorTheme(activity, onFinished)
-                else -> loadDefaultColorTheme(activity, onFinished)
+                ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT -> loadWallColorTheme(activity, colorThemeOptions, onFinished)
+                else -> loadDefaultColorTheme(activity, colorThemeOptions, onFinished)
             }
         }
 
+        override val options: ColorThemeOptions
+            get() = colorThemeInstance.options
         override val accentColor: Int
             get() = colorThemeInstance.accentColor
         override val uiBG: Int

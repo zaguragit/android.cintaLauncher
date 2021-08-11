@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
+import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.setColorThemeDayNight
 import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.ui.acrylicBlur
@@ -81,7 +83,6 @@ object HomeLongPressPopup {
         reloadColorTheme: () -> Unit,
     ): List<ListPopupItem> {
         return listOf(
-            ListPopupItem(context.getString(R.string.launcher_settings), isTitle = true),
             ListPopupItem(
                 context.getString(R.string.color_theme_gen),
                 description = context.resources.getStringArray(R.array.color_theme_gens)[settings.colorTheme],
@@ -91,6 +92,21 @@ object HomeLongPressPopup {
                     .setSingleChoiceItems(R.array.color_theme_gens, settings.colorTheme) { d, i ->
                         settings.edit(context) {
                             colorTheme = context.resources.getStringArray(R.array.color_theme_gens_data)[i].toInt()
+                            reloadColorTheme()
+                        }
+                        d.dismiss()
+                    }
+                    .show()
+            },
+            ListPopupItem(
+                context.getString(R.string.color_theme_day_night),
+                description = context.resources.getStringArray(R.array.color_theme_day_night)[settings.colorThemeDayNight.ordinal],
+                icon = ContextCompat.getDrawable(context, R.drawable.ic_lightness),
+            ) {
+                AlertDialog.Builder(context)
+                    .setSingleChoiceItems(R.array.color_theme_day_night, settings.colorThemeDayNight.ordinal) { d, i ->
+                        settings.edit(context) {
+                            setColorThemeDayNight(context.resources.getStringArray(R.array.color_theme_day_night_data)[i].toInt())
                             reloadColorTheme()
                         }
                         d.dismiss()

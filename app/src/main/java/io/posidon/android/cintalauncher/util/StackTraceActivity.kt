@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity
 import io.posidon.android.cintalauncher.BuildConfig
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.color.ColorThemeOptions
 import io.posidon.android.cintalauncher.color.DefaultColorTheme
 import kotlin.system.exitProcess
 
@@ -66,7 +67,10 @@ class StackTraceActivity : FragmentActivity() {
             }
 
             try {
-                val colorTheme = if (ColorTheme.isInitialized) ColorTheme else DefaultColorTheme(this)
+                val colorTheme = if (ColorTheme.isInitialized) ColorTheme else DefaultColorTheme(
+                    this,
+                    ColorThemeOptions(ColorThemeOptions.DayNight.DARK)
+                )
                 window.decorView.setBackgroundColor(colorTheme.uiBG)
                 send.backgroundTintList = ColorStateList.valueOf(colorTheme.appDrawerItemBase)
                 send.setTextColor(colorTheme.titleColorForBG(this, colorTheme.appDrawerItemBase))

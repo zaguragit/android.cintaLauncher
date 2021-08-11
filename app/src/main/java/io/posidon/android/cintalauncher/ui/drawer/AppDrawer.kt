@@ -43,6 +43,8 @@ class AppDrawer(
         setOnClickListener(::close)
     }
 
+    private var popupX = 0f
+    private var popupY = 0f
     @SuppressLint("ClickableViewAccessibility")
     fun init() {
         recycler.layoutManager = GridLayoutManager(view.context, 3, RecyclerView.VERTICAL, false).apply {
@@ -60,50 +62,49 @@ class AppDrawer(
         recycler.setOnScrollChangeListener { _, _, _, _, _ -> adapter.onScroll() }
         scrollBar.onStartScroll = ::open
 
-        var x = 0f
-        var y = 0f
         val onLongPress = Runnable {
             recycler.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            DrawerLongPressPopup.show(recycler, x, y, activity.getNavigationBarHeight(), activity.settings, activity::reloadScrollbarController, activity::loadApps)
+            DrawerLongPressPopup.show(recycler, popupX, popupY, activity.getNavigationBarHeight(), activity.settings, activity::reloadScrollbarController, activity::loadApps)
         }
         var lastRecyclerViewDownTouchEvent: MotionEvent? = null
         recycler.setOnTouchListener { v, event ->
-            when (event.action) {
+            when (event.action and MotionEvent.ACTION_MASK) {
                 MotionEvent.ACTION_DOWN -> {
-                    x = event.rawX
-                    y = event.rawY
+                    popupX = event.rawX
+                    popupY = event.rawY
                     if (recycler.findChildViewUnder(event.x, event.y) == null) {
+                        v.handler.removeCallbacks(onLongPress)
                         lastRecyclerViewDownTouchEvent = event
                         v.handler.postDelayed(onLongPress, ViewConfiguration.getLongPressTimeout().toLong())
                     }
                 }
-                MotionEvent.ACTION_UP ->
-                    v.handler.removeCallbacks(onLongPress)
                 MotionEvent.ACTION_MOVE -> if (lastRecyclerViewDownTouchEvent != null) {
-                    // Check to see if it was a tap or a swipe
-                    val xDelta = abs(lastRecyclerViewDownTouchEvent!!.x - event.x)
-                    val yDelta = abs(lastRecyclerViewDownTouchEvent!!.y - event.y)
-                    if (xDelta >= 30 || yDelta >= 30) {
+                    val xDelta = abs(popupX - event.x)
+                    val yDelta = abs(popupY - event.y)
+                    if (xDelta >= 10 || yDelta >= 10) {
                         v.handler.removeCallbacks(onLongPress)
+                        lastRecyclerViewDownTouchEvent = null
                     }
+                }
+                MotionEvent.ACTION_CANCEL,
+                MotionEvent.ACTION_UP -> {
+                    v.handler.removeCallbacks(onLongPress)
                     lastRecyclerViewDownTouchEvent = null
                 }
-                MotionEvent.ACTION_CANCEL ->
-                    v.handler.removeCallbacks(onLongPress)
             }
             false
         }
         bottomBar.setOnTouchListener { _, e ->
             when (e.action and MotionEvent.ACTION_MASK) {
                 MotionEvent.ACTION_DOWN -> {
-                    x = e.rawX
-                    y = e.rawY
+                    popupX = e.rawX
+                    popupY = e.rawY
                 }
             }
             false
         }
         bottomBar.setOnLongClickListener {
-            DrawerLongPressPopup.show(it, x, y, activity.getNavigationBarHeight(), activity.settings, activity::reloadScrollbarController, activity::loadApps)
+            DrawerLongPressPopup.show(it, popupX, popupY, activity.getNavigationBarHeight(), activity.settings, activity::reloadScrollbarController, activity::loadApps)
             true
         }
     }
@@ -118,7 +119,7 @@ class AppDrawer(
     }
 
     fun updateColorTheme() {
-        view.setBackgroundColor(ColorTheme.appDrawerColor and 0xffffff or 0xdd000000.toInt())
+        view.setBackgroundColor(ColorTheme.appDrawerColor and 0xffffff or 0xca000000.toInt())
         bottomBar.setBackgroundColor(ColorTheme.appDrawerBottomBarColor)
         closeButton.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
         closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))

@@ -11,12 +11,14 @@ class ListPopupTitleViewHolder(itemView: View) : ListPopupViewHolder(itemView) {
 
     val text = itemView.findViewById<TextView>(R.id.text)
     val description = itemView.findViewById<TextView>(R.id.description)
+    val separator = itemView.findViewById<View>(R.id.separator)
 
     override fun onBind(item: ListPopupItem) {
         text.text = item.text
         description.text = item.description
 
-        text.setTextColor(ColorTheme.cardTitle)
+        text.setTextColor(ColorTheme.adjustColorForContrast(ColorTheme.cardBG, ColorTheme.accentColor))
+        separator.setBackgroundColor(ColorTheme.cardHint)
 
         itemView.setOnClickListener(item.onClick)
 

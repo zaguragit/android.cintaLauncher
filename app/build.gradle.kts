@@ -12,7 +12,7 @@ android {
         minSdk = 26
         targetSdk = 30
         versionCode = 1
-        versionName = "1.0"
+        versionName = "2021.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,8 +44,6 @@ dependencies {
     implementation("androidx.preference:preference-ktx:1.1.1")
     implementation("com.google.android.material:material:1.4.0")
     testImplementation("junit:junit:4.13.2")
-    //androidTestImplementation("androidx.test.ext:junit:1.1.2")
-    //androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
 }
 
 configurations.all {

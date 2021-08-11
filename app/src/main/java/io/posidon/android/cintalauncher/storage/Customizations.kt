@@ -1,5 +1,7 @@
 package io.posidon.android.cintalauncher.storage
 
+import io.posidon.android.cintalauncher.color.ColorThemeOptions
+
 object ColorThemeSetting {
     val Settings.colorTheme: Int
         get() = get(KEY_COLOR_THEME, COLOR_THEME_DEFAULT)
@@ -15,6 +17,21 @@ object ColorThemeSetting {
     const val COLOR_THEME_WALLPAPER_TINT_SYSTEM_ASSISTED = 2
 
     const val COLOR_THEME_DEFAULT = COLOR_THEME_WALLPAPER_TINT
+}
+
+object ColorThemeDayNightSetting {
+    val Settings.colorThemeDayNight: ColorThemeOptions.DayNight
+        get() = ColorThemeOptions.DayNight.values()[get(KEY, DEFAULT)]
+
+    var Settings.SettingsEditor.colorThemeDayNight: ColorThemeOptions.DayNight
+        get() = ColorThemeOptions.DayNight.values()[settings[KEY, DEFAULT]]
+        inline set(value) = setColorThemeDayNight(value.ordinal)
+
+    fun Settings.SettingsEditor.setColorThemeDayNight(i: Int) { KEY set i }
+
+    private const val KEY = "color_theme:day_night"
+
+    const val DEFAULT = 0
 }
 
 object ScrollbarControllerSetting {

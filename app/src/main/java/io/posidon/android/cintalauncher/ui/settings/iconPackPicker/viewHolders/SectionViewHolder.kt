@@ -11,6 +11,6 @@ class SectionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(string: String) {
         text.text = string
-        text.setTextColor(ColorTheme.accentColor)
+        text.setTextColor(ColorTheme.adjustColorForContrast(ColorTheme.uiBG, ColorTheme.accentColor))
     }
 }

@@ -12,11 +12,11 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
-
 @RequiresApi(Build.VERSION_CODES.O_MR1)
 class AndroidOMR1WallColorTheme(
     context: Context,
-    colors: WallpaperColors
+    colors: WallpaperColors,
+    override val options: ColorThemeOptions
 ): TintedColorTheme {
 
     private val primary = colors.primaryColor
@@ -24,7 +24,15 @@ class AndroidOMR1WallColorTheme(
     private val tertiary = colors.tertiaryColor
 
     override val accentColor = (tertiary ?: secondary ?: primary).toArgb()
-    override val uiBG = primary.toArgb() and 0xffffff or (context.getColor(R.color.feed_bg) and 0xff000000.toInt())
+    override val uiBG = run {
+        val c = primary.toArgb()
+        val lab = DoubleArray(3)
+        ColorUtils.colorToLAB(c, lab)
+        lab[0] = if (options.isDarkModeColor(c))
+            lab[0].coerceAtMost(30.0)
+        else lab[0].coerceAtLeast(30.0)
+        ColorUtils.LABToColor(lab[0], lab[1], lab[2]) and 0xffffff or (context.getColor(R.color.feed_bg) and 0xff000000.toInt())
+    }
     override val uiTitle = titleColorForBG(context, uiBG)
     override val uiDescription = textColorForBG(context, uiBG)
     override val uiHint = hintColorForBG(context, uiBG)
@@ -33,16 +41,13 @@ class AndroidOMR1WallColorTheme(
         val dom = (secondary ?: primary).toArgb()
         val hsl = FloatArray(3)
         ColorUtils.colorToHSL(dom, hsl)
-        val l = hsl[2]
-        when {
-            l < .22f -> {
-                hsl[2] = min(hsl[2], .24f)
-                ColorUtils.HSLToColor(hsl)
-            }
-            else -> {
-                hsl[2] = max(hsl[2], .96f - hsl[1] * .1f)
-                ColorUtils.HSLToColor(hsl)
-            }
+        if (options.isDarkModeCardColor(dom)) {
+            hsl[2] = min(hsl[2], .24f)
+            ColorUtils.HSLToColor(hsl)
+        }
+        else {
+            hsl[2] = max(hsl[2], .96f - hsl[1] * .1f)
+            ColorUtils.HSLToColor(hsl)
         }
     }
 
@@ -54,20 +59,18 @@ class AndroidOMR1WallColorTheme(
         val rgb = primary.toArgb()
         val lab = DoubleArray(3)
         ColorUtils.colorToLAB(rgb, lab)
-        val lum = Colors.getLuminance(rgb)
-        when {
-            lum > .6f -> {
-                val oldL = lab[0]
-                lab[0] = lab[0].coerceAtLeast(89.0)
-                val ld = lab[0] - oldL
-                lab[1] *= 1.0 + ld / 100 * 1.6
-                lab[2] *= 1.0 + ld / 100 * 1.6
-            }
-            else -> {
-                lab[0] = lab[0].coerceAtMost(5.0 - abs(lab[1]) / 128 + lab[2].coerceAtMost(0.0) / 128)
-                lab[1] = (lab[1] / 3.0).coerceAtLeast(-50.0).coerceAtMost(50.0)
-                lab[2] = (lab[2] / 3.0).coerceAtLeast(-45.0).coerceAtMost(70.0)
-            }
+        val isDark = options.isDarkModeColor(rgb)
+        if (isDark) {
+            lab[0] = lab[0].coerceAtMost(5.0 - abs(lab[1]) / 128 + lab[2].coerceAtMost(0.0) / 128)
+            lab[1] = (lab[1] / 3.0).coerceAtLeast(-50.0).coerceAtMost(50.0)
+            lab[2] = (lab[2] / 3.0).coerceAtLeast(-45.0).coerceAtMost(70.0)
+        }
+        else {
+            val oldL = lab[0]
+            lab[0] = lab[0].coerceAtLeast(89.0)
+            val ld = lab[0] - oldL
+            lab[1] *= 1.0 + ld / 100 * 1.6
+            lab[2] *= 1.0 + ld / 100 * 1.6
         }
         ColorUtils.LABToColor(lab[0], lab[1], lab[2])
     }

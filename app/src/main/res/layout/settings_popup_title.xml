@@ -4,6 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+    <View
+        style="@style/Theme.CintaLauncher.ListPopup.Title.Separator"
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
     <TextView
         style="@style/Theme.CintaLauncher.ListPopup.Title.Label"
         android:id="@+id/text"
