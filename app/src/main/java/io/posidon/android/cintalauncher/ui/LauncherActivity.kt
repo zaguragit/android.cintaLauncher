@@ -139,7 +139,7 @@ class LauncherActivity : FragmentActivity() {
             runOnUiThread(::updateBlur)
             return@thread
         }
-        val drawable = wallpaperManager.peekFastDrawable()
+        val drawable = wallpaperManager.peekDrawable()
         if (drawable == null) {
             if (blurBitmap == null) return@thread
             blurBitmap = null
