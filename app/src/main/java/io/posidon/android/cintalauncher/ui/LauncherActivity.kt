@@ -139,7 +139,14 @@ class LauncherActivity : FragmentActivity() {
             runOnUiThread(::updateBlur)
             return@thread
         }
-        AcrylicBlur.blurWallpaper(this, wallpaperManager.drawable) {
+        val drawable = wallpaperManager.peekFastDrawable()
+        if (drawable == null) {
+            if (blurBitmap == null) return@thread
+            blurBitmap = null
+            runOnUiThread(::updateBlur)
+            return@thread
+        }
+        AcrylicBlur.blurWallpaper(this, drawable) {
             acrylicBlur = it
             blurBitmap = it.fullBlur
             runOnUiThread(::updateBlur)

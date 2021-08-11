@@ -182,7 +182,7 @@ interface ColorTheme {
                 ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT_SYSTEM_ASSISTED -> colors()?.let {
                     loadSystemWallColorTheme(activity, colorThemeOptions, onFinished, it)
                     println(it)
-                } ?: loadWallColorTheme(activity, colorThemeOptions, onFinished)
+                } ?: loadDefaultColorTheme(activity, colorThemeOptions, onFinished)
                 else -> loadDefaultColorTheme(activity, colorThemeOptions, onFinished)
             }
         }
