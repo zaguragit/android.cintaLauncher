@@ -2,6 +2,7 @@ package io.posidon.android.cintalauncher.ui.drawer.viewHolders
 
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -91,6 +92,7 @@ fun bindAppViewHolder(
     isDimmed: Boolean,
     suggestionsManager: AppSuggestionsManager,
     navbarHeight: Int,
+    onDragOut: (view: View) -> Unit = {},
 ) {
     holder.blurBG.drawable = BitmapDrawable(holder.itemView.resources, acrylicBlur?.smoothBlur)
     holder.map[item] = holder.blurBG::invalidate
@@ -134,7 +136,14 @@ fun bindAppViewHolder(
         item.open(it.context.applicationContext, it)
     }
     holder.itemView.setOnLongClickListener {
-        ItemLongPress.onItemLongPress(it.context, backgroundColor, ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor), it, item, navbarHeight)
+        ItemLongPress.onItemLongPress(
+            it,
+            backgroundColor,
+            ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor),
+            item,
+            navbarHeight,
+            onDragOut = onDragOut
+        )
         true
     }
 }

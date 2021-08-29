@@ -38,7 +38,7 @@ class AnswerSearchViewHolder(itemView: View) : SearchViewHolder(itemView) {
 
         title.text = result.title
         description.text = result.description
-        sourceAction.text = result.sourceName
+        sourceAction.text = itemView.context.getString(R.string.read_more_at_source, result.sourceName)
 
         val bg = ColorTheme.actionButtonBG(ColorTheme.accentColor)
         val fg = ColorTheme.actionButtonFG(bg)

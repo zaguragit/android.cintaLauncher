@@ -1,8 +1,11 @@
 package io.posidon.android.cintalauncher.ui.popup.drawerItem
 
+import android.content.ClipData
+import android.content.ClipDescription
 import android.content.Context
 import android.content.pm.LauncherApps
 import android.content.res.ColorStateList
+import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -56,21 +59,52 @@ object ItemLongPress {
         return window
     }
 
-    inline fun onItemLongPress(
-        context: Context,
+    fun onItemLongPress(
+        view: View,
         backgroundColor: Int,
         textColor: Int,
-        view: View,
         item: LauncherItem,
         navbarHeight: Int,
+        onDragStart: (view: View) -> Unit = {},
+        onDragOut: (view: View) -> Unit = {},
     ) {
         if (currentPopup == null) {
+            val context = view.context
             context.vibrate(14)
             val (x, y, gravity) = PopupUtils.getPopupLocationFromView(view, navbarHeight)
             val popupWindow = makePopupWindow(context, item, backgroundColor, textColor) {
                 item.showProperties(view, backgroundColor, textColor)
             }
             popupWindow.showAtLocation(view, gravity, x, y)
+
+            view.setOnDragListener { v, event ->
+                when (event.action) {
+                    DragEvent.ACTION_DRAG_EXITED -> {
+                        currentPopup?.dismiss()
+                        onDragOut(v)
+                    }
+                    DragEvent.ACTION_DRAG_STARTED -> {
+                        v.visibility = View.INVISIBLE
+                    }
+                    DragEvent.ACTION_DRAG_ENDED -> {
+                        v.visibility = View.VISIBLE
+                        currentPopup?.isFocusable = true
+                        currentPopup?.update()
+                    }
+                }
+                true
+            }
+
+            popupWindow.isFocusable = false
+            val shadow = View.DragShadowBuilder(view)
+            val clipData = ClipData(
+                item.label,
+                arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
+                ClipData.Item(item.toString()))
+
+            view.startDragAndDrop(clipData, shadow, null, View.DRAG_FLAG_OPAQUE or View.DRAG_FLAG_GLOBAL)
+
+            onDragStart(view)
         }
     }
 }

@@ -7,11 +7,10 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Process
-import io.posidon.android.cintalauncher.data.items.App
+import io.posidon.android.cintalauncher.LauncherContext
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.storage.Settings
 import java.util.*
-import kotlin.collections.HashMap
 
 
 class AppSuggestionsManager {
@@ -29,32 +28,33 @@ class AppSuggestionsManager {
         while (last3.size > 3) last3.removeLast()
     }
 
-    private var appsByName: HashMap<String, MutableList<App>> = HashMap()
-
-    fun onAppsLoaded(context: Context, settings: Settings, appsByName: HashMap<String, MutableList<App>>) {
-        loadSavedRecents(settings, appsByName)
-        this.appsByName = appsByName
-        tryLoadFromSystem(context)
+    fun onAppsLoaded(
+        appManager: LauncherContext.AppManager,
+        context: Context,
+        settings: Settings
+    ) {
+        loadSavedRecents(settings, appManager)
+        tryLoadFromSystem(context, appManager)
     }
 
-    fun loadSavedRecents(settings: Settings, appsByName: HashMap<String, MutableList<App>>) {
+    fun loadSavedRecents(settings: Settings, appManager: LauncherContext.AppManager) {
         settings.getStrings("stats:recently_opened")?.let {
             val last3 = LinkedList<LauncherItem>()
             it.forEach {
-                LauncherItem.parse(it, appsByName)?.let { it1 -> last3.add(it1) }
+                appManager.parseLauncherItem(it)?.let { it1 -> last3.add(it1) }
             }
             this.last3 = last3
         }
     }
 
-    fun tryLoadFromSystem(context: Context) {
+    fun tryLoadFromSystem(context: Context, appManager: LauncherContext.AppManager) {
         hasPermission = checkUsageAccessPermission(context)
         if (hasPermission) {
-            loadSystemRecents(context, appsByName)
+            loadSystemRecents(context, appManager)
         }
     }
 
-    fun loadSystemRecents(context: Context, appsByName: HashMap<String, MutableList<App>>) {
+    fun loadSystemRecents(context: Context, appManager: LauncherContext.AppManager) {
         val usageStatsManager = context.getSystemService(UsageStatsManager::class.java)
 
         val c = Calendar.getInstance()
@@ -72,18 +72,17 @@ class AppSuggestionsManager {
             var i = 0
             for (stat in stats) {
                 if (stat.packageName == context.packageName) continue
-                val p = appsByName[stat.packageName]
-                it += p?.first() ?: continue
+                it += appManager.getAppByPackage(stat.packageName) ?: continue
                 i++
                 if (i >= 3) break
             }
         }
     }
 
-    fun onResume(context: Context) {
+    fun onResume(context: Context, appManager: LauncherContext.AppManager) {
         hasPermission = checkUsageAccessPermission(context)
         if (hasPermission) {
-            loadSystemRecents(context, appsByName)
+            loadSystemRecents(context, appManager)
         }
     }
 

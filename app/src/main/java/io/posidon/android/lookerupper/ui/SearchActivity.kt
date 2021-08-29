@@ -41,7 +41,7 @@ class SearchActivity : FragmentActivity() {
         searcher.onCreate(this)
         loadColors()
         val container = findViewById<View>(R.id.search_bar_container)!!
-        adapter = SearchAdapter(getNavigationBarHeight())
+        adapter = SearchAdapter(this, getNavigationBarHeight())
         findViewById<RecyclerView>(R.id.recycler).apply {
             layoutManager = GridLayoutManager(this@SearchActivity, 3, RecyclerView.VERTICAL, false).apply {
                 spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {

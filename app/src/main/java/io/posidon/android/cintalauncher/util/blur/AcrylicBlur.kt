@@ -27,29 +27,12 @@ class AcrylicBlur private constructor(
         fun blurWallpaper(context: Context, drawable: Drawable): AcrylicBlur {
             val w = Device.screenWidth(context)
             val h = Device.screenHeight(context)
-
-            val start = System.currentTimeMillis()
-
             val b = drawable.toBitmap(w / 12, h / 12)
             val smoothBlur = Graphics.fastBlur(b, context.dp(1f).toInt())
-
             val partialBlurMedium = Graphics.fastBlur(b, context.dp(.6f).toInt())
             val partialBlurSmall = Graphics.fastBlur(b, context.dp(.3f).toInt())
-
-            val blurT = System.currentTimeMillis()
-
             val nb = Bitmap.createScaledBitmap(smoothBlur, w, h, false)
-
-            val scaleT = System.currentTimeMillis()
-
             val fullBlur = NoiseBlur.blur(nb, context.dp(18f))
-
-            val noiseT = System.currentTimeMillis()
-            println("""
-                blur: ${blurT - start}
-                scale: ${scaleT - blurT}
-                noise: ${noiseT - scaleT}
-            """.trimIndent())
             return AcrylicBlur(fullBlur, smoothBlur, partialBlurMedium, partialBlurSmall)
         }
 

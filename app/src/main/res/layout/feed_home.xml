@@ -45,6 +45,10 @@
             android:id="@+id/summary_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pinned_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <include layout="@layout/feed_home_search_bar"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recents_recycler"

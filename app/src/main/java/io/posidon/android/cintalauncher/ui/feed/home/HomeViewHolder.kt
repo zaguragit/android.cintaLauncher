@@ -4,10 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.drawable.BitmapDrawable
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -16,11 +13,13 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import io.posidon.android.cintalauncher.LauncherContext
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.providers.summary.NotificationSummariesProvider
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.acrylicBlur
+import io.posidon.android.cintalauncher.ui.feed.home.pinned.PinnedItemsAdapter
 import io.posidon.android.cintalauncher.ui.feed.home.summary.SummaryAdapter
 import io.posidon.android.cintalauncher.ui.popup.home.HomeLongPressPopup
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
@@ -33,6 +32,7 @@ class HomeViewHolder(
     val scrollIndicator: ImageView,
     parentView: ViewGroup,
     val launcherActivity: LauncherActivity,
+    val launcherContext: LauncherContext,
     itemView: View,
 ) : RecyclerView.ViewHolder(itemView) {
 
@@ -46,7 +46,12 @@ class HomeViewHolder(
         layoutManager = LinearLayoutManager(itemView.context, RecyclerView.VERTICAL, false)
         adapter = summaryAdapter
     }
-    val recentlyOpenedAdapter = RecentlyOpenedItemsAdapter(launcherActivity)
+    val pinnedAdapter = PinnedItemsAdapter(launcherActivity, launcherContext)
+    val pinnedRecycler = summaryCard.findViewById<RecyclerView>(R.id.pinned_recycler)!!.apply {
+        layoutManager = GridLayoutManager(itemView.context, 3, RecyclerView.VERTICAL, true)
+        adapter = pinnedAdapter
+    }
+    val recentlyOpenedAdapter = RecentlyOpenedItemsAdapter(launcherActivity, launcherContext)
     val recentlyOpenedRecycler = summaryCard.findViewById<RecyclerView>(R.id.recents_recycler)!!.apply {
         layoutManager = GridLayoutManager(itemView.context, 3, RecyclerView.VERTICAL, false)
         adapter = recentlyOpenedAdapter
@@ -93,8 +98,19 @@ class HomeViewHolder(
         }
     }
 
+    fun updatePinned() {
+        pinnedAdapter.showDropTarget(false)
+        val pinned = launcherContext.appManager.pinnedItems
+        if (pinned.isEmpty()) {
+            pinnedRecycler.isVisible = false
+        } else {
+            pinnedRecycler.isVisible = true
+            pinnedAdapter.updateItems(pinned)
+        }
+    }
+
     fun updateRecents() {
-        val recent = launcherActivity.suggestionsManager.getLast3()
+        val recent = launcherContext.appManager.suggestionsManager.getLast3()
         if (recent.isEmpty()) {
             recentlyOpenedRecycler.isVisible = false
         } else {
@@ -107,6 +123,7 @@ class HomeViewHolder(
         blurBG.invalidate()
         summaryAdapter.onScroll()
         recentlyOpenedAdapter.onScroll()
+        pinnedAdapter.onScroll()
     }
 }
 
@@ -117,6 +134,7 @@ fun bindHomeViewHolder(
     holder: HomeViewHolder
 ) {
     holder.updateSummary()
+    holder.updatePinned()
     holder.updateRecents()
     (holder.itemView.background as InvertedRoundRectDrawable).outerColor = ColorTheme.uiBG
     holder.searchCard.setCardBackgroundColor(ColorTheme.searchBarBG)
@@ -137,7 +155,24 @@ fun bindHomeViewHolder(
         false
     }
     holder.itemView.setOnLongClickListener {
-        HomeLongPressPopup.show(it, popupX, popupY, holder.launcherActivity.getNavigationBarHeight(), holder.launcherActivity.settings, holder.launcherActivity::reloadColorThemeSync)
+        HomeLongPressPopup.show(it, popupX, popupY, holder.launcherActivity.getNavigationBarHeight(), holder.launcherContext.settings, holder.launcherActivity::reloadColorThemeSync)
+        true
+    }
+    holder.itemView.setOnDragListener { v, event ->
+        val pinnedItems = holder.launcherContext.appManager.pinnedItems
+        println("home: ${event.action}")
+        when (event.action) {
+            DragEvent.ACTION_DRAG_STARTED,
+            DragEvent.ACTION_DRAG_ENTERED -> {
+                if (pinnedItems.isEmpty()) {
+                    holder.pinnedRecycler.isVisible = true
+                    holder.pinnedAdapter.showDropTarget(true)
+                }
+            }
+            DragEvent.ACTION_DRAG_ENDED -> {
+                holder.updatePinned()
+            }
+        }
         true
     }
 }

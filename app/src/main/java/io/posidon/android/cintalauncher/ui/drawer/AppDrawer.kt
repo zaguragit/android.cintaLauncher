@@ -177,6 +177,7 @@ class AppDrawer(
     }
 
     fun close(v: View? = null) {
+        if (!isOpen) return
         ItemLongPress.currentPopup?.dismiss()
         scrollBar.controller.showSelection = false
         activity.feedRecycler.isInvisible = false

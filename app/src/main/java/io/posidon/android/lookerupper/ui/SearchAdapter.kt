@@ -1,5 +1,6 @@
 package io.posidon.android.lookerupper.ui
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +12,11 @@ import io.posidon.android.lookerupper.ui.viewHolders.SearchViewHolder
 import io.posidon.android.lookerupper.ui.viewHolders.ShortcutSearchViewHolder
 import io.posidon.android.lookerupper.ui.viewHolders.instantAnswer.AnswerSearchViewHolder
 
-class SearchAdapter(val navbarHeight: Int) : RecyclerView.Adapter<SearchViewHolder>() {
+class SearchAdapter(
+    val activity: Activity,
+    val navbarHeight: Int
+) : RecyclerView.Adapter<SearchViewHolder>() {
+
     private var results = emptyList<SearchResult>()
 
     override fun getItemViewType(i: Int): Int {
@@ -26,7 +31,7 @@ class SearchAdapter(val navbarHeight: Int) : RecyclerView.Adapter<SearchViewHold
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         return when (viewType) {
-            RESULT_APP -> AppSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.app_drawer_item, parent, false), navbarHeight)
+            RESULT_APP -> AppSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.app_drawer_item, parent, false), navbarHeight, activity)
             RESULT_SHORTCUT -> ShortcutSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_result_shortcut, parent, false))
             RESULT_CONTACT -> ContactSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_result_contact, parent, false))
             RESULT_ANSWER -> AnswerSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_result_answer, parent, false))

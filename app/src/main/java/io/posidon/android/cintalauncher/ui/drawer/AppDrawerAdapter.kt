@@ -45,8 +45,20 @@ class AppDrawerAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, i: Int) {
         val item = items[i]
         when (holder.itemViewType) {
-            SECTION_HEADER -> bindSectionHeaderViewHolder(holder as SectionHeaderViewHolder, item as SectionHeaderItem, indexer?.getHighlightI() == i, launcherActivity)
-            APP_ITEM -> bindAppViewHolder(holder as AppViewHolder, (item as AppItem).item, indexer?.isDimmed(item.item) ?: false, launcherActivity.suggestionsManager, launcherActivity.getNavigationBarHeight())
+            SECTION_HEADER -> bindSectionHeaderViewHolder(
+                holder as SectionHeaderViewHolder,
+                item as SectionHeaderItem,
+                indexer?.getHighlightI() == i,
+                launcherActivity
+            )
+            APP_ITEM -> bindAppViewHolder(
+                holder as AppViewHolder,
+                (item as AppItem).item,
+                indexer?.isDimmed(item.item) ?: false,
+                launcherActivity.launcherContext.appManager.suggestionsManager,
+                launcherActivity.getNavigationBarHeight(),
+                onDragOut = { launcherActivity.appDrawer.close(it) }
+            )
         }
     }
 

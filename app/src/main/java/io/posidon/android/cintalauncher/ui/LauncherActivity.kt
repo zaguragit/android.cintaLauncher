@@ -12,10 +12,7 @@ import android.graphics.drawable.*
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.toRectF
@@ -23,13 +20,11 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import io.posidon.android.cintalauncher.LauncherContext
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.color.ColorThemeOptions
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
-import io.posidon.android.cintalauncher.data.items.App
-import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
-import io.posidon.android.cintalauncher.providers.Feed
 import io.posidon.android.cintalauncher.providers.app.AppCallback
 import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.providers.notification.NotificationProvider
@@ -48,7 +43,6 @@ import io.posidon.android.cintalauncher.ui.view.scrollbar.hue.HueScrollbarContro
 import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.cintalauncher.util.StackTraceActivity
 import io.posidon.android.cintalauncher.util.blur.AcrylicBlur
-import io.posidon.android.launcherutils.AppLoader
 import io.posidon.android.launcherutils.GestureNavContract
 import io.posidon.android.launcherutils.LiveWallpaper
 import posidon.android.conveniencelib.*
@@ -59,10 +53,9 @@ var acrylicBlur: AcrylicBlur? = null
 
 class LauncherActivity : FragmentActivity() {
 
-    val feed = Feed()
-    val settings = Settings()
+    val launcherContext = LauncherContext()
 
-    val suggestionsManager = AppSuggestionsManager()
+    val settings by launcherContext::settings
 
     val notificationProvider = NotificationProvider(this)
 
@@ -78,10 +71,6 @@ class LauncherActivity : FragmentActivity() {
     lateinit var feedAdapter: FeedAdapter
 
     lateinit var wallpaperManager: WallpaperManager
-
-    val appLoader = AppLoader({ packageName, name, profile, label, icon -> App(packageName, name, profile, label, icon, settings) }, ::AppCollection)
-
-    var blurBitmap: Bitmap? = null
 
     var colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
 
@@ -102,7 +91,15 @@ class LauncherActivity : FragmentActivity() {
         feedRecycler.adapter = feedAdapter
         feedRecycler.setOnScrollChangeListener { _, _, scrollY, _, _ -> feedAdapter.onScroll(scrollY) }
 
-        feed.init(settings, notificationProvider, RssProvider, onUpdate = this::loadFeed) {
+        findViewById<View>(R.id.home_container)!!.setOnDragListener { v, event ->
+            println("root: ${event.action}")
+            val location = IntArray(2)
+            feedRecycler.getLocationOnScreen(location)
+            feedRecycler.findChildViewUnder(event.x - location[0], event.y - location[1])?.dispatchDragEvent(event)
+            true
+        }
+
+        launcherContext.feed.init(settings, notificationProvider, RssProvider, onUpdate = this::loadFeed) {
             runOnUiThread {
                 feedAdapter.onFeedInitialized()
             }
@@ -129,26 +126,94 @@ class LauncherActivity : FragmentActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        if (appDrawer.isOpen) appDrawer.close()
+        else feedRecycler.scrollToPosition(0)
+    }
+
+    private var lastUpdateTime = System.currentTimeMillis()
+
+    override fun onResume() {
+        super.onResume()
+        notificationProvider.update()
+        val shouldUpdate = settings.reload(applicationContext)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
+            thread (isDaemon = true) {
+                ColorTheme.onResumePreOMR1(
+                    this,
+                    settings.colorTheme,
+                    colorThemeOptions,
+                    LauncherActivity::updateColorTheme
+                )
+                onWallpaperChanged()
+            }
+        } else {
+            if (acrylicBlur == null) {
+                loadBlur()
+            }
+            if (shouldUpdate) {
+                thread(name = "Reloading color theme", isDaemon = true, block = this::reloadColorThemeSync)
+            }
+        }
+        val current = System.currentTimeMillis()
+        if (current - lastUpdateTime > 1000L * 60L * 5L) {
+            lastUpdateTime = current
+            thread (isDaemon = true, block = RssProvider::update)
+        }
+        if (shouldUpdate) {
+            reloadScrollbarController()
+        } else {
+            launcherContext.appManager.suggestionsManager.onResume(this, launcherContext.appManager)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (appDrawer.isOpen) {
+            appDrawer.close()
+        }
+        PopupUtils.dismissCurrent()
+        launcherContext.appManager.suggestionsManager.save(settings, this)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        if (hasFocus) {
+            notificationProvider.update()
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        configureWindow()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        val isActionMain = Intent.ACTION_MAIN == intent.action
+        if (isActionMain) {
+            handleGestureContract(intent)
+        }
+    }
+
     private fun loadBlur() = thread(isDaemon = true, name = "Blur thread") {
         if (ActivityCompat.checkSelfPermission(
             this,
             Manifest.permission.READ_EXTERNAL_STORAGE
         ) != PackageManager.PERMISSION_GRANTED) {
-            if (blurBitmap == null) return@thread
-            blurBitmap = null
+            if (acrylicBlur == null) return@thread
+            acrylicBlur = null
             runOnUiThread(::updateBlur)
             return@thread
         }
         val drawable = wallpaperManager.peekDrawable()
         if (drawable == null) {
-            if (blurBitmap == null) return@thread
-            blurBitmap = null
+            if (acrylicBlur == null) return@thread
+            acrylicBlur = null
             runOnUiThread(::updateBlur)
             return@thread
         }
         AcrylicBlur.blurWallpaper(this, drawable) {
             acrylicBlur = it
-            blurBitmap = it.fullBlur
             runOnUiThread(::updateBlur)
         }
     }
@@ -211,47 +276,6 @@ class LauncherActivity : FragmentActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        if (appDrawer.isOpen) appDrawer.close()
-        else feedRecycler.scrollToPosition(0)
-    }
-
-    private var lastUpdateTime = System.currentTimeMillis()
-
-    override fun onResume() {
-        super.onResume()
-        notificationProvider.update()
-        val shouldUpdate = settings.reload(applicationContext)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
-            thread (isDaemon = true) {
-                ColorTheme.onResumePreOMR1(
-                    this,
-                    settings.colorTheme,
-                    colorThemeOptions,
-                    LauncherActivity::updateColorTheme
-                )
-                onWallpaperChanged()
-            }
-        } else {
-            if (blurBitmap == null) {
-                loadBlur()
-            }
-            if (shouldUpdate) {
-                thread(name = "Reloading color theme", isDaemon = true, block = this::reloadColorThemeSync)
-            }
-        }
-        val current = System.currentTimeMillis()
-        if (current - lastUpdateTime > 1000L * 60L * 5L) {
-            lastUpdateTime = current
-            thread (isDaemon = true, block = RssProvider::update)
-        }
-        if (shouldUpdate) {
-            reloadScrollbarController()
-        } else {
-            suggestionsManager.onResume(this)
-        }
-    }
-
     fun reloadColorThemeSync() {
         colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
@@ -282,34 +306,6 @@ class LauncherActivity : FragmentActivity() {
         scrollBar.controller.updateTheme(this)
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (appDrawer.isOpen) {
-            appDrawer.close()
-        }
-        PopupUtils.dismissCurrent()
-        suggestionsManager.save(settings, this)
-    }
-
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        if (hasFocus) {
-            notificationProvider.update()
-        }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        configureWindow()
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        val isActionMain = Intent.ACTION_MAIN == intent.action
-        if (isActionMain) {
-            handleGestureContract(intent)
-        }
-    }
-
     private fun onWallpaperChanged() {
         loadBlur()
     }
@@ -327,10 +323,9 @@ class LauncherActivity : FragmentActivity() {
     }
 
     fun loadApps() {
-        appLoader.async(this, settings.getStrings("icon_packs") ?: emptyArray()) { apps: AppCollection ->
+        launcherContext.appManager.loadApps(this) { apps: AppCollection ->
             scrollBar.controller.loadSections(apps)
             appDrawer.update(apps.sections)
-            suggestionsManager.onAppsLoaded(this, settings, apps.byName)
             runOnUiThread {
                 feedAdapter.onAppsLoaded()
             }

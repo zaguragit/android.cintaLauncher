@@ -48,7 +48,7 @@ class FeedAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            TYPE_HOME -> HomeViewHolder(scrollIndicator.also { homeViewHolder?.vertical?.removeView(it) }, parent, activity, LayoutInflater.from(parent.context)
+            TYPE_HOME -> HomeViewHolder(scrollIndicator.also { homeViewHolder?.vertical?.removeView(it) }, parent, activity, activity.launcherContext, LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_home, parent, false)).also { homeViewHolder = it }
             TYPE_PLAIN -> FeedItemViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_plain, parent, false))
@@ -119,6 +119,7 @@ class FeedAdapter(
 
     fun onAppsLoaded() {
         homeViewHolder?.updateRecents()
+        homeViewHolder?.updatePinned()
     }
 
     fun onScroll(scrollY: Int) {

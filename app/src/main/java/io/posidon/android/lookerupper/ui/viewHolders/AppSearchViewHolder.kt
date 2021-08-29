@@ -1,5 +1,6 @@
 package io.posidon.android.lookerupper.ui.viewHolders
 
+import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
@@ -26,7 +27,11 @@ import io.posidon.android.lookerupper.data.results.AppResult
 import io.posidon.android.lookerupper.data.results.SearchResult
 import posidon.android.conveniencelib.toBitmap
 
-class AppSearchViewHolder(itemView: View, val navbarHeight: Int) : SearchViewHolder(itemView) {
+class AppSearchViewHolder(
+    itemView: View,
+    val navbarHeight: Int,
+    val activity: Activity
+) : SearchViewHolder(itemView) {
 
     val icon = itemView.findViewById<ImageView>(R.id.icon_image)!!
     val label = itemView.findViewById<TextView>(R.id.icon_text)!!
@@ -107,7 +112,14 @@ class AppSearchViewHolder(itemView: View, val navbarHeight: Int) : SearchViewHol
 
         itemView.setOnClickListener(result::open)
         itemView.setOnLongClickListener {
-            ItemLongPress.onItemLongPress(it.context, backgroundColor, ColorTheme.titleColorForBG(itemView.context, backgroundColor), it, result.app, navbarHeight)
+            ItemLongPress.onItemLongPress(
+                it,
+                backgroundColor,
+                ColorTheme.titleColorForBG(itemView.context, backgroundColor),
+                result.app,
+                navbarHeight,
+                onDragOut = { activity.finish() }
+            )
             true
         }
     }

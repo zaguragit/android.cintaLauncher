@@ -1,22 +1,24 @@
 package io.posidon.android.cintalauncher.ui.feed.home
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import io.posidon.android.cintalauncher.LauncherContext
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.items.LauncherItem
-import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.drawer.viewHolders.AppViewHolder
 import io.posidon.android.cintalauncher.ui.drawer.viewHolders.bindAppViewHolder
 import posidon.android.conveniencelib.getNavigationBarHeight
 
 class RecentlyOpenedItemsAdapter(
-    launcherActivity: LauncherActivity,
+    activity: Activity,
+    launcherContext: LauncherContext,
 ) : RecyclerView.Adapter<AppViewHolder>() {
 
-    val suggestionsManager = launcherActivity.suggestionsManager
-    val navbarHeight = launcherActivity.getNavigationBarHeight()
+    val suggestionsManager = launcherContext.appManager.suggestionsManager
+    val navbarHeight = activity.getNavigationBarHeight()
 
     private var items: List<LauncherItem> = emptyList()
 
