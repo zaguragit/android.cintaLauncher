@@ -21,9 +21,9 @@ class ListPopupAdapter : RecyclerView.Adapter<ListPopupViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListPopupViewHolder {
         return when (viewType) {
-            1 -> ListPopupTitleViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.settings_popup_title, parent, false))
-            2 -> ListPopupSwitchItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.settings_popup_switch_item, parent, false))
-            else -> ListPopupItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.settings_popup_item, parent, false))
+            1 -> ListPopupTitleViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_popup_title, parent, false))
+            2 -> ListPopupSwitchItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_popup_switch_item, parent, false))
+            else -> ListPopupItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_popup_item, parent, false))
         }
     }
 
