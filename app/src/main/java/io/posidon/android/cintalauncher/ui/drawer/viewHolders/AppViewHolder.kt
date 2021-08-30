@@ -109,7 +109,6 @@ fun bindAppViewHolder(
     if (notification == null) {
         holder.iconSmall.isVisible = false
         holder.notificationView.isVisible = false
-        holder.imageView.isVisible = false
         holder.icon.isVisible = true
         holder.icon.setImageDrawable(item.icon)
     } else {
@@ -118,17 +117,29 @@ fun bindAppViewHolder(
         holder.icon.isVisible = false
         holder.iconSmall.setImageDrawable(item.icon)
         holder.notificationView.text = notification.formatForAppCard(item)
-        val image = (notification as? FeedItemWithBigImage)?.image
-        if (image == null) holder.imageView.isVisible = false
-        else {
+    }
+    val image = (notification as? FeedItemWithBigImage)?.image
+    if (image == null) {
+        item as App
+        if (item.banner != null) {
             holder.imageView.isVisible = true
             holder.imageView.setImageDrawable(null)
             Glide.with(holder.itemView.context)
-                .load(image)
+                .load(item.banner)
                 .apply(holder.requestOptions)
                 .listener(holder.imageRequestListener)
                 .into(holder.imageView)
+        } else {
+            holder.imageView.isVisible = false
         }
+    } else {
+        holder.imageView.isVisible = true
+        holder.imageView.setImageDrawable(null)
+        Glide.with(holder.itemView.context)
+            .load(image)
+            .apply(holder.requestOptions)
+            .listener(holder.imageRequestListener)
+            .into(holder.imageView)
     }
 
     holder.itemView.setOnClickListener {

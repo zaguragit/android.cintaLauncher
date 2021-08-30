@@ -50,12 +50,13 @@ class AppProvider(
         }
     }
 
-    private fun makeAppResult(packageName: String, name: String, profile: UserHandle, label: String, icon: Drawable) = AppResult(App(
+    private fun makeAppResult(packageName: String, name: String, profile: UserHandle, label: String, icon: Drawable, extra: AppLoader.ExtraAppInfo) = AppResult(App(
         packageName,
         name,
         profile,
         label,
         icon,
+        extra.banner,
         searcher.settings
     ))
 

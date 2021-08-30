@@ -27,6 +27,7 @@ class App(
     val userHandle: UserHandle = Process.myUserHandle(),
     override val label: String,
     icon: Drawable,
+    val banner: Drawable?,
     settings: Settings
 ) : LauncherItem {
 

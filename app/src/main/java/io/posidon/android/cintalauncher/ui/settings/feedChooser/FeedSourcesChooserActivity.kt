@@ -1,27 +1,21 @@
 package io.posidon.android.cintalauncher.ui.settings.feedChooser
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.EditText
-import android.widget.ExpandableListView
-import android.widget.FrameLayout
-import android.widget.TextView
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.*
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.ui.settings.SettingsActivity
-import posidon.android.conveniencelib.dp
-import posidon.android.conveniencelib.getNavigationBarHeight
-import posidon.android.conveniencelib.getStatusBarHeight
-import posidon.android.conveniencelib.vibrate
+import posidon.android.conveniencelib.*
 
 class FeedSourcesChooserActivity : SettingsActivity() {
 
@@ -36,38 +30,40 @@ class FeedSourcesChooserActivity : SettingsActivity() {
         val feedUrls = settings.getStrings("feed:rss_sources")?.let { arrayListOf(*it) } ?: arrayListOf()
 
         grid.adapter = FeedChooserAdapter(settings, feedUrls)
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        val fab = findViewById<ImageView>(R.id.add_button)
         fab.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
         fab.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(this, ColorTheme.buttonColor))
         fab.setOnClickListener {
-            sourceEditPopup(it.context, settings, feedUrls, grid.adapter!!)
+            sourceEditPopup(it, settings, feedUrls, grid.adapter!!)
         }
         (fab.layoutParams as FrameLayout.LayoutParams).bottomMargin = dp(20).toInt() + getNavigationBarHeight()
     }
 
     companion object {
         inline fun sourceEditPopup(
-            context: Context,
+            parent: View,
             settings: Settings,
             feedUrls: ArrayList<String>,
             adapter: RecyclerView.Adapter<*>,
             i: Int = -1
         ) {
+            val context = parent.context
             context.vibrate(14)
-            val dialog = BottomSheetDialog(context, R.style.Theme_CintaLauncher_BottomSheetPopup)
-            dialog.setContentView(R.layout.feed_chooser_option_edit_dialog)
-            dialog.window!!.findViewById<View>(R.id.design_bottom_sheet).run {
-                setBackgroundResource(R.drawable.bottom_sheet)
+            val content = LayoutInflater.from(context).inflate(R.layout.feed_chooser_option_edit_dialog, null)
+            val dialog = PopupWindow(content, Device.screenWidth(context), WRAP_CONTENT, true)
+
+            content.run {
+                setBackgroundResource(R.drawable.card)
                 backgroundTintList = ColorStateList.valueOf(ColorTheme.appDrawerColor)
             }
 
             val textColor = ColorTheme.textColorForBG(context, ColorTheme.appDrawerColor)
             val hintColor = ColorTheme.hintColorForBG(context, ColorTheme.appDrawerColor)
-            val input = dialog.findViewById<EditText>(R.id.title)!!
+            val input = content.findViewById<EditText>(R.id.title)!!
             input.setTextColor(textColor)
             input.setHintTextColor(hintColor)
 
-            dialog.findViewById<TextView>(R.id.done)!!.run {
+            content.findViewById<TextView>(R.id.done)!!.run {
                 setTextColor(ColorTheme.titleColorForBG(context, ColorTheme.buttonColor))
                 backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
                 setOnClickListener {
@@ -85,7 +81,7 @@ class FeedSourcesChooserActivity : SettingsActivity() {
 
             if (i == -1) {
                 val suggestions = Suggestions(context)
-                dialog.findViewById<ExpandableListView>(R.id.list)!!.apply {
+                content.findViewById<ExpandableListView>(R.id.list)!!.apply {
                     visibility = View.VISIBLE
                     setAdapter(SuggestionsAdapter(suggestions))
                     setOnChildClickListener { _, _, topicI, sourceI, _ ->
@@ -95,11 +91,12 @@ class FeedSourcesChooserActivity : SettingsActivity() {
                         }
                         true
                     }
+                    divider = null
                 }
-                dialog.findViewById<TextView>(R.id.remove)!!.visibility = View.GONE
+                content.findViewById<TextView>(R.id.remove)!!.visibility = View.GONE
             } else {
                 val url = feedUrls[i]
-                dialog.findViewById<TextView>(R.id.remove)!!.run {
+                content.findViewById<TextView>(R.id.remove)!!.run {
                     val hsl = FloatArray(3)
                     ColorUtils.colorToHSL(ColorTheme.buttonColor, hsl)
                     hsl[0] = 0f
@@ -118,8 +115,7 @@ class FeedSourcesChooserActivity : SettingsActivity() {
                 }
                 input.text = Editable.Factory().newEditable(url)
             }
-
-            dialog.show()
+            dialog.showAtLocation(parent, Gravity.BOTTOM, 0, 0)
         }
     }
 }

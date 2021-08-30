@@ -33,13 +33,6 @@
         <item name="android:paddingStart">34dp</item>
     </style>
 
-    <style name="Theme.CintaLauncher.BottomSheetPopup" parent="Theme.Design.BottomSheetDialog">
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:backgroundDimAmount">0.2</item>
-        <item name="android:windowBackground">@drawable/black_gradient</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
-    </style>
-
     <style name="Theme.CintaLauncher.Settings.Input" parent="Theme.CintaLauncher">
         <item name="android:layout_height">52dp</item>
         <item name="android:includeFontPadding">false</item>

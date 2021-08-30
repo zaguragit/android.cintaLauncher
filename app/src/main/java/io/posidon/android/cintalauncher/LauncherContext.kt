@@ -71,13 +71,14 @@ class LauncherContext {
             }
         }
 
-        private val appLoader = AppLoader({ packageName, name, profile, label, icon ->
+        private val appLoader = AppLoader({ packageName, name, profile, label, icon, extra ->
             App(
                 packageName,
                 name,
                 profile,
                 label,
                 icon,
+                extra.banner,
                 settings
             )
         }, ::AppCollection)

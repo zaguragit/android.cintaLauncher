@@ -28,7 +28,7 @@ class FeedChooserAdapter(
         holder.card.backgroundTintList = ColorStateList.valueOf(ColorTheme.cardBG)
         holder.text.setTextColor(ColorTheme.cardDescription)
         holder.text.setOnLongClickListener {
-            FeedSourcesChooserActivity.sourceEditPopup(it.context, settings, feedUrls, this, i)
+            FeedSourcesChooserActivity.sourceEditPopup(it, settings, feedUrls, this, i)
             true
         }
     }

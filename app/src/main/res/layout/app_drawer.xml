@@ -27,6 +27,7 @@
             android:layout_width="128dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_close_app_drawer"/>
+            android:src="@drawable/ic_swipe_up"
+            android:scaleY="-1"/>
     </FrameLayout>
 </FrameLayout>

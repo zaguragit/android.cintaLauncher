@@ -22,14 +22,13 @@ class SuggestionsAdapter(
 
     override fun getGroupView(topicI: Int, p1: Boolean, cv: View?, parent: ViewGroup): View {
         val convertView = (cv ?: TextView(parent.context).apply {
-            val h = context.dp(16).toInt()
-            val v = context.dp(8).toInt()
-            setPadding(h, v + context.dp(8).toInt(), h, v)
+            val h = dp(16).toInt()
+            val v = dp(8).toInt()
+            setPadding(h, v + dp(8).toInt(), h, v)
             val textColor = ColorTheme.textColorForBG(context, ColorTheme.appDrawerColor)
             setTextColor(textColor)
             textSize = 20f
         }) as TextView
-
         convertView.text = suggestions[topicI].name
         return convertView
     }
@@ -37,15 +36,13 @@ class SuggestionsAdapter(
     @SuppressLint("ClickableViewAccessibility")
     override fun getChildView(topicI: Int, sourceI: Int, isLast: Boolean, cv: View?, parent: ViewGroup): View {
         val convertView = (cv ?: TextView(parent.context).apply {
-            val h = context.dp(16).toInt()
-            setPadding(h + context.dp(16).toInt(), context.dp(2).toInt(), h, context.dp(8).toInt())
+            val h = dp(16).toInt()
+            setPadding(h + dp(16).toInt(), dp(2).toInt(), h, dp(8).toInt())
             val textColor = ColorTheme.textColorForBG(context, ColorTheme.appDrawerColor)
             setTextColor(textColor)
             textSize = 16f
         }) as TextView
-
         convertView.text = suggestions[topicI][sourceI].name
-
         return convertView
     }
 

@@ -67,21 +67,6 @@
                 android:resource="@mipmap/ic_launcher" />
         </activity>
 
-        <activity
-            android:name=".ui.settings.CintaSettings"
-            android:icon="@drawable/launcher_settings"
-            android:label="@string/launcher_settings"
-            android:taskAffinity="io.posidon.android.cintalauncher.ui.settings.CintaSettings">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <action android:name="android.intent.action.APPLICATION_PREFERENCES"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-
         <activity android:name=".ui.settings.feedChooser.FeedSourcesChooserActivity"/>
 
         <activity android:name=".ui.settings.iconPackPicker.IconPackPickerActivity"/>
