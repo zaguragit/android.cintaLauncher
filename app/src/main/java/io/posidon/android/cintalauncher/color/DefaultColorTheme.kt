@@ -13,6 +13,11 @@ class DefaultColorTheme(
 
     override val accentColor = context.getColor(R.color.accent)
 
+    override val wallColor = 0
+    override val wallTitle = titleColorForBG(context, wallColor)
+    override val wallDescription = textColorForBG(context, wallColor)
+    override val wallHint = hintColorForBG(context, wallColor)
+
     override val uiBG = context.getColor(R.color.feed_bg)
     override val uiTitle = titleColorForBG(context, uiBG)
     override val uiDescription = textColorForBG(context, uiBG)

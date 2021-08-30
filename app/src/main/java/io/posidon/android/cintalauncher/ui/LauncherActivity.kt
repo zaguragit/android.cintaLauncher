@@ -91,14 +91,6 @@ class LauncherActivity : FragmentActivity() {
         feedRecycler.adapter = feedAdapter
         feedRecycler.setOnScrollChangeListener { _, _, scrollY, _, _ -> feedAdapter.onScroll(scrollY) }
 
-        findViewById<View>(R.id.home_container)!!.setOnDragListener { v, event ->
-            println("root: ${event.action}")
-            val location = IntArray(2)
-            feedRecycler.getLocationOnScreen(location)
-            feedRecycler.findChildViewUnder(event.x - location[0], event.y - location[1])?.dispatchDragEvent(event)
-            true
-        }
-
         launcherContext.feed.init(settings, notificationProvider, RssProvider, onUpdate = this::loadFeed) {
             runOnUiThread {
                 feedAdapter.onFeedInitialized()

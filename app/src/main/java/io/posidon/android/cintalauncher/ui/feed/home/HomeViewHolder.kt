@@ -141,10 +141,10 @@ fun bindHomeViewHolder(
     holder.searchIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
     holder.searchText.setTextColor(ColorTheme.searchBarFG)
     holder.blurBG.drawable = acrylicBlur?.smoothBlur?.let { BitmapDrawable(holder.itemView.resources, it) }
-    holder.time.setTextColor(ColorTheme.uiTitle)
-    holder.date.setTextColor(ColorTheme.uiDescription)
-    holder.weekDay.setTextColor(ColorTheme.uiDescription)
-    holder.scrollIndicator.imageTintList = ColorStateList.valueOf(ColorTheme.uiHint)
+    holder.time.setTextColor(ColorTheme.wallTitle)
+    holder.date.setTextColor(ColorTheme.wallDescription)
+    holder.weekDay.setTextColor(ColorTheme.wallDescription)
+    holder.scrollIndicator.imageTintList = ColorStateList.valueOf(ColorTheme.wallHint)
     holder.itemView.setOnTouchListener { _, e ->
         when (e.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN -> {
@@ -160,7 +160,6 @@ fun bindHomeViewHolder(
     }
     holder.itemView.setOnDragListener { v, event ->
         val pinnedItems = holder.launcherContext.appManager.pinnedItems
-        println("home: ${event.action}")
         when (event.action) {
             DragEvent.ACTION_DRAG_STARTED,
             DragEvent.ACTION_DRAG_ENTERED -> {

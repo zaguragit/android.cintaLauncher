@@ -27,6 +27,11 @@ interface ColorTheme {
 
     val accentColor: Int
 
+    val wallColor: Int
+    val wallTitle: Int
+    val wallDescription: Int
+    val wallHint: Int
+
     val uiBG: Int
     val uiTitle: Int
     val uiDescription: Int
@@ -204,6 +209,14 @@ interface ColorTheme {
             get() = colorThemeInstance.options
         override val accentColor: Int
             get() = colorThemeInstance.accentColor
+        override val wallColor: Int
+            get() = colorThemeInstance.wallColor
+        override val wallTitle: Int
+            get() = colorThemeInstance.wallTitle
+        override val wallDescription: Int
+            get() = colorThemeInstance.wallDescription
+        override val wallHint: Int
+            get() = colorThemeInstance.wallHint
         override val uiBG: Int
             get() = colorThemeInstance.uiBG
         override val uiTitle: Int

@@ -20,6 +20,11 @@ class PalleteTintedColorTheme(
         ColorUtils.HSLToColor(hsl)
     }
 
+    override val wallColor = wallpaper.getDominantColor(0)
+    override val wallTitle = titleColorForBG(context, wallColor)
+    override val wallDescription = textColorForBG(context, wallColor)
+    override val wallHint = hintColorForBG(context, wallColor)
+
     override val uiBG = run {
         val base = context.getColor(R.color.feed_bg)
         val swatch = run {

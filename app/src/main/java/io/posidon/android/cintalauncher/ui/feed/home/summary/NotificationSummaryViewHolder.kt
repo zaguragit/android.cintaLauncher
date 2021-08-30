@@ -25,12 +25,12 @@ class NotificationSummaryViewHolder(
         description.text = summary.description
         itemView.setOnClickListener(summary.onTap)
 
-        val sourceColor = ColorStateList.valueOf(ColorTheme.uiDescription)
+        val sourceColor = ColorStateList.valueOf(ColorTheme.wallDescription)
         source.setTextColor(sourceColor)
         icon.imageTintList = sourceColor
-        description.setTextColor(ColorTheme.uiTitle)
+        description.setTextColor(ColorTheme.wallTitle)
 
-        description.setShadowLayer(itemView.context.dp(5), description.shadowDx, description.shadowDy, ColorTheme.uiBG and 0xffffff or 0x55000000)
-        source.setShadowLayer(itemView.context.dp(3), source.shadowDx, source.shadowDy, ColorTheme.uiBG and 0xffffff or 0x33000000)
+        description.setShadowLayer(itemView.context.dp(5), description.shadowDx, description.shadowDy, ColorTheme.wallColor and 0xffffff or 0x55000000)
+        source.setShadowLayer(itemView.context.dp(3), source.shadowDx, source.shadowDy, ColorTheme.wallColor and 0xffffff or 0x33000000)
     }
 }

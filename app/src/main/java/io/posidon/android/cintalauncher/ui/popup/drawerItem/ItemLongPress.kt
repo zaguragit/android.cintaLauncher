@@ -75,6 +75,7 @@ object ItemLongPress {
             val popupWindow = makePopupWindow(context, item, backgroundColor, textColor) {
                 item.showProperties(view, backgroundColor, textColor)
             }
+            popupWindow.isFocusable = false
             popupWindow.showAtLocation(view, gravity, x, y)
 
             view.setOnDragListener { v, event ->
@@ -95,7 +96,6 @@ object ItemLongPress {
                 true
             }
 
-            popupWindow.isFocusable = false
             val shadow = View.DragShadowBuilder(view)
             val clipData = ClipData(
                 item.label,

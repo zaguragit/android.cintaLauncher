@@ -24,6 +24,12 @@ class AndroidOMR1WallColorTheme(
     private val tertiary = colors.tertiaryColor
 
     override val accentColor = (tertiary ?: secondary ?: primary).toArgb()
+
+    override val wallColor = primary.toArgb()
+    override val wallTitle = titleColorForBG(context, wallColor)
+    override val wallDescription = textColorForBG(context, wallColor)
+    override val wallHint = hintColorForBG(context, wallColor)
+
     override val uiBG = run {
         val c = primary.toArgb()
         val lab = DoubleArray(3)
