@@ -86,7 +86,7 @@ class AndroidOMR1WallColorTheme(
         val lab = DoubleArray(3)
         ColorUtils.colorToLAB(appDrawerColor, lab)
         lab[0] *= if (isLight) .8 else 1.2
-        ColorUtils.LABToColor(lab[0], lab[1], lab[2]) and 0xffffff or 0x88000000.toInt()
+        ColorUtils.LABToColor(lab[0], lab[1], lab[2])
     }
 
     override val buttonColor = run {

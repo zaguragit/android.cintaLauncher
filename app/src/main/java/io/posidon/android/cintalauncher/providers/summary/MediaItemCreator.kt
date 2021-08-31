@@ -67,7 +67,8 @@ object MediaItemCreator {
             isPlaying = {
                 controller.playbackState?.state == PlaybackState.STATE_PLAYING
             },
-            uid = uid
+            uid = uid,
+            packageName = controller.packageName
         )
     }
 }

@@ -20,12 +20,9 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
-import io.posidon.android.cintalauncher.data.feed.items.formatForAppCard
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
-import io.posidon.android.cintalauncher.providers.FeedSorter
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter.Companion.APP_ITEM
@@ -104,9 +101,8 @@ fun bindAppViewHolder(
     holder.label.setTextColor(ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor))
     holder.notificationView.setTextColor(ColorTheme.textColorForBG(holder.itemView.context, backgroundColor))
 
-    val notifications = (item as? App)?.getNotifications()
-    val notification = notifications?.let(FeedSorter::getMostRelevant)
-    if (notification == null) {
+    val banner = (item as? App)?.getBanner()
+    if (banner?.text == null) {
         holder.iconSmall.isVisible = false
         holder.notificationView.isVisible = false
         holder.icon.isVisible = true
@@ -116,27 +112,16 @@ fun bindAppViewHolder(
         holder.notificationView.isVisible = true
         holder.icon.isVisible = false
         holder.iconSmall.setImageDrawable(item.icon)
-        holder.notificationView.text = notification.formatForAppCard(item)
+        holder.notificationView.text = banner.text
     }
-    val image = (notification as? FeedItemWithBigImage)?.image
-    if (image == null) {
-        item as App
-        if (item.banner != null) {
-            holder.imageView.isVisible = true
-            holder.imageView.setImageDrawable(null)
-            Glide.with(holder.itemView.context)
-                .load(item.banner)
-                .apply(holder.requestOptions)
-                .listener(holder.imageRequestListener)
-                .into(holder.imageView)
-        } else {
-            holder.imageView.isVisible = false
-        }
+    if (banner?.background == null) {
+        holder.imageView.isVisible = false
     } else {
         holder.imageView.isVisible = true
         holder.imageView.setImageDrawable(null)
+        holder.imageView.alpha = banner.bgOpacity
         Glide.with(holder.itemView.context)
-            .load(image)
+            .load(banner.background)
             .apply(holder.requestOptions)
             .listener(holder.imageRequestListener)
             .into(holder.imageView)

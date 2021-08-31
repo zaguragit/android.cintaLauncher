@@ -18,4 +18,5 @@ class MediaSummary(
     val togglePause: (ImageView) -> Unit,
     val isPlaying: () -> Boolean,
     val uid: String?,
+    val packageName: String,
 ) : SummaryItem(color, title, instant, onTap)

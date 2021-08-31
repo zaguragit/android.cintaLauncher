@@ -13,7 +13,9 @@ import android.os.UserHandle
 import android.view.View
 import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
-import io.posidon.android.cintalauncher.data.feed.items.FeedItem
+import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
+import io.posidon.android.cintalauncher.data.feed.items.formatForAppCard
+import io.posidon.android.cintalauncher.providers.FeedSorter
 import io.posidon.android.cintalauncher.providers.notification.NotificationService
 import io.posidon.android.cintalauncher.storage.DoReshapeAdaptiveIconsSetting.doReshapeAdaptiveIcons
 import io.posidon.android.cintalauncher.storage.Settings
@@ -31,8 +33,29 @@ class App(
     settings: Settings
 ) : LauncherItem {
 
-    inline fun getNotifications(): List<FeedItem> =
-        NotificationService.notifications.filter { it.meta?.sourcePackageName == packageName }
+    inline fun getBanner(): Banner? {
+        val notifications = NotificationService.notifications.filter { it.meta?.sourcePackageName == packageName }
+        if (banner == null && notifications.isEmpty()) return null
+        val mediaItem = NotificationService.mediaItem
+        if (mediaItem != null && mediaItem.packageName == packageName) return Banner(
+            mediaItem.description + '\n' + mediaItem.subtitle,
+            mediaItem.cover,
+            .4f
+        )
+        val notification = FeedSorter.getMostRelevant(notifications)
+        val image = (notification as? FeedItemWithBigImage)?.image ?: banner
+        return Banner(
+            notification?.formatForAppCard(this),
+            image,
+            .1f
+        )
+    }
+
+    class Banner(
+        val text: String?,
+        val background: Any?,
+        val bgOpacity: Float,
+    )
 
     override fun open(context: Context, view: View?) {
         try {

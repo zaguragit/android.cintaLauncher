@@ -3,6 +3,7 @@ package io.posidon.android.cintalauncher.ui.drawer
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
@@ -94,19 +95,6 @@ class AppDrawer(
             }
             false
         }
-        bottomBar.setOnTouchListener { _, e ->
-            when (e.action and MotionEvent.ACTION_MASK) {
-                MotionEvent.ACTION_DOWN -> {
-                    popupX = e.rawX
-                    popupY = e.rawY
-                }
-            }
-            false
-        }
-        bottomBar.setOnLongClickListener {
-            DrawerLongPressPopup.show(it, popupX, popupY, activity.getNavigationBarHeight(), activity.settings, activity::reloadScrollbarController, activity::loadApps)
-            true
-        }
     }
 
     var appSections: List<List<App>>? = null
@@ -120,7 +108,7 @@ class AppDrawer(
 
     fun updateColorTheme() {
         view.setBackgroundColor(ColorTheme.appDrawerColor and 0xffffff or 0xca000000.toInt())
-        bottomBar.setBackgroundColor(ColorTheme.appDrawerBottomBarColor)
+        bottomBar.background = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(ColorTheme.appDrawerBottomBarColor and 0xffffff or 0x88000000.toInt(), 0))
         closeButton.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
         closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))
         scrollBar.recycler = this@AppDrawer.recycler

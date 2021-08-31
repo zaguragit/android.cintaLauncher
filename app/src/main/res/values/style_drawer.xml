@@ -17,9 +17,12 @@
     </style>
 
     <style name="Theme.CintaLauncher.Drawer.ExitButton" parent="Theme.CintaLauncher">
-        <item name="android:background">@drawable/button_bg_round</item>
+        <item name="android:background">@drawable/round_bg</item>
         <item name="tint">#ffffff</item>
-        <item name="android:padding">8dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_width">96dp</item>
+        <item name="android:layout_height">38dp</item>
+        <item name="android:elevation">32dp</item>
     </style>
 
     <style name="Theme.CintaLauncher.Drawer.Item.Container" parent="Theme.CintaLauncher">

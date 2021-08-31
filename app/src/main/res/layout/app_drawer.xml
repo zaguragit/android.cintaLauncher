@@ -18,14 +18,10 @@
         style="@style/Theme.CintaLauncher.Drawer.BottomBar"
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_gravity="bottom"
-        android:focusable="true"
-        android:clickable="true">
+        android:layout_gravity="bottom">
         <ImageView
             style="@style/Theme.CintaLauncher.Drawer.ExitButton"
             android:id="@+id/back_button"
-            android:layout_width="128dp"
-            android:layout_height="32dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_swipe_up"
             android:scaleY="-1"/>
