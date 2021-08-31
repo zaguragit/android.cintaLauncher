@@ -88,9 +88,9 @@ class SearchActivity : FragmentActivity() {
         findViewById<View>(R.id.search_bar_container).backgroundTintList =
             ColorStateList.valueOf(ColorTheme.searchBarBG)
         findViewById<TextView>(R.id.search_bar_text).run {
-            setHintTextColor(ColorTheme.textColorForBG(context, ColorTheme.searchBarBG))
+            setHintTextColor(ColorTheme.searchBarFG and 0x00ffffff or 0x88000000.toInt())
             setTextColor(ColorTheme.searchBarFG)
-            highlightColor = ColorTheme.searchBarFG and 0x00ffffff or 0x88000000.toInt()
+            highlightColor = ColorTheme.searchBarFG and 0x00ffffff or 0x66000000
         }
         findViewById<ImageView>(R.id.search_bar_icon).imageTintList =
             ColorStateList.valueOf(ColorTheme.searchBarFG)

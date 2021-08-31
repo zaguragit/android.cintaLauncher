@@ -139,7 +139,7 @@ fun bindHomeViewHolder(
     (holder.itemView.background as InvertedRoundRectDrawable).outerColor = ColorTheme.uiBG
     holder.searchCard.setCardBackgroundColor(ColorTheme.searchBarBG)
     holder.searchIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
-    holder.searchText.setTextColor(ColorTheme.searchBarFG)
+    holder.searchText.setTextColor(ColorTheme.searchBarFG and 0x00ffffff or 0x88000000.toInt())
     holder.blurBG.drawable = acrylicBlur?.smoothBlur?.let { BitmapDrawable(holder.itemView.resources, it) }
     holder.time.setTextColor(ColorTheme.wallTitle)
     holder.date.setTextColor(ColorTheme.wallDescription)

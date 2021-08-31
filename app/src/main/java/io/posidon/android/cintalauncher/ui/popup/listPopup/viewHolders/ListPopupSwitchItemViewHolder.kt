@@ -2,7 +2,6 @@ package io.posidon.android.cintalauncher.ui.popup.listPopup.viewHolders
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.drawable.*
 import android.util.StateSet
 import android.view.View
@@ -52,6 +51,7 @@ class ListPopupSwitchItemViewHolder(itemView: View) : ListPopupViewHolder(itemVi
             view.setImageDrawable(value)
             view.imageTintList = ColorStateList.valueOf(ColorTheme.cardDescription)
         }
+        switch.isChecked = (item.value as? Boolean) ?: false
         switch.setOnCheckedChangeListener(item.onToggle!!)
     }
 
@@ -65,51 +65,30 @@ class ListPopupSwitchItemViewHolder(itemView: View) : ListPopupViewHolder(itemVi
     private fun generateThumbDrawable(context: Context): Drawable {
         val out = StateListDrawable()
         out.addState(intArrayOf(android.R.attr.state_checked), generateCircle(context, ColorTheme.accentColor))
-        out.addState(StateSet.WILD_CARD, generateCircle(context, ColorTheme.cardHint))
+        out.addState(StateSet.WILD_CARD, generateCircle(context, ColorTheme.cardHint and 0x00ffffff or 0x55000000))
         return out
     }
 
     fun generateCircle(context: Context, color: Int): Drawable {
-        val r = context.dp(20).toInt()
-        val inset = context.dp(3).toInt()
+        val r = context.dp(18).toInt()
+        val inset = context.dp(4).toInt()
         return LayerDrawable(arrayOf(
             GradientDrawable().apply {
                 shape = GradientDrawable.OVAL
                 setColor(color)
                 setSize(r, r)
-                setStroke(1, 0xdd000000.toInt())
+                setStroke(1, 0x33000000)
             },
-            GradientDrawable().apply {
-                shape = GradientDrawable.OVAL
-                val highlight = Color.HSVToColor(floatArrayOf(0f, 0f, 0f).apply {
-                    Color.colorToHSV(color, this)
-                    this[2] *= 1.8f * (1 + this[2] * this[2])
-                    this[1] *= 0.4f
-                }) and 0x00ffffff
-                colors = intArrayOf(highlight or 0x55000000, Color.HSVToColor(floatArrayOf(0f, 0f, 0f).apply {
-                    Color.colorToHSV(color, this)
-                    this[1] *= 1.08f
-                    this[2] *= 1.6f
-                }) and 0x00ffffff)
-                setSize(r, r)
-                setStroke(context.dp(1).toInt(), highlight or 0x12000000)
-            }
         )).apply {
             setLayerInset(0, inset, inset, inset, inset)
-            setLayerInset(1, inset, inset, inset, inset)
         }
     }
 
     fun generateBG(context: Context, color: Int): Drawable {
         return GradientDrawable().apply {
             cornerRadius = Float.MAX_VALUE
-            val shadow = Color.HSVToColor(floatArrayOf(0f, 0f, 0f).apply {
-                Color.colorToHSV(color, this)
-                this[2] *= 0.8f
-                this[1] *= 1.08f
-            }) and 0x00ffffff
-            colors = intArrayOf(shadow or (color and 0xff000000.toInt()), color)
-            setStroke(1, 0xdd000000.toInt())
+            setColor(color)
+            setStroke(1, 0x88000000.toInt())
         }
     }
 }
