@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.ui.feed.home
+package io.posidon.android.cintalauncher.ui.feed.home.suggestions
 
 import android.app.Activity
 import android.view.LayoutInflater
@@ -8,14 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.LauncherContext
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.items.LauncherItem
-import io.posidon.android.cintalauncher.ui.drawer.viewHolders.AppViewHolder
-import io.posidon.android.cintalauncher.ui.drawer.viewHolders.bindAppViewHolder
 import posidon.android.conveniencelib.getNavigationBarHeight
 
-class RecentlyOpenedItemsAdapter(
+class SuggestionsAdapter(
     activity: Activity,
     launcherContext: LauncherContext,
-) : RecyclerView.Adapter<AppViewHolder>() {
+) : RecyclerView.Adapter<SuggestionViewHolder>() {
 
     val suggestionsManager = launcherContext.appManager.suggestionsManager
     val navbarHeight = activity.getNavigationBarHeight()
@@ -24,14 +22,14 @@ class RecentlyOpenedItemsAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
-        return AppViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.app_drawer_item, parent, false) as CardView, map)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuggestionViewHolder {
+        return SuggestionViewHolder(LayoutInflater.from(parent.context)
+            .inflate(R.layout.feed_home_suggestion, parent, false) as CardView, map)
     }
 
-    override fun onBindViewHolder(holder: AppViewHolder, i: Int) {
+    override fun onBindViewHolder(holder: SuggestionViewHolder, i: Int) {
         val item = items[i]
-        bindAppViewHolder(holder, item, false, suggestionsManager, navbarHeight)
+        bindSuggestionViewHolder(holder, item, suggestionsManager, navbarHeight)
     }
 
     fun updateItems(items: List<LauncherItem>) {

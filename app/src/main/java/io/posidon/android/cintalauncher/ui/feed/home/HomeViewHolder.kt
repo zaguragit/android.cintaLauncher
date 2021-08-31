@@ -20,6 +20,7 @@ import io.posidon.android.cintalauncher.providers.summary.NotificationSummariesP
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.feed.home.pinned.PinnedItemsAdapter
+import io.posidon.android.cintalauncher.ui.feed.home.suggestions.SuggestionsAdapter
 import io.posidon.android.cintalauncher.ui.feed.home.summary.SummaryAdapter
 import io.posidon.android.cintalauncher.ui.popup.home.HomeLongPressPopup
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
@@ -51,7 +52,7 @@ class HomeViewHolder(
         layoutManager = GridLayoutManager(itemView.context, 3, RecyclerView.VERTICAL, true)
         adapter = pinnedAdapter
     }
-    val recentlyOpenedAdapter = RecentlyOpenedItemsAdapter(launcherActivity, launcherContext)
+    val recentlyOpenedAdapter = SuggestionsAdapter(launcherActivity, launcherContext)
     val recentlyOpenedRecycler = summaryCard.findViewById<RecyclerView>(R.id.recents_recycler)!!.apply {
         layoutManager = GridLayoutManager(itemView.context, 3, RecyclerView.VERTICAL, false)
         adapter = recentlyOpenedAdapter
