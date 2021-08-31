@@ -3,6 +3,9 @@ package io.posidon.android.lookerupper.ui
 import android.app.SearchManager
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -16,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.storage.Settings
+import io.posidon.android.cintalauncher.ui.acrylicBlur
+import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import io.posidon.android.lookerupper.data.Searcher
 import io.posidon.android.lookerupper.data.providers.AppProvider
 import io.posidon.android.lookerupper.data.providers.ContactProvider
@@ -54,6 +59,9 @@ class SearchActivity : FragmentActivity() {
             container.post {
                 setPadding(paddingLeft, container.measuredHeight, paddingRight, paddingBottom)
             }
+            setOnScrollChangeListener { _, _, _, _, _ ->
+                this@SearchActivity.adapter.onScroll()
+            }
         }
         findViewById<EditText>(R.id.search_bar_text).run {
             doOnTextChanged { text, start, before, count ->
@@ -68,10 +76,15 @@ class SearchActivity : FragmentActivity() {
                 } else false
             }
         }
+        val blurBG = findViewById<SeeThoughView>(R.id.blur_bg)!!
+        blurBG.drawable = BitmapDrawable(resources, acrylicBlur?.smoothBlur)
     }
 
     private fun loadColors() {
-        window.decorView.setBackgroundColor(ColorTheme.uiBG)
+        window.decorView.background = LayerDrawable(arrayOf(
+            BitmapDrawable(resources, acrylicBlur?.partialBlurSmall),
+            ColorDrawable(ColorTheme.uiBG),
+        ))
         findViewById<View>(R.id.search_bar_container).backgroundTintList =
             ColorStateList.valueOf(ColorTheme.searchBarBG)
         findViewById<TextView>(R.id.search_bar_text).run {

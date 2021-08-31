@@ -1,6 +1,7 @@
 package io.posidon.android.lookerupper.ui.viewHolders
 
 import android.app.Activity
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
@@ -22,7 +23,9 @@ import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
 import io.posidon.android.cintalauncher.data.feed.items.formatForAppCard
 import io.posidon.android.cintalauncher.providers.FeedSorter
+import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
+import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import io.posidon.android.lookerupper.data.results.AppResult
 import io.posidon.android.lookerupper.data.results.SearchResult
 import posidon.android.conveniencelib.toBitmap
@@ -30,7 +33,8 @@ import posidon.android.conveniencelib.toBitmap
 class AppSearchViewHolder(
     itemView: View,
     val navbarHeight: Int,
-    val activity: Activity
+    val activity: Activity,
+    val map: HashMap<SearchResult, () -> Unit>
 ) : SearchViewHolder(itemView) {
 
     val icon = itemView.findViewById<ImageView>(R.id.icon_image)!!
@@ -40,6 +44,8 @@ class AppSearchViewHolder(
     val iconSmall = itemView.findViewById<ImageView>(R.id.icon_image_small)!!
     val notificationView = itemView.findViewById<TextView>(R.id.icon_notifications)!!
     val imageView = itemView.findViewById<ImageView>(R.id.background_image)!!
+
+    val blurBG = itemView.findViewById<SeeThoughView>(R.id.blur_bg)!!
 
     val requestOptions = RequestOptions()
         .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -76,6 +82,10 @@ class AppSearchViewHolder(
 
     override fun onBind(result: SearchResult) {
         result as AppResult
+
+        blurBG.drawable = BitmapDrawable(itemView.resources, acrylicBlur?.smoothBlur)
+        map[result] = blurBG::invalidate
+
         val backgroundColor = ColorTheme.tintAppDrawerItem(result.getColor())
         card.setCardBackgroundColor(backgroundColor)
         label.setTextColor(ColorTheme.titleColorForBG(itemView.context, backgroundColor))

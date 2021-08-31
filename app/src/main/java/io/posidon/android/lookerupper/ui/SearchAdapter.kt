@@ -11,6 +11,7 @@ import io.posidon.android.lookerupper.ui.viewHolders.ContactSearchViewHolder
 import io.posidon.android.lookerupper.ui.viewHolders.SearchViewHolder
 import io.posidon.android.lookerupper.ui.viewHolders.ShortcutSearchViewHolder
 import io.posidon.android.lookerupper.ui.viewHolders.instantAnswer.AnswerSearchViewHolder
+import java.util.*
 
 class SearchAdapter(
     val activity: Activity,
@@ -31,10 +32,10 @@ class SearchAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         return when (viewType) {
-            RESULT_APP -> AppSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.app_drawer_item, parent, false), navbarHeight, activity)
+            RESULT_APP -> AppSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.app_drawer_item, parent, false), navbarHeight, activity, map)
             RESULT_SHORTCUT -> ShortcutSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_result_shortcut, parent, false))
             RESULT_CONTACT -> ContactSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_result_contact, parent, false))
-            RESULT_ANSWER -> AnswerSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_result_answer, parent, false))
+            RESULT_ANSWER -> AnswerSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_result_answer, parent, false), map)
             else -> throw Exception("Invalid view type")
         }
     }
@@ -48,6 +49,14 @@ class SearchAdapter(
     fun update(results: List<SearchResult>) {
         this.results = results
         notifyDataSetChanged()
+    }
+
+    val map = HashMap<SearchResult, () -> Unit>()
+
+    fun onScroll() {
+        map.forEach {
+            it.value()
+        }
     }
 
     companion object {

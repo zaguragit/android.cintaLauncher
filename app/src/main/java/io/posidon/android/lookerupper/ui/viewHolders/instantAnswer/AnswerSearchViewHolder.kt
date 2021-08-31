@@ -1,5 +1,6 @@
 package io.posidon.android.lookerupper.ui.viewHolders.instantAnswer
 
+import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -8,11 +9,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.ui.acrylicBlur
+import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import io.posidon.android.lookerupper.data.results.InstantAnswerResult
 import io.posidon.android.lookerupper.data.results.SearchResult
 import io.posidon.android.lookerupper.ui.viewHolders.SearchViewHolder
 
-class AnswerSearchViewHolder(itemView: View) : SearchViewHolder(itemView) {
+class AnswerSearchViewHolder(
+    itemView: View,
+    val map: HashMap<SearchResult, () -> Unit>
+) : SearchViewHolder(itemView) {
 
     val card = itemView.findViewById<CardView>(R.id.card)!!
     val title = card.findViewById<TextView>(R.id.title)!!
@@ -29,8 +35,13 @@ class AnswerSearchViewHolder(itemView: View) : SearchViewHolder(itemView) {
     val searchAction = actionsContainer.findViewById<TextView>(R.id.search)!!
     val actionSeparator = actionsContainer.findViewById<View>(R.id.separator)!!
 
+    val blurBG = itemView.findViewById<SeeThoughView>(R.id.blur_bg)!!
+
     override fun onBind(result: SearchResult) {
         result as InstantAnswerResult
+
+        blurBG.drawable = BitmapDrawable(itemView.resources, acrylicBlur?.smoothBlur)
+        map[result] = blurBG::invalidate
 
         card.setCardBackgroundColor(ColorTheme.cardBG)
         title.setTextColor(ColorTheme.cardTitle)

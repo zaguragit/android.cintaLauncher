@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card"
+    style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.Card">
+    <io.posidon.android.cintalauncher.ui.view.SeeThoughView
+        android:id="@+id/blur_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.3"/>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.Card">
-        <LinearLayout
+        android:orientation="vertical"
+        android:padding="@dimen/feed_card_padding"
+        style="@style/Theme.CintaLauncher.SearchResult.Container">
+        <TextView
+            style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.Title"
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.Description"
+            android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/feed_card_padding"
-            style="@style/Theme.CintaLauncher.SearchResult.Container">
-            <TextView
-                style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.Title"
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <TextView
-                style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.Description"
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="5"
-                android:ellipsize="end"/>
+            android:maxLines="5"
+            android:ellipsize="end"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.Infobox.List"
-                android:id="@+id/info_box"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+        <androidx.recyclerview.widget.RecyclerView
+            style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.Infobox.List"
+            android:id="@+id/info_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.Actions.Container"
-                android:id="@+id/actions_container">
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.Actions.Container"
+            android:id="@+id/actions_container">
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.ActionText"
+                        android:id="@+id/source"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.ActionText"
-                            android:id="@+id/source"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"/>
-                        <View
-                            android:id="@+id/separator"
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"/>
-                        <TextView
-                            style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.ActionText"
-                            android:id="@+id/search"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/search_in_duckduckgo"/>
-                    </LinearLayout>
-                </HorizontalScrollView>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</LinearLayout>
+                        android:layout_gravity="center_vertical"/>
+                    <View
+                        android:id="@+id/separator"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"/>
+                    <TextView
+                        style="@style/Theme.CintaLauncher.SearchResult.InstantAnswer.ActionText"
+                        android:id="@+id/search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/search_in_duckduckgo"/>
+                </LinearLayout>
+            </HorizontalScrollView>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

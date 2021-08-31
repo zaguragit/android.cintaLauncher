@@ -6,6 +6,11 @@
     android:layout_marginHorizontal="8dp"
     android:id="@+id/search_bar_container"
     style="@style/Theme.CintaLauncher.SearchBar.Container">
+    <io.posidon.android.cintalauncher.ui.view.SeeThoughView
+        android:id="@+id/blur_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.3"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/search_bar_height"
