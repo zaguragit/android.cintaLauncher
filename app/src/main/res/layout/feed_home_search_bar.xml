@@ -20,17 +20,5 @@
             android:layout_width="@dimen/search_bar_height"
             android:layout_height="@dimen/search_bar_height"
             android:src="@drawable/ic_search"/>
-        <TextView
-            style="@style/Theme.CintaLauncher.SearchBar.Text"
-            android:id="@+id/search_bar_text"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/search_bar_height"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/search"
-            android:includeFontPadding="false"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:marqueeRepeatLimit="marquee_forever"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

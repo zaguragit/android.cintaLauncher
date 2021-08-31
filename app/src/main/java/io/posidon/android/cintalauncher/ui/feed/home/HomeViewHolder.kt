@@ -67,7 +67,6 @@ class HomeViewHolder(
         }
     }
     val searchIcon = searchCard.findViewById<ImageView>(R.id.search_bar_icon)!!
-    val searchText = searchCard.findViewById<TextView>(R.id.search_bar_text)!!
     val blurBG = searchCard.findViewById<SeeThoughView>(R.id.blur_bg)!!
 
     val vertical = itemView.findViewById<LinearLayout>(R.id.vertical)!!
@@ -139,7 +138,6 @@ fun bindHomeViewHolder(
     (holder.itemView.background as InvertedRoundRectDrawable).outerColor = ColorTheme.uiBG
     holder.searchCard.setCardBackgroundColor(ColorTheme.searchBarBG)
     holder.searchIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
-    holder.searchText.setTextColor(ColorTheme.searchBarFG and 0x00ffffff or 0x88000000.toInt())
     holder.blurBG.drawable = acrylicBlur?.smoothBlur?.let { BitmapDrawable(holder.itemView.resources, it) }
     holder.time.setTextColor(ColorTheme.wallTitle)
     holder.date.setTextColor(ColorTheme.wallDescription)

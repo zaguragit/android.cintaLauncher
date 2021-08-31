@@ -1,36 +1,56 @@
 <resources>
     <string name="app_name">Cinta</string>
-    <string name="launcher_settings">Cinta settings</string>
+
     <string name="cinta_launcher_crashed">Cinta launcher crashed</string>
     <string name="send_bug_report">Send bug report</string>
-    <string name="search">Search</string>
-    <string name="properties">Properties</string>
+
     <string name="read_more_at_source">More at %s</string>
     <string name="search_in_duckduckgo">Search on DuckDuckGo</string>
-    <string name="color_theme_gen">Color theme generator</string>
+
     <string name="done">Done</string>
     <string name="remove">Remove</string>
     <string name="example_feed_url">www.example.com/rss</string>
-    <string name="rss_sources">News sources</string>
-    <string name="splash_message">Automated customization</string>
-    <string name="permissions">Permissions</string>
-    <string name="permission_storage">Storage</string>
-    <string name="permission_storage_explanation">To adjust theme colors to the wallpaper &amp; for background blur</string>
-    <string name="permission_contacts">Contacts</string>
-    <string name="permission_contacts_explanation">Contacts can be displayed in the search screen</string>
-    <string name="permission_notifications">Notifications</string>
-    <string name="permission_notifications_explanation">For displaying notifications &amp; a media player in your feed</string>
-    <string name="grant_permissions">Grant permissions</string>
-    <string name="permission_usage_access">Usage access</string>
-    <string name="permission_usage_access_explanation">Cinta will see which apps you use, to improve the app suggestions</string>
-    <string name="icon_packs">Icon packs</string>
-    <string name="chosen">Chosen</string>
-    <string name="available">Available</string>
-    <string name="system">System</string>
-    <string name="scrollbar_controller">App sorting</string>
+
     <string name="now">now</string>
-    <string name="reshape_adaptive_icons">Reshape adaptive icons</string>
-    <string name="reshape_adaptive_icons_explanation">Attempts to remove icon backgrounds without messing them up</string>
-    <string name="icons">Icons</string>
-    <string name="color_theme_day_night">Lightness mode</string>
+
+    <string name="properties">Properties</string>
+
+    <!-- settings start -->
+        <string name="color_theme_gen">Color theme generator</string>
+        <string name="color_theme_day_night">Lightness mode</string>
+        <string name="rss_sources">News sources</string>
+
+        <string name="scrollbar_controller">App sorting</string>
+
+        <string name="icons">Icons</string>
+
+        <string name="reshape_adaptive_icons">Reshape adaptive icons</string>
+        <string name="reshape_adaptive_icons_explanation">Attempts to remove icon backgrounds without messing them up</string>
+
+        <string name="icon_packs">Icon packs</string>
+        <string name="chosen">Chosen</string>
+        <string name="available">Available</string>
+        <string name="system">System</string>
+    <!-- settings end -->
+
+    <!-- first time screen start -->
+        <string name="splash_message">Automated customization</string>
+
+        <!-- permissions start -->
+            <string name="permissions">Permissions</string>
+            <string name="grant_permissions">Grant permissions</string>
+
+            <string name="permission_storage">Storage</string>
+            <string name="permission_storage_explanation">To adjust theme colors to the wallpaper &amp; for background blur</string>
+
+            <string name="permission_contacts">Contacts</string>
+            <string name="permission_contacts_explanation">Contacts can be displayed in the search screen</string>
+
+            <string name="permission_notifications">Notifications</string>
+            <string name="permission_notifications_explanation">For displaying notifications &amp; a media player in your feed</string>
+
+            <string name="permission_usage_access">Usage access</string>
+            <string name="permission_usage_access_explanation">Cinta will see which apps you use, to improve the app suggestions</string>
+        <!-- permissions end -->
+    <!-- first time screen end -->
 </resources>

@@ -28,7 +28,6 @@
             android:layout_height="@dimen/search_bar_height"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:hint="@string/search"
             android:includeFontPadding="false"
             android:scrollHorizontally="true"
             android:lines="1"
