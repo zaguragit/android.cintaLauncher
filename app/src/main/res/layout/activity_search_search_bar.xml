@@ -31,7 +31,7 @@
             android:includeFontPadding="false"
             android:scrollHorizontally="true"
             android:lines="1"
-            android:inputType="number|textNoSuggestions|phone|datetime"
+            android:inputType="number|text|phone|datetime"
             android:imeOptions="actionSearch">
             <requestFocus/>
         </EditText>

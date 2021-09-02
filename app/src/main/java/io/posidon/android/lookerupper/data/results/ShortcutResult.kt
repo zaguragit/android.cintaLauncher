@@ -11,10 +11,15 @@ import posidon.android.conveniencelib.toBitmap
 class ShortcutResult(
     val shortcutInfo: ShortcutInfo,
     override val title: String,
-    val icon: Drawable,
+    override val icon: Drawable,
     val app: AppResult
-) : SearchResult {
+) : CompactResult() {
+
+    var showSubtitle = true
+
+    override val subtitle get() = if (showSubtitle) app.title else null
     override var relevance = Relevance(0f)
+    override val onLongPress = null
 
     private val _color = run {
         val palette = Palette.from(icon.toBitmap()).generate()

@@ -20,19 +20,16 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
-import io.posidon.android.cintalauncher.data.feed.items.formatForAppCard
-import io.posidon.android.cintalauncher.providers.FeedSorter
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import io.posidon.android.lookerupper.data.results.AppResult
 import io.posidon.android.lookerupper.data.results.SearchResult
+import posidon.android.conveniencelib.getNavigationBarHeight
 import posidon.android.conveniencelib.toBitmap
 
 class AppSearchViewHolder(
     itemView: View,
-    val navbarHeight: Int,
     val activity: Activity,
     val map: HashMap<SearchResult, () -> Unit>
 ) : SearchViewHolder(itemView) {
@@ -93,12 +90,10 @@ class AppSearchViewHolder(
         label.setTextColor(ColorTheme.titleColorForBG(itemView.context, backgroundColor))
         notificationView.setTextColor(ColorTheme.textColorForBG(itemView.context, backgroundColor))
 
-        val notifications = (result as? AppResult)?.getNotifications()
-        val notification = notifications?.let(FeedSorter::getMostRelevant)
-        if (notification == null) {
+        val banner = (result as? AppResult)?.app?.getBanner()
+        if (banner?.text == null) {
             iconSmall.isVisible = false
             notificationView.isVisible = false
-            imageView.isVisible = false
             icon.isVisible = true
             icon.setImageDrawable(result.icon)
         } else {
@@ -106,18 +101,19 @@ class AppSearchViewHolder(
             notificationView.isVisible = true
             icon.isVisible = false
             iconSmall.setImageDrawable(result.icon)
-            notificationView.text = notification.formatForAppCard(result.app)
-            val image = (notification as? FeedItemWithBigImage)?.image
-            if (image == null) imageView.isVisible = false
-            else {
-                imageView.isVisible = true
-                imageView.setImageDrawable(null)
-                Glide.with(itemView.context)
-                    .load(image)
-                    .apply(requestOptions)
-                    .listener(imageRequestListener)
-                    .into(imageView)
-            }
+            notificationView.text = banner.text
+        }
+        if (banner?.background == null) {
+            imageView.isVisible = false
+        } else {
+            imageView.isVisible = true
+            imageView.setImageDrawable(null)
+            imageView.alpha = banner.bgOpacity
+            Glide.with(itemView.context)
+                .load(banner.background)
+                .apply(requestOptions)
+                .listener(imageRequestListener)
+                .into(imageView)
         }
 
         itemView.setOnClickListener(result::open)
@@ -127,7 +123,7 @@ class AppSearchViewHolder(
                 backgroundColor,
                 ColorTheme.titleColorForBG(itemView.context, backgroundColor),
                 result.app,
-                navbarHeight,
+                activity.getNavigationBarHeight(),
                 onDragOut = { activity.finish() }
             )
             true

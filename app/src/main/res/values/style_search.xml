@@ -31,6 +31,8 @@
 
     <style name="Theme.CintaLauncher.SearchResult.Simple.Icon" parent="Theme.CintaLauncher">
         <item name="android:padding">8dp</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
     </style>
 
     <style name="Theme.CintaLauncher.SearchResult.Simple.Title" parent="Theme.CintaLauncher">
@@ -106,5 +108,11 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/feed_card_text_dark_title</item>
         <item name="android:padding">@dimen/feed_card_spacing</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.SearchResult.Group.Container" parent="Theme.CintaLauncher">
+    </style>
+
+    <style name="Theme.CintaLauncher.SearchResult.Group.Recycler" parent="Theme.CintaLauncher">
     </style>
 </resources>

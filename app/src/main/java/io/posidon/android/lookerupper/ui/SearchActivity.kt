@@ -26,7 +26,6 @@ import io.posidon.android.lookerupper.data.providers.AppProvider
 import io.posidon.android.lookerupper.data.providers.ContactProvider
 import io.posidon.android.lookerupper.data.providers.DuckDuckGoProvider
 import io.posidon.android.lookerupper.data.results.SearchResult
-import posidon.android.conveniencelib.getNavigationBarHeight
 
 
 class SearchActivity : FragmentActivity() {
@@ -46,8 +45,9 @@ class SearchActivity : FragmentActivity() {
         searcher.onCreate(this)
         loadColors()
         val container = findViewById<View>(R.id.search_bar_container)!!
-        adapter = SearchAdapter(this, getNavigationBarHeight())
-        findViewById<RecyclerView>(R.id.recycler).apply {
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler)!!
+        adapter = SearchAdapter(this, recyclerView, false)
+        recyclerView.run {
             layoutManager = GridLayoutManager(this@SearchActivity, 3, RecyclerView.VERTICAL, false).apply {
                 spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(i: Int): Int =

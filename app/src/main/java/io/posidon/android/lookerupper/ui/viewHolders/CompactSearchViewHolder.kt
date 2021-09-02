@@ -1,35 +1,33 @@
 package io.posidon.android.lookerupper.ui.viewHolders
 
+import android.app.Activity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.lookerupper.data.results.ContactResult
+import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.applyIfNotNull
+import io.posidon.android.lookerupper.data.results.CompactResult
 import io.posidon.android.lookerupper.data.results.SearchResult
 
-class ContactSearchViewHolder(
+class CompactSearchViewHolder(
     itemView: View,
+    val activity: Activity,
     val isOnCard: Boolean
 ) : SearchViewHolder(itemView) {
 
     val icon = itemView.findViewById<ImageView>(R.id.icon)!!
     val text = itemView.findViewById<TextView>(R.id.text)!!
+    val subtitle = itemView.findViewById<TextView>(R.id.subtitle)!!
 
     override fun onBind(result: SearchResult) {
-        result as ContactResult
-        Glide.with(itemView)
-            .load(result.iconUri)
-            .placeholder(ContextCompat.getDrawable(itemView.context, R.drawable.placeholder_contact)!!.apply {
-                setTint(if (isOnCard) ColorTheme.cardHint else ColorTheme.uiHint)
-            })
-            .apply(RequestOptions.circleCropTransform())
-            .into(icon)
+        result as CompactResult
+        icon.setImageDrawable(result.icon)
         text.text = result.title
+        applyIfNotNull(subtitle, result.subtitle, TextView::setText)
         text.setTextColor(if (isOnCard) ColorTheme.cardTitle else ColorTheme.uiTitle)
+        subtitle.setTextColor(if (isOnCard) ColorTheme.cardDescription else ColorTheme.uiDescription)
         itemView.setOnClickListener(result::open)
+        itemView.setOnLongClickListener(result.onLongPress?.let { { v -> it(v, activity) } })
     }
 }
