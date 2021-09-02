@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.items.LauncherItem
-import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
+import io.posidon.android.cintalauncher.providers.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
@@ -26,7 +26,7 @@ class SuggestionViewHolder(
 fun bindSuggestionViewHolder(
     holder: SuggestionViewHolder,
     item: LauncherItem,
-    suggestionsManager: AppSuggestionsManager,
+    suggestionsManager: SuggestionsManager,
     navbarHeight: Int,
     onDragOut: (view: View) -> Unit = {},
 ) {
@@ -40,7 +40,7 @@ fun bindSuggestionViewHolder(
     holder.icon.setImageDrawable(item.icon)
 
     holder.itemView.setOnClickListener {
-        suggestionsManager.onItemOpened(item)
+        suggestionsManager.onItemOpened(it.context, item)
         item.open(it.context.applicationContext, it)
     }
     holder.itemView.setOnLongClickListener {

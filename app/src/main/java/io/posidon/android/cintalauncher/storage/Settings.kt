@@ -80,8 +80,14 @@ class Settings {
             else settings.singles[key] = SingleString(value)
         }
 
-        operator fun set(key: String, value: Array<String>) {
-            settings.lists[key] = value
+        operator fun set(key: String, value: Array<String>?) {
+            if (value == null) settings.lists.keys.remove(key)
+            else settings.lists[key] = value
+        }
+
+        fun setStrings(key: String, value: Array<String>?) {
+            if (value == null) settings.lists.keys.remove(key)
+            else settings.lists[key] = value
         }
 
         @JvmName("set1")
@@ -97,7 +103,7 @@ class Settings {
         inline infix fun String.set(value: String?) = set(this, value)
 
         @JvmName("set1")
-        inline infix fun String.set(value: Array<String>) = set(this, value)
+        inline infix fun String.set(value: Array<String>?) = set(this, value)
     }
 
     private val editor = SettingsEditor(this)

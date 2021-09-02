@@ -110,7 +110,7 @@ class HomeViewHolder(
     }
 
     fun updateRecents() {
-        val recent = launcherContext.appManager.suggestionsManager.getLast3()
+        val recent = launcherContext.appManager.suggestionsManager.getSuggestions()
         if (recent.isEmpty()) {
             recentlyOpenedRecycler.isVisible = false
         } else {

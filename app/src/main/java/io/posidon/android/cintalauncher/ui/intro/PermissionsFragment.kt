@@ -16,7 +16,7 @@ import androidx.core.view.isVisible
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.color.ColorThemeOptions
-import io.posidon.android.cintalauncher.providers.AppSuggestionsManager
+import io.posidon.android.cintalauncher.providers.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.util.FakeLauncherActivity
 
@@ -82,7 +82,7 @@ class PermissionsFragment : FragmentWithNext(R.layout.intro_permissions) {
                 .setOnClickListener(::requestNotificationsPermission)
         }
 
-        if (AppSuggestionsManager.checkUsageAccessPermission(context)) {
+        if (SuggestionsManager.checkUsageAccessPermission(context)) {
             findViewById<View>(R.id.button_usage_access)!!.isVisible = false
             tickUsageAccess.isVisible = true
         } else {
