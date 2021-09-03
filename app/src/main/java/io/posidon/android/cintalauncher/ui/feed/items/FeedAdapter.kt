@@ -1,13 +1,16 @@
 package io.posidon.android.cintalauncher.ui.feed.items
 
+import android.content.ClipData
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
@@ -127,6 +130,25 @@ class FeedAdapter(
         if (h != null && scrollY < h.itemView.height) {
             h.onScroll()
         }
+    }
+
+    fun showDropTarget(i: Int) {
+        homeViewHolder?.run {
+            if (i != -1) pinnedRecycler.isVisible = true
+            pinnedAdapter.showDropTarget(i)
+        }
+    }
+
+    fun getPinnedItemIndex(x: Float, y: Float): Int {
+        return homeViewHolder?.getPinnedItemIndex(x, y) ?: -1
+    }
+
+    fun onDrop(v: View, i: Int, clipData: ClipData) {
+        homeViewHolder?.pinnedAdapter?.onDrop(v, i, clipData)
+    }
+
+    fun updatePinned() {
+        homeViewHolder?.updatePinned()
     }
 
     companion object {

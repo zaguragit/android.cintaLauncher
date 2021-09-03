@@ -1,6 +1,6 @@
 package io.posidon.android.cintalauncher.ui.feed.home.pinned
 
-import android.view.DragEvent
+import android.content.ClipData
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,23 +56,6 @@ class PinnedItemsAdapter(
                 .inflate(R.layout.feed_home_drop_target, parent, false) as CardView, map)
                 .also { dropTarget = it }
                 .apply {
-                    itemView.setOnDragListener { v, event ->
-                        when (event.action) {
-                            DragEvent.ACTION_DRAG_ENDED,
-                            DragEvent.ACTION_DRAG_EXITED, -> {
-                                dropTargetIndex = items.size
-                                notifyDataSetChanged()
-                            }
-                            DragEvent.ACTION_DROP -> {
-                                val item = launcherContext.appManager.parseLauncherItem(event.clipData.getItemAt(0).text.toString())!!
-                                items.add(dropTargetIndex, item)
-                                dropTargetIndex = -1
-                                notifyDataSetChanged()
-                                updatePins(v)
-                            }
-                        }
-                        true
-                    }
                 }
             else -> AppViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.app_drawer_item, parent, false) as CardView, map)
@@ -104,16 +87,6 @@ class PinnedItemsAdapter(
                 updatePins(it)
             },
         )
-        holder.itemView.setOnDragListener { v, event ->
-            when (event.action) {
-                DragEvent.ACTION_DRAG_LOCATION,
-                DragEvent.ACTION_DRAG_ENTERED -> {
-                    dropTargetIndex = holder.adapterPosition
-                    notifyDataSetChanged()
-                }
-            }
-            true
-        }
     }
 
     fun updateItems(items: List<LauncherItem>) {
@@ -129,15 +102,30 @@ class PinnedItemsAdapter(
         }
     }
 
-    fun showDropTarget(show: Boolean) {
-        if (show != (dropTargetIndex != -1)) {
-            if (show) {
-                dropTargetIndex = 0
-                notifyItemInserted(0)
-            } else {
+    fun showDropTarget(i: Int) {
+        if (i != dropTargetIndex) {
+            if (i == -1) {
+                val old = dropTargetIndex
                 dropTargetIndex = -1
-                notifyItemRemoved(0)
+                notifyItemRemoved(old)
+            } else {
+                if (dropTargetIndex == -1) {
+                    dropTargetIndex = i
+                    notifyItemInserted(i)
+                } else {
+                    val old = dropTargetIndex
+                    dropTargetIndex = i
+                    notifyItemMoved(old, i)
+                }
             }
         }
+    }
+
+    fun onDrop(v: View, i: Int, clipData: ClipData) {
+        val item = launcherContext.appManager.parseLauncherItem(clipData.getItemAt(0).text.toString())!!
+        items.add(i, item)
+        dropTargetIndex = -1
+        notifyDataSetChanged()
+        updatePins(v)
     }
 }

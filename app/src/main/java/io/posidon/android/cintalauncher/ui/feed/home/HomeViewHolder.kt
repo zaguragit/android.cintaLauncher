@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.drawable.BitmapDrawable
-import android.view.*
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -99,7 +102,7 @@ class HomeViewHolder(
     }
 
     fun updatePinned() {
-        pinnedAdapter.showDropTarget(false)
+        pinnedAdapter.showDropTarget(-1)
         val pinned = launcherContext.appManager.pinnedItems
         if (pinned.isEmpty()) {
             pinnedRecycler.isVisible = false
@@ -124,6 +127,19 @@ class HomeViewHolder(
         summaryAdapter.onScroll()
         recentlyOpenedAdapter.onScroll()
         pinnedAdapter.onScroll()
+    }
+
+    fun getPinnedItemIndex(x: Float, y: Float): Int {
+        val location = IntArray(2)
+        pinnedRecycler.getLocationOnScreen(location)
+        val lx = (x - location[0])
+        val ly = (y - location[1])
+        if (lx < 0 || ly < 0 || lx > pinnedRecycler.width || ly > pinnedRecycler.height)
+            return -1
+        val xx = (lx / pinnedRecycler.width * 3).toInt()
+        val yy = ((pinnedRecycler.height - ly) / pinnedRecycler.height * 3).toInt()
+        val i = xx + yy * 3
+        return i.coerceAtMost(pinnedAdapter.itemCount - 1)
     }
 }
 
@@ -155,22 +171,6 @@ fun bindHomeViewHolder(
     }
     holder.itemView.setOnLongClickListener {
         HomeLongPressPopup.show(it, popupX, popupY, holder.launcherActivity.getNavigationBarHeight(), holder.launcherContext.settings, holder.launcherActivity::reloadColorThemeSync)
-        true
-    }
-    holder.itemView.setOnDragListener { v, event ->
-        val pinnedItems = holder.launcherContext.appManager.pinnedItems
-        when (event.action) {
-            DragEvent.ACTION_DRAG_STARTED,
-            DragEvent.ACTION_DRAG_ENTERED -> {
-                if (pinnedItems.isEmpty()) {
-                    holder.pinnedRecycler.isVisible = true
-                    holder.pinnedAdapter.showDropTarget(true)
-                }
-            }
-            DragEvent.ACTION_DRAG_ENDED -> {
-                holder.updatePinned()
-            }
-        }
         true
     }
 }

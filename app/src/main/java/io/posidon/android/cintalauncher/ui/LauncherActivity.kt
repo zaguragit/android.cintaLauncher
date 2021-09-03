@@ -35,6 +35,7 @@ import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
 import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.SCROLLBAR_CONTROLLER_BY_HUE
 import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.scrollbarController
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
+import io.posidon.android.cintalauncher.ui.feed.home.HomeViewHolder
 import io.posidon.android.cintalauncher.ui.feed.items.FeedAdapter
 import io.posidon.android.cintalauncher.ui.popup.PopupUtils
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
@@ -59,6 +60,7 @@ class LauncherActivity : FragmentActivity() {
 
     val notificationProvider = NotificationProvider(this)
 
+    val homeContainer by lazy { findViewById<View>(R.id.home_container) }
     val feedRecycler by lazy { findViewById<RecyclerView>(R.id.feed_recycler)!! }
     val scrollBar by lazy { findViewById<Scrollbar>(R.id.scroll_bar)!! }
 
@@ -97,6 +99,36 @@ class LauncherActivity : FragmentActivity() {
             }
         }
 
+        homeContainer.setOnDragListener { v, event ->
+            val viewUnder = feedRecycler.findChildViewUnder(event.x, event.y)
+            if (viewUnder != null && feedRecycler.findContainingViewHolder(viewUnder) is HomeViewHolder) {
+                when (event.action) {
+                    DragEvent.ACTION_DRAG_STARTED,
+                    DragEvent.ACTION_DRAG_ENTERED,
+                    DragEvent.ACTION_DRAG_LOCATION -> {
+                        val i = feedAdapter.getPinnedItemIndex(event.x, event.y)
+                        val pinnedItems = launcherContext.appManager.pinnedItems
+                        feedAdapter.showDropTarget(if (i == -1) pinnedItems.size else i)
+                    }
+                    DragEvent.ACTION_DRAG_ENDED -> {
+                        feedAdapter.updatePinned()
+                    }
+                    DragEvent.ACTION_DRAG_EXITED -> {
+                        feedAdapter.showDropTarget(-1)
+                    }
+                    DragEvent.ACTION_DROP -> {
+                        val i = feedAdapter.getPinnedItemIndex(event.x, event.y)
+                        if (i == -1)
+                            return@setOnDragListener false
+                        feedAdapter.onDrop(v, i, event.clipData)
+                    }
+                }
+            } else {
+                feedAdapter.showDropTarget(-1)
+            }
+            true
+        }
+
         appDrawer.init()
 
         window.decorView.findViewById<View>(android.R.id.content).setOnTouchListener(::onTouch)
@@ -129,6 +161,11 @@ class LauncherActivity : FragmentActivity() {
         super.onResume()
         notificationProvider.update()
         val shouldUpdate = settings.reload(applicationContext)
+        if (shouldUpdate) {
+            reloadScrollbarController()
+        } else {
+            launcherContext.appManager.suggestionsManager.onResume(this, launcherContext.appManager)
+        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             thread (isDaemon = true) {
                 ColorTheme.onResumePreOMR1(
@@ -151,11 +188,6 @@ class LauncherActivity : FragmentActivity() {
         if (current - lastUpdateTime > 1000L * 60L * 5L) {
             lastUpdateTime = current
             thread (isDaemon = true, block = RssProvider::update)
-        }
-        if (shouldUpdate) {
-            reloadScrollbarController()
-        } else {
-            launcherContext.appManager.suggestionsManager.onResume(this, launcherContext.appManager)
         }
     }
 
@@ -216,7 +248,7 @@ class LauncherActivity : FragmentActivity() {
         if (b == null) {
             blurBG.background = null
             scrollBarContainer.background = ColorDrawable(ColorTheme.scrollBarDefaultBG)
-            findViewById<View>(R.id.home_container).foreground = InvertedRoundRectDrawable(
+            homeContainer.foreground = InvertedRoundRectDrawable(
                 floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r), 0f, ColorTheme.scrollBarDefaultBG)
             return
         }
@@ -233,7 +265,7 @@ class LauncherActivity : FragmentActivity() {
             BitmapDrawable(resources, b.fullBlur),
             ColorDrawable(ColorTheme.scrollBarTintBG)
         )).apply { setLayerInsetTop(0, scrollBarContainer.measuredHeight - Device.screenHeight(this@LauncherActivity)) }
-        findViewById<View>(R.id.home_container).foreground = LayerDrawable(arrayOf(
+        homeContainer.foreground = LayerDrawable(arrayOf(
             InvertedRoundRectDrawable(
                 floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r),
                 0f,
