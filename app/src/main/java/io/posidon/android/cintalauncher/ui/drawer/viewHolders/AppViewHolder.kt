@@ -90,7 +90,10 @@ fun bindAppViewHolder(
     suggestionsManager: SuggestionsManager,
     navbarHeight: Int,
     onDragOut: (view: View) -> Unit = {},
+    onDragStart: (view: View) -> Unit = {},
 ) {
+    holder.itemView.setOnDragListener(null)
+    
     holder.blurBG.drawable = BitmapDrawable(holder.itemView.resources, acrylicBlur?.smoothBlur)
     holder.map[item] = holder.blurBG::invalidate
 
@@ -138,7 +141,8 @@ fun bindAppViewHolder(
             ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor),
             item,
             navbarHeight,
-            onDragOut = onDragOut
+            onDragOut = onDragOut,
+            onDragStart = onDragStart
         )
         true
     }

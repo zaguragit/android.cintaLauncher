@@ -55,8 +55,6 @@ class PinnedItemsAdapter(
             1 -> DropTargetViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_home_drop_target, parent, false) as CardView, map)
                 .also { dropTarget = it }
-                .apply {
-                }
             else -> AppViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.app_drawer_item, parent, false) as CardView, map)
         }
@@ -81,9 +79,10 @@ class PinnedItemsAdapter(
             false,
             suggestionsManager,
             navbarHeight,
-            onDragOut = {
+            onDragStart = {
                 items.removeAt(i)
-                notifyItemRemoved(ii)
+                dropTargetIndex = ii
+                notifyItemChanged(ii)
                 updatePins(it)
             },
         )
@@ -104,15 +103,17 @@ class PinnedItemsAdapter(
 
     fun showDropTarget(i: Int) {
         if (i != dropTargetIndex) {
-            if (i == -1) {
-                val old = dropTargetIndex
-                dropTargetIndex = -1
-                notifyItemRemoved(old)
-            } else {
-                if (dropTargetIndex == -1) {
+            when {
+                i == -1 -> {
+                    val old = dropTargetIndex
+                    dropTargetIndex = -1
+                    notifyItemRemoved(old)
+                }
+                dropTargetIndex == -1 -> {
                     dropTargetIndex = i
                     notifyItemInserted(i)
-                } else {
+                }
+                else -> {
                     val old = dropTargetIndex
                     dropTargetIndex = i
                     notifyItemMoved(old, i)

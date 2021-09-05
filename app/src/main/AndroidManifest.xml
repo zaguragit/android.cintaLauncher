@@ -31,7 +31,8 @@
 
         <service
             android:name=".providers.notification.NotificationService"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
@@ -42,7 +43,8 @@
             android:excludeFromRecents="true"
             android:allowEmbedded="false"
             android:configChanges="navigation|density|screenSize|smallestScreenSize"
-            android:enabled="false">
+            android:enabled="false"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
@@ -53,7 +55,8 @@
 
         <activity
             android:name="io.posidon.android.lookerupper.ui.SearchActivity"
-            android:taskAffinity="io.posidon.android.lookerupper.ui.SearchActivity">
+            android:taskAffinity="io.posidon.android.lookerupper.ui.SearchActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
                 <action android:name="android.intent.action.SEARCH_LONG_PRESS"/>
@@ -79,7 +82,8 @@
 
         <activity-alias
             android:name=".ui.intro.IntroActivityAlias"
-            android:targetActivity=".ui.intro.IntroActivity">
+            android:targetActivity=".ui.intro.IntroActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
@@ -96,7 +100,10 @@
             android:launchMode="singleInstance">
         </activity>
 
-        <activity android:name=".util.FakeLauncherActivity" android:enabled="false">
+        <activity
+            android:name=".util.FakeLauncherActivity"
+            android:enabled="false"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />

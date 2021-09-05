@@ -31,6 +31,7 @@ import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.lookerupper.ui.SearchActivity
 import posidon.android.conveniencelib.dp
 import posidon.android.conveniencelib.getNavigationBarHeight
+import kotlin.math.ceil
 
 class HomeViewHolder(
     val scrollIndicator: ImageView,
@@ -136,10 +137,11 @@ class HomeViewHolder(
         val ly = (y - location[1])
         if (lx < 0 || ly < 0 || lx > pinnedRecycler.width || ly > pinnedRecycler.height)
             return -1
-        val xx = (lx / pinnedRecycler.width * 3).toInt()
-        val yy = ((pinnedRecycler.height - ly) / pinnedRecycler.height * 3).toInt()
+        val count = pinnedAdapter.itemCount
+        val xx = lx.toInt() * 3 / pinnedRecycler.width
+        val yy = (pinnedRecycler.height - ly.toInt()) * ceil(count / 3f).toInt() / pinnedRecycler.height
         val i = xx + yy * 3
-        return i.coerceAtMost(pinnedAdapter.itemCount - 1)
+        return i.coerceAtMost(count - 1)
     }
 }
 
