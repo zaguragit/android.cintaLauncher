@@ -26,14 +26,17 @@ class Feed {
     private var onUpdate: (List<FeedItem>) -> Unit = {}
     private lateinit var providers: Array<out FeedItemProvider>
     private val lock = ReentrantLock()
+    lateinit var settings: Settings
+        private set
 
     fun init(settings: Settings, vararg providers: FeedItemProvider, onUpdate: (List<FeedItem>) -> Unit, onDone: () -> Unit) {
         this.onUpdate = onUpdate
         this.providers = providers
+        this.settings = settings
         providers.forEach { it.preInit(this) }
         thread(name = "Feed init thread") {
             lock.withLock {
-                providers.forEach { it.init(settings) }
+                providers.forEach { it.init() }
             }
             onDone()
         }

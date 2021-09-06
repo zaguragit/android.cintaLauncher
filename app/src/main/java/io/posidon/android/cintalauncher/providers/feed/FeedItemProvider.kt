@@ -7,9 +7,11 @@ abstract class FeedItemProvider {
     open fun onInit() {}
     abstract fun getUpdated(): List<FeedItem>
 
-    private lateinit var feed: Feed
+    protected lateinit var feed: Feed
+        private set
     private var itemCache: List<FeedItem>? = null
-    lateinit var settings: Settings
+    protected inline val settings: Settings
+        get() = feed.settings
 
     fun get(): List<FeedItem> = itemCache ?: getUpdated().also { itemCache = it }
 
@@ -17,8 +19,7 @@ abstract class FeedItemProvider {
         this.feed = feed
     }
 
-    fun init(settings: Settings) {
-        this.settings = settings
+    fun init() {
         itemCache = getUpdated()
         onInit()
     }
