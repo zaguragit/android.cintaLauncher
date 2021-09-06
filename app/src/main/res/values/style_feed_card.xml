@@ -73,4 +73,12 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/accent</item>
     </style>
+
+    <style name="Theme.CintaLauncher.Empty.Container" parent="Theme.CintaLauncher">
+        <item name="android:layout_height">156dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Empty.Description" parent="Theme.CintaLauncher">
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>

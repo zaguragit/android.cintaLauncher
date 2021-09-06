@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.ui.feed.items
+package io.posidon.android.cintalauncher.ui.feed
 
 import android.content.ClipData
 import android.content.Context
@@ -36,15 +36,19 @@ class FeedAdapter(
 
     fun getFeedItem(i: Int) = itemList[i - 1]
 
-    override fun getItemCount() = itemList.size + 1
+    override fun getItemCount() = if (itemList.isEmpty()) 2 else itemList.size + 1
 
-    override fun getItemId(i: Int) = if (i == 0) 0 else getFeedItem(i).id
+    override fun getItemId(i: Int) = if (i == 0) 0 else if (itemList.isEmpty()) -1 else getFeedItem(i).id
 
-    override fun getItemViewType(i: Int) = if (i == 0) TYPE_HOME else when (getFeedItem(i)) {
-        is FeedItemWithBigImage -> TYPE_BIG_IMAGE
-        is FeedItemSmall -> TYPE_SMALL
-        is FeedItemWithProgress -> TYPE_PROGRESS
-        else -> TYPE_PLAIN
+    override fun getItemViewType(i: Int) = when {
+        i == 0 -> TYPE_HOME
+        itemList.isEmpty() -> TYPE_EMPTY
+        else -> when (getFeedItem(i)) {
+            is FeedItemWithBigImage -> TYPE_BIG_IMAGE
+            is FeedItemSmall -> TYPE_SMALL
+            is FeedItemWithProgress -> TYPE_PROGRESS
+            else -> TYPE_PLAIN
+        }
     }
 
     private var homeViewHolder: HomeViewHolder? = null
@@ -61,6 +65,8 @@ class FeedAdapter(
                 .inflate(R.layout.feed_item_big_image, parent, false))
             TYPE_PROGRESS -> FeedItemViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_plain, parent, false))
+            TYPE_EMPTY -> EmptyFeedItemViewHolder(LayoutInflater.from(parent.context)
+                .inflate(R.layout.feed_item_empty, parent, false))
             else -> throw RuntimeException("Invalid view holder type")
         }
     }
@@ -71,6 +77,10 @@ class FeedAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, i: Int) {
         if (i == 0) {
             return bindHomeViewHolder(holder as HomeViewHolder)
+        }
+        if (holder.itemViewType == TYPE_EMPTY) {
+            bindEmptyFeedItemViewHolder(holder as EmptyFeedItemViewHolder)
+            return
         }
         val item = getFeedItem(i)
         val k = item.sourceIcon to item.color
@@ -157,5 +167,6 @@ class FeedAdapter(
         private const val TYPE_SMALL = 2
         private const val TYPE_BIG_IMAGE = 3
         private const val TYPE_PROGRESS = 4
+        private const val TYPE_EMPTY = 5
     }
 }

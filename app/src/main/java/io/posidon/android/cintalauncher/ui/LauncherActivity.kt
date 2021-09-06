@@ -13,9 +13,11 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.animation.AccelerateInterpolator
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.toRectF
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,8 +27,10 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.color.ColorThemeOptions
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
+import io.posidon.android.cintalauncher.data.feed.items.isToday
 import io.posidon.android.cintalauncher.providers.app.AppCallback
 import io.posidon.android.cintalauncher.providers.app.AppCollection
+import io.posidon.android.cintalauncher.providers.feed.FeedFilter
 import io.posidon.android.cintalauncher.providers.feed.notification.NotificationProvider
 import io.posidon.android.cintalauncher.providers.feed.rss.RssProvider
 import io.posidon.android.cintalauncher.storage.*
@@ -35,8 +39,9 @@ import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
 import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.SCROLLBAR_CONTROLLER_BY_HUE
 import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.scrollbarController
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
+import io.posidon.android.cintalauncher.ui.feed.FeedAdapter
+import io.posidon.android.cintalauncher.ui.feed.filters.FeedFilterAdapter
 import io.posidon.android.cintalauncher.ui.feed.home.HomeViewHolder
-import io.posidon.android.cintalauncher.ui.feed.items.FeedAdapter
 import io.posidon.android.cintalauncher.ui.popup.PopupUtils
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
 import io.posidon.android.cintalauncher.ui.view.scrollbar.alphabet.AlphabetScrollbarController
@@ -62,6 +67,7 @@ class LauncherActivity : FragmentActivity() {
 
     val homeContainer by lazy { findViewById<View>(R.id.home_container) }
     val feedRecycler by lazy { findViewById<RecyclerView>(R.id.feed_recycler)!! }
+    val feedFilterRecycler by lazy { findViewById<RecyclerView>(R.id.feed_filters_recycler)!! }
     val scrollBar by lazy { findViewById<Scrollbar>(R.id.scroll_bar)!! }
 
     val scrollBarContainer by lazy { findViewById<View>(R.id.scroll_bar_container)!! }
@@ -71,6 +77,7 @@ class LauncherActivity : FragmentActivity() {
     val appDrawer by lazy { AppDrawer(this, scrollBar) }
 
     lateinit var feedAdapter: FeedAdapter
+    lateinit var feedFilterAdapter: FeedFilterAdapter
 
     lateinit var wallpaperManager: WallpaperManager
 
@@ -91,7 +98,55 @@ class LauncherActivity : FragmentActivity() {
         feedAdapter.setHasStableIds(true)
         feedRecycler.setItemViewCacheSize(20)
         feedRecycler.adapter = feedAdapter
-        feedRecycler.setOnScrollChangeListener { _, _, scrollY, _, _ -> feedAdapter.onScroll(scrollY) }
+        feedRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    feedAdapter.onScroll(0)
+                    showFilters(recyclerView.canScrollVertically(-1))
+                }
+            }
+
+            var lastScrollCheck = false
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val scrollCheck = recyclerView.canScrollVertically(-1)
+                feedAdapter.onScroll(0)
+                if (scrollCheck != lastScrollCheck) {
+                    showFilters(scrollCheck)
+                }
+                lastScrollCheck = scrollCheck
+            }
+
+            fun showFilters(show: Boolean) {
+                if (show) {
+                    feedFilterRecycler.isVisible = true
+                    feedFilterRecycler.animate()
+                        .translationY(0f)
+                        .setInterpolator(SpringInterpolator())
+                        .setDuration(450L)
+                        .onEnd { feedFilterRecycler.isVisible = true }
+                } else {
+                    feedFilterRecycler.animate()
+                        .translationY(feedFilterRecycler.height.toFloat())
+                        .setInterpolator(AccelerateInterpolator())
+                        .setDuration(100L)
+                        .onEnd { feedFilterRecycler.isVisible = false }
+                }
+            }
+        })
+
+        feedFilterAdapter = FeedFilterAdapter(launcherContext)
+        feedFilterRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        feedFilterRecycler.adapter = feedFilterAdapter
+
+        feedFilterAdapter.updateItems(
+            FeedFilter(getString(R.string.today), filter = FeedItem::isToday),
+            FeedFilter(getString(R.string.news)) {
+                it.meta?.isNotification != true
+            },
+            FeedFilter(getString(R.string.notifications)) {
+                it.meta?.isNotification == true
+            },
+        )
 
         launcherContext.feed.init(settings, notificationProvider, RssProvider, onUpdate = this::loadFeed) {
             runOnUiThread {

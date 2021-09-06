@@ -15,6 +15,12 @@
 
     <string name="properties">Properties</string>
 
+    <!-- filters start -->
+        <string name="news">News</string>
+        <string name="notifications">Notifications</string>
+        <string name="today">Today</string>
+    <!-- filters end -->
+
     <!-- settings start -->
         <string name="color_theme_gen">Color theme generator</string>
         <string name="color_theme_day_night">Lightness mode</string>
@@ -51,6 +57,7 @@
 
             <string name="permission_usage_access">Usage access</string>
             <string name="permission_usage_access_explanation">Cinta will see which apps you use, to improve the app suggestions</string>
-        <!-- permissions end -->
+    <string name="no_feed_items">Nothing here</string>
+    <!-- permissions end -->
     <!-- first time screen end -->
 </resources>

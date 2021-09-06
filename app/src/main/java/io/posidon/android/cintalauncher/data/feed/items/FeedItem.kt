@@ -75,3 +75,13 @@ fun FeedItem.formatTimeAgo(resources: Resources): String {
     }
     return "${hours / 24}d"
 }
+
+fun FeedItem.isToday(): Boolean {
+    val now = System.currentTimeMillis()
+    val passed = now - instant.toEpochMilli()
+    val seconds = passed / 1000
+    val minutes = seconds / 60
+    val hours = minutes / 60
+    val days = hours / 24
+    return days <= 1
+}

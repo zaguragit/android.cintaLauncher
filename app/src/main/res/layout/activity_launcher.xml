@@ -21,6 +21,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"/>
+        <androidx.recyclerview.widget.RecyclerView
+            style="@style/Theme.CintaLauncher.FeedFilters"
+            android:id="@+id/feed_filters_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:visibility="gone"/>
         <include layout="@layout/app_drawer"/>
     </FrameLayout>
     <include layout="@layout/dock"/>

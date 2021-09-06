@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/card"
+    style="@style/Theme.CintaLauncher.FeedFilter.Card">
+    <LinearLayout
+        style="@style/Theme.CintaLauncher.FeedFilter.Container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <ImageView
+            style="@style/Theme.CintaLauncher.FeedFilter.Icon"
+            android:id="@+id/icon"/>
+        <TextView
+            style="@style/Theme.CintaLauncher.FeedFilter.Text"
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
