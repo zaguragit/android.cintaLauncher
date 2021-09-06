@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.providers.rss
+package io.posidon.android.cintalauncher.providers.feed.rss
 
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
@@ -8,8 +8,8 @@ import android.view.View
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
 import io.posidon.android.cintalauncher.data.feed.items.longHash
-import io.posidon.android.cintalauncher.providers.Feed.Companion.MAX_ITEMS_HINT
-import io.posidon.android.cintalauncher.providers.FeedItemProvider
+import io.posidon.android.cintalauncher.providers.feed.Feed.Companion.MAX_ITEMS_HINT
+import io.posidon.android.cintalauncher.providers.feed.FeedItemProvider
 import io.posidon.android.cintalauncher.util.AsyncLoadDrawable
 import io.posidon.android.cintalauncher.util.ImageLoader
 import posidon.android.loader.rss.RssItem
@@ -36,7 +36,7 @@ object RssProvider : FeedItemProvider() {
                 object : FeedItem {
                     override val color = if (it.source.accentColor == 0) 0 else it.source.accentColor or 0xff000000.toInt()
                     override val title = it.title
-                    override val sourceIcon = it.source.iconUrl?.let(::loadBitmap)
+                    override val sourceIcon = it.source.iconUrl?.let(RssProvider::loadBitmap)
                     override val description = null
                     override val source: String = it.source.name
                     override val instant = it.time.toInstant()
@@ -53,7 +53,7 @@ object RssProvider : FeedItemProvider() {
                     override val image = it.img!!
                     override val color = if (it.source.accentColor == 0) 0 else it.source.accentColor or 0xff000000.toInt()
                     override val title = it.title
-                    override val sourceIcon = it.source.iconUrl?.let(::loadBitmap)
+                    override val sourceIcon = it.source.iconUrl?.let(RssProvider::loadBitmap)
                     override val description = null
                     override val source: String = it.source.name
                     override val instant = it.time.toInstant()

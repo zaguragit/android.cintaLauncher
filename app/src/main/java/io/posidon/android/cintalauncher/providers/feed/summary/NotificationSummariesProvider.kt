@@ -1,8 +1,8 @@
-package io.posidon.android.cintalauncher.providers.summary
+package io.posidon.android.cintalauncher.providers.feed.summary
 
 import android.content.Context
 import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
-import io.posidon.android.cintalauncher.providers.notification.NotificationService
+import io.posidon.android.cintalauncher.providers.feed.notification.NotificationService
 
 object NotificationSummariesProvider {
 

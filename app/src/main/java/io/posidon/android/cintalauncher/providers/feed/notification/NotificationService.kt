@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.providers.notification
+package io.posidon.android.cintalauncher.providers.feed.notification
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -19,8 +19,8 @@ import io.posidon.android.cintalauncher.BuildConfig
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
 import io.posidon.android.cintalauncher.data.feed.summary.media.MediaSummary
-import io.posidon.android.cintalauncher.providers.summary.MediaItemCreator
-import io.posidon.android.cintalauncher.providers.summary.NotificationSummaryCreator
+import io.posidon.android.cintalauncher.providers.feed.summary.MediaItemCreator
+import io.posidon.android.cintalauncher.providers.feed.summary.NotificationSummaryCreator
 import io.posidon.android.cintalauncher.util.StackTraceActivity
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
@@ -84,7 +84,11 @@ class NotificationService : NotificationListenerService() {
                             if (messagingStyle != null) {
                                 tmpMessageNotifications += notification
                             }
-                            tmpNotifications += NotificationCreator.create(applicationContext, notification, this)
+                            tmpNotifications += NotificationCreator.create(
+                                applicationContext,
+                                notification,
+                                this
+                            )
                         }
                         i++
                     }
@@ -105,7 +109,8 @@ class NotificationService : NotificationListenerService() {
                             } else throw Exception("Non-message notification got into the summary")
                         }
                     } else {
-                        listOf(NotificationSummaryCreator.createCompressed(
+                        listOf(
+                            NotificationSummaryCreator.createCompressed(
                             applicationContext,
                             notifications
                         ))
@@ -114,7 +119,7 @@ class NotificationService : NotificationListenerService() {
             }
             catch (e: Exception) { e.printStackTrace() }
             lock.lock()
-            NotificationService.notifications = tmpNotifications
+            Companion.notifications = tmpNotifications
             notificationSummaries = tmpSummaries
             onUpdate()
             onSummaryUpdate()
@@ -176,11 +181,11 @@ class NotificationService : NotificationListenerService() {
         }
 
         fun setOnUpdate(onUpdate: () -> Unit) {
-            this.onUpdate = onUpdate
+            Companion.onUpdate = onUpdate
         }
 
         fun setOnSummaryUpdate(onSummaryUpdate: () -> Unit) {
-            this.onSummaryUpdate = onSummaryUpdate
+            Companion.onSummaryUpdate = onSummaryUpdate
         }
     }
 }

@@ -15,8 +15,8 @@ import androidx.core.graphics.ColorUtils
 import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
 import io.posidon.android.cintalauncher.data.feed.items.formatForAppCard
-import io.posidon.android.cintalauncher.providers.FeedSorter
-import io.posidon.android.cintalauncher.providers.notification.NotificationService
+import io.posidon.android.cintalauncher.providers.feed.FeedSorter
+import io.posidon.android.cintalauncher.providers.feed.notification.NotificationService
 import io.posidon.android.cintalauncher.storage.DoReshapeAdaptiveIconsSetting.doReshapeAdaptiveIcons
 import io.posidon.android.cintalauncher.storage.Settings
 import posidon.android.conveniencelib.isInstalled

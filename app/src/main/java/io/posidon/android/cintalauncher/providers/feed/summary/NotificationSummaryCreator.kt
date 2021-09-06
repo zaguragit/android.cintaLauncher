@@ -1,11 +1,11 @@
-package io.posidon.android.cintalauncher.providers.summary
+package io.posidon.android.cintalauncher.providers.feed.summary
 
 import android.content.Context
 import android.service.notification.StatusBarNotification
 import androidx.core.app.NotificationCompat
 import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
 import io.posidon.android.cintalauncher.data.feed.summary.notification.NotificationSummary
-import io.posidon.android.cintalauncher.providers.notification.NotificationCreator
+import io.posidon.android.cintalauncher.providers.feed.notification.NotificationCreator
 import java.time.Instant
 
 object NotificationSummaryCreator {

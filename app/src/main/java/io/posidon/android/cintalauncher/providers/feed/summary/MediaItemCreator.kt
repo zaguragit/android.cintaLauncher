@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.providers.summary
+package io.posidon.android.cintalauncher.providers.feed.summary
 
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable

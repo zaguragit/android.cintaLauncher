@@ -81,7 +81,6 @@ object DrawerLongPressPopup {
         reloadApps: () -> Unit,
     ): List<ListPopupItem> {
         return listOf(
-            //ListPopupItem(context.getString(R.string.drawer_settings), isTitle = true),
             ListPopupItem(
                 context.getString(R.string.scrollbar_controller),
                 description = context.resources.getStringArray(R.array.scrollbar_controllers)[settings.scrollbarController],

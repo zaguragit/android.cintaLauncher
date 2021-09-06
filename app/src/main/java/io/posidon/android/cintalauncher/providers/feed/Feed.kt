@@ -1,9 +1,8 @@
-package io.posidon.android.cintalauncher.providers
+package io.posidon.android.cintalauncher.providers.feed
 
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.storage.Settings
 import java.util.concurrent.locks.ReentrantLock
-import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 import kotlin.concurrent.withLock
 

@@ -3,9 +3,9 @@ package io.posidon.android.cintalauncher
 import android.content.Context
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.data.items.LauncherItem
-import io.posidon.android.cintalauncher.providers.Feed
-import io.posidon.android.cintalauncher.providers.SuggestionsManager
 import io.posidon.android.cintalauncher.providers.app.AppCollection
+import io.posidon.android.cintalauncher.providers.feed.Feed
+import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.launcherutils.AppLoader
 

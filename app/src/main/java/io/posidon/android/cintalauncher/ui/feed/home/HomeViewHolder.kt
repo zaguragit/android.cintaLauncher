@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.LauncherContext
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.providers.summary.NotificationSummariesProvider
+import io.posidon.android.cintalauncher.providers.feed.summary.NotificationSummariesProvider
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.feed.home.pinned.PinnedItemsAdapter

@@ -1,8 +1,8 @@
-package io.posidon.android.cintalauncher.providers.notification
+package io.posidon.android.cintalauncher.providers.feed.notification
 
 import android.content.Context
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
-import io.posidon.android.cintalauncher.providers.FeedItemProvider
+import io.posidon.android.cintalauncher.providers.feed.FeedItemProvider
 
 class NotificationProvider(val context: Context) : FeedItemProvider() {
 

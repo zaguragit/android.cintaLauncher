@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.providers.notification
+package io.posidon.android.cintalauncher.providers.feed.notification
 
 import android.app.Notification
 import android.app.NotificationManager

@@ -27,8 +27,8 @@ import io.posidon.android.cintalauncher.color.ColorThemeOptions
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.providers.app.AppCallback
 import io.posidon.android.cintalauncher.providers.app.AppCollection
-import io.posidon.android.cintalauncher.providers.notification.NotificationProvider
-import io.posidon.android.cintalauncher.providers.rss.RssProvider
+import io.posidon.android.cintalauncher.providers.feed.notification.NotificationProvider
+import io.posidon.android.cintalauncher.providers.feed.rss.RssProvider
 import io.posidon.android.cintalauncher.storage.*
 import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
 import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
@@ -164,7 +164,7 @@ class LauncherActivity : FragmentActivity() {
         if (shouldUpdate) {
             reloadScrollbarController()
         } else {
-            launcherContext.appManager.suggestionsManager.onResume(this, launcherContext.appManager)
+            launcherContext.appManager.suggestionsManager.onResume(this)
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             thread (isDaemon = true) {
@@ -197,7 +197,7 @@ class LauncherActivity : FragmentActivity() {
             appDrawer.close()
         }
         PopupUtils.dismissCurrent()
-        launcherContext.appManager.suggestionsManager.save(settings, this)
+        launcherContext.appManager.suggestionsManager.onPause(settings, this)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

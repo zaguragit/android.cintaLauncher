@@ -24,6 +24,7 @@ import io.posidon.android.cintalauncher.ui.popup.PopupUtils
 import io.posidon.android.cintalauncher.ui.popup.listPopup.ListPopupAdapter
 import io.posidon.android.cintalauncher.ui.popup.listPopup.ListPopupItem
 import io.posidon.android.cintalauncher.ui.settings.feedChooser.FeedSourcesChooserActivity
+import io.posidon.android.cintalauncher.ui.settings.iconPackPicker.IconPackPickerActivity
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import posidon.android.conveniencelib.Device
 import java.util.concurrent.locks.ReentrantLock
@@ -118,6 +119,12 @@ object HomeLongPressPopup {
                 icon = ContextCompat.getDrawable(context, R.drawable.ic_news),
             ) {
                 context.startActivity(Intent(context, FeedSourcesChooserActivity::class.java))
+            },
+            ListPopupItem(
+                context.getString(R.string.icon_packs),
+                icon = ContextCompat.getDrawable(context, R.drawable.ic_shapes),
+            ) {
+                context.startActivity(Intent(context, IconPackPickerActivity::class.java))
             },
         )
     }
