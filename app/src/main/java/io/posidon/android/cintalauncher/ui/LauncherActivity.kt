@@ -256,10 +256,14 @@ class LauncherActivity : FragmentActivity() {
             BitmapDrawable(resources, b.partialBlurSmall),
             BitmapDrawable(resources, b.partialBlurMedium),
             BitmapDrawable(resources, b.fullBlur),
+            BitmapDrawable(resources, b.insaneBlur).also {
+                it.alpha = 160
+            },
         )).apply {
             setLayerInsetBottom(0, -scrollBarContainer.measuredHeight)
             setLayerInsetBottom(1, -scrollBarContainer.measuredHeight)
             setLayerInsetBottom(2, -scrollBarContainer.measuredHeight)
+            setLayerInsetBottom(3, -scrollBarContainer.measuredHeight)
         }
         scrollBarContainer.background = LayerDrawable(arrayOf(
             BitmapDrawable(resources, b.fullBlur),
@@ -284,9 +288,9 @@ class LauncherActivity : FragmentActivity() {
 
     private fun updateColorTheme() {
         feedAdapter.updateColorTheme()
-        appDrawer.updateColorTheme()
         scrollBar.controller.updateTheme(this)
         updateBlur()
+        appDrawer.updateColorTheme()
     }
 
     @RequiresApi(Build.VERSION_CODES.O_MR1)

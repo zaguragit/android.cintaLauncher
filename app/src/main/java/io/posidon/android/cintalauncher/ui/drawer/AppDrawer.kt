@@ -3,6 +3,7 @@ package io.posidon.android.cintalauncher.ui.drawer
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.view.HapticFeedbackConstants
@@ -107,7 +108,7 @@ class AppDrawer(
     }
 
     fun updateColorTheme() {
-        view.setBackgroundColor(ColorTheme.appDrawerColor and 0xffffff or 0xca000000.toInt())
+        view.background = ColorDrawable(ColorTheme.appDrawerColor and 0xffffff or 0xaa000000.toInt())
         bottomBar.background = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(ColorTheme.appDrawerBottomBarColor and 0xffffff or 0x88000000.toInt(), 0))
         closeButton.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
         closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))
@@ -148,11 +149,7 @@ class AppDrawer(
         activity.blurBG.isVisible = true
         currentValueAnimator = ValueAnimator.ofFloat(s, 3f).apply {
             addUpdateListener {
-                val l = activity.blurBG.background as? LayerDrawable ?: return@addUpdateListener
-                val x = it.animatedValue as Float
-                l.getDrawable(0).alpha = (255 * (x).coerceAtMost(1f)).toInt()
-                l.getDrawable(1).alpha = (255 * (x - 1f).coerceAtLeast(0f).coerceAtMost(1f)).toInt()
-                l.getDrawable(2).alpha = (255 * (x - 2f).coerceAtLeast(0f)).toInt()
+                updateBlurAnimation(it.animatedValue as Float)
             }
             interpolator = DecelerateInterpolator()
             duration = 200
@@ -190,11 +187,7 @@ class AppDrawer(
         activity.blurBG.isVisible = true
         currentValueAnimator = ValueAnimator.ofFloat(s, 0f).apply {
             addUpdateListener {
-                val l = activity.blurBG.background as? LayerDrawable ?: return@addUpdateListener
-                val x = it.animatedValue as Float
-                l.getDrawable(0).alpha = (255 * (x).coerceAtMost(1f)).toInt()
-                l.getDrawable(1).alpha = (255 * (x - 1f).coerceAtLeast(0f).coerceAtMost(1f)).toInt()
-                l.getDrawable(2).alpha = (255 * (x - 2f).coerceAtLeast(0f)).toInt()
+                updateBlurAnimation(it.animatedValue as Float)
             }
             interpolator = AccelerateInterpolator()
             duration = 135
@@ -205,5 +198,13 @@ class AppDrawer(
             }
             start()
         }
+    }
+
+    fun updateBlurAnimation(x: Float) {
+        val l = activity.blurBG.background as? LayerDrawable ?: return
+        l.getDrawable(0).alpha = (255 * (x).coerceAtMost(1f)).toInt()
+        l.getDrawable(1).alpha = (255 * (x - 1f).coerceAtLeast(0f).coerceAtMost(1f)).toInt()
+        l.getDrawable(2).alpha = (255 * (x - 2f).coerceAtLeast(0f)).toInt()
+        l.getDrawable(3).alpha = (120 * ((x - .5f) / 2.5f).coerceAtLeast(0f)).toInt()
     }
 }

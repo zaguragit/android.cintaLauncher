@@ -27,7 +27,6 @@ import io.posidon.android.lookerupper.data.providers.ContactProvider
 import io.posidon.android.lookerupper.data.providers.DuckDuckGoProvider
 import io.posidon.android.lookerupper.data.results.SearchResult
 
-
 class SearchActivity : FragmentActivity() {
 
     lateinit var adapter: SearchAdapter
@@ -83,7 +82,12 @@ class SearchActivity : FragmentActivity() {
     private fun loadColors() {
         window.decorView.background = LayerDrawable(arrayOf(
             BitmapDrawable(resources, acrylicBlur?.partialBlurSmall),
-            ColorDrawable(ColorTheme.uiBG),
+            BitmapDrawable(resources, acrylicBlur?.insaneBlur).also {
+                it.alpha = 80
+            },
+            ColorDrawable(ColorTheme.uiBG).also {
+                it.alpha = 120
+            },
         ))
         findViewById<View>(R.id.search_bar_container).backgroundTintList =
             ColorStateList.valueOf(ColorTheme.searchBarBG)
