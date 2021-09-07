@@ -23,7 +23,13 @@ class AndroidOMR1WallColorTheme(
     private val secondary = colors.secondaryColor
     private val tertiary = colors.tertiaryColor
 
-    override val accentColor = (tertiary ?: secondary ?: primary).toArgb()
+    override val accentColor = run {
+        val base = (tertiary ?: secondary ?: primary).toArgb()
+        val hsl = FloatArray(3)
+        ColorUtils.colorToHSL(base, hsl)
+        hsl[2] = hsl[2].coerceAtLeast(0.4f)
+        ColorUtils.HSLToColor(hsl)
+    }
 
     override val wallColor = primary.toArgb()
     override val wallTitle = titleColorForBG(context, wallColor)

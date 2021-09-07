@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.toRectF
@@ -121,8 +122,8 @@ class LauncherActivity : FragmentActivity() {
                     feedFilterRecycler.isVisible = true
                     feedFilterRecycler.animate()
                         .translationY(0f)
-                        .setInterpolator(SpringInterpolator())
-                        .setDuration(450L)
+                        .setInterpolator(DecelerateInterpolator())
+                        .setDuration(100L)
                         .onEnd { feedFilterRecycler.isVisible = true }
                 } else {
                     feedFilterRecycler.animate()
@@ -344,6 +345,7 @@ class LauncherActivity : FragmentActivity() {
     private fun updateColorTheme() {
         feedAdapter.updateColorTheme()
         scrollBar.controller.updateTheme(this)
+        feedFilterAdapter.updateColorTheme()
         updateBlur()
         appDrawer.updateColorTheme()
     }

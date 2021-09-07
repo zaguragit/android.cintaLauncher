@@ -48,4 +48,8 @@ class FeedFilterAdapter(
         this.items = items.mapTo(ArrayList()) { item -> item to (this.items.find { it.first == item && it.second } != null) }
         notifyDataSetChanged()
     }
+
+    fun updateColorTheme() {
+        notifyDataSetChanged()
+    }
 }
