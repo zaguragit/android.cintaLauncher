@@ -1,17 +1,21 @@
 package io.posidon.android.lookerupper.ui
 
 import android.app.SearchManager
+import android.app.WallpaperColors
+import android.app.WallpaperManager
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.LayerDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,7 +24,9 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.color.ColorThemeOptions
 import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
+import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
 import io.posidon.android.cintalauncher.storage.Settings
+import io.posidon.android.cintalauncher.ui.LauncherActivity.Companion.loadBlur
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import io.posidon.android.lookerupper.data.Searcher
@@ -33,7 +39,13 @@ class SearchActivity : FragmentActivity() {
 
     lateinit var adapter: SearchAdapter
     val settings = Settings()
-    val searcher = Searcher(settings, ::AppProvider, ::ContactProvider, ::DuckDuckGoProvider, update = ::updateResults)
+    val searcher = Searcher(
+        settings,
+        ::AppProvider,
+        ::ContactProvider,
+        ::DuckDuckGoProvider,
+        update = ::updateResults
+    )
 
     private fun updateResults(list: List<SearchResult>) = runOnUiThread {
         adapter.update(list)
@@ -41,13 +53,20 @@ class SearchActivity : FragmentActivity() {
 
     val container by lazy { findViewById<View>(R.id.search_bar_container)!! }
     val searchBar by lazy { findViewById<View>(R.id.search_bar)!! }
+    val blurBG by lazy { findViewById<SeeThoughView>(R.id.blur_bg)!! }
+
+    val colorThemeOptions by lazy { ColorThemeOptions(settings.colorThemeDayNight) }
+    val wallpaperManager by lazy { getSystemService(WallpaperManager::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         settings.init(this)
         searcher.onCreate(this)
-        ColorTheme.onCreate(ColorThemeOptions(settings.colorThemeDayNight), this)
+        ColorTheme.onCreate(colorThemeOptions, this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            wallpaperManager.addOnColorsChangedListener(::onColorsChangedListener, container.handler)
+        }
         loadColors()
         val recyclerView = findViewById<RecyclerView>(R.id.recycler)!!
         adapter = SearchAdapter(this, recyclerView, false)
@@ -80,8 +99,30 @@ class SearchActivity : FragmentActivity() {
                 } else false
             }
         }
-        val blurBG = findViewById<SeeThoughView>(R.id.blur_bg)!!
+    }
+
+    fun updateBlur() {
         blurBG.drawable = BitmapDrawable(resources, acrylicBlur?.smoothBlur)
+        window.decorView.background = LayerDrawable(arrayOf(
+            BitmapDrawable(resources, acrylicBlur?.partialBlurSmall),
+            BitmapDrawable(resources, acrylicBlur?.insaneBlur).also {
+                it.alpha = 80
+            },
+            ColorDrawable(ColorTheme.uiBG).also {
+                it.alpha = 120
+            },
+        ))
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O_MR1)
+    fun onColorsChangedListener(
+        colors: WallpaperColors?,
+        which: Int
+    ) {
+        if (which and WallpaperManager.FLAG_SYSTEM != 0) {
+            loadBlur(wallpaperManager, ::updateBlur)
+            ColorTheme.onColorsChanged(this, settings.colorTheme, colorThemeOptions, SearchActivity::loadColors) { colors }
+        }
     }
 
     private fun loadColors() {

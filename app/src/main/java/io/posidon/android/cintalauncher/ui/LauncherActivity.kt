@@ -1,6 +1,7 @@
 package io.posidon.android.cintalauncher.ui
 
 import android.Manifest
+import android.app.Activity
 import android.app.WallpaperColors
 import android.app.WallpaperManager
 import android.content.Intent
@@ -236,7 +237,7 @@ class LauncherActivity : FragmentActivity() {
             }
         } else {
             if (acrylicBlur == null) {
-                loadBlur()
+                loadBlur(wallpaperManager, ::updateBlur)
             }
             if (shouldUpdate) {
                 thread(name = "Reloading color theme", isDaemon = true, block = this::reloadColorThemeSync)
@@ -274,29 +275,6 @@ class LauncherActivity : FragmentActivity() {
         val isActionMain = Intent.ACTION_MAIN == intent.action
         if (isActionMain) {
             handleGestureContract(intent)
-        }
-    }
-
-    private fun loadBlur() = thread(isDaemon = true, name = "Blur thread") {
-        if (ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) != PackageManager.PERMISSION_GRANTED) {
-            if (acrylicBlur == null) return@thread
-            acrylicBlur = null
-            runOnUiThread(::updateBlur)
-            return@thread
-        }
-        val drawable = wallpaperManager.peekDrawable()
-        if (drawable == null) {
-            if (acrylicBlur == null) return@thread
-            acrylicBlur = null
-            runOnUiThread(::updateBlur)
-            return@thread
-        }
-        AcrylicBlur.blurWallpaper(this, drawable) {
-            acrylicBlur = it
-            runOnUiThread(::updateBlur)
         }
     }
 
@@ -394,7 +372,7 @@ class LauncherActivity : FragmentActivity() {
     }
 
     private fun onWallpaperChanged() {
-        loadBlur()
+        loadBlur(wallpaperManager, ::updateBlur)
     }
 
     private fun handleGestureContract(intent: Intent) {
@@ -437,6 +415,31 @@ class LauncherActivity : FragmentActivity() {
         feedRecycler.setPadding(0, getStatusBarHeight(), 0, 0)
         scrollBar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             bottomMargin = getNavigationBarHeight()
+        }
+    }
+
+    companion object {
+        fun Activity.loadBlur(wallpaperManager: WallpaperManager, updateBlur: () -> Unit) = thread(isDaemon = true, name = "Blur thread") {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED) {
+                if (acrylicBlur == null) return@thread
+                acrylicBlur = null
+                runOnUiThread(updateBlur)
+                return@thread
+            }
+            val drawable = wallpaperManager.peekDrawable()
+            if (drawable == null) {
+                if (acrylicBlur == null) return@thread
+                acrylicBlur = null
+                runOnUiThread(updateBlur)
+                return@thread
+            }
+            AcrylicBlur.blurWallpaper(this, drawable) {
+                acrylicBlur = it
+                runOnUiThread(updateBlur)
+            }
         }
     }
 }
