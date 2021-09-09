@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.drawable.BitmapDrawable
-import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -19,11 +18,13 @@ import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.LauncherContext
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.feed.notification.NotificationService
 import io.posidon.android.cintalauncher.providers.feed.summary.NotificationSummariesProvider
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.feed.home.pinned.PinnedItemsAdapter
 import io.posidon.android.cintalauncher.ui.feed.home.suggestions.SuggestionsAdapter
+import io.posidon.android.cintalauncher.ui.feed.home.summary.NotificationIconsAdapter
 import io.posidon.android.cintalauncher.ui.feed.home.summary.SummaryAdapter
 import io.posidon.android.cintalauncher.ui.popup.home.HomeLongPressPopup
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
@@ -61,6 +62,11 @@ class HomeViewHolder(
         layoutManager = GridLayoutManager(itemView.context, 3, RecyclerView.VERTICAL, false)
         adapter = recentlyOpenedAdapter
     }
+    val notificationIconsAdapter = NotificationIconsAdapter()
+    val notificationIconsRecycler = itemView.findViewById<RecyclerView>(R.id.notification_icon_list)!!.apply {
+        layoutManager = LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
+        adapter = notificationIconsAdapter
+    }
 
     val searchCard = itemView.findViewById<CardView>(R.id.search_bar_container)!!.apply {
         setOnClickListener {
@@ -75,6 +81,7 @@ class HomeViewHolder(
     val blurBG = searchCard.findViewById<SeeThoughView>(R.id.blur_bg)!!
 
     val vertical = itemView.findViewById<LinearLayout>(R.id.vertical)!!
+    val indicatorContainer = itemView.findViewById<ViewGroup>(R.id.swipe_up_indicator_container)!!
 
     init {
         NotificationSummariesProvider.init(itemView.context) {
@@ -84,9 +91,7 @@ class HomeViewHolder(
             height = parentView.measuredHeight - parentView.paddingBottom - parentView.paddingTop
         }
         val s = itemView.dp(24).toInt()
-        vertical.addView(scrollIndicator, 4, LinearLayout.LayoutParams(s, s).apply {
-            gravity = Gravity.CENTER_HORIZONTAL
-        })
+        indicatorContainer.addView(scrollIndicator, LinearLayout.LayoutParams(s, s))
         val r = itemView.context.resources.getDimension(R.dimen.dock_corner_radius)
         itemView.background = InvertedRoundRectDrawable(
             floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r), 0f, 0)
@@ -123,6 +128,18 @@ class HomeViewHolder(
         }
     }
 
+    fun updateNotificationIcons() {
+        val icons = NotificationService.notifications.groupBy {
+            it.sourceIcon?.constantState
+        }.mapNotNull { it.key?.newDrawable() }
+        if (icons.isEmpty()) {
+            notificationIconsRecycler.isVisible = false
+        } else {
+            notificationIconsRecycler.isVisible = true
+            notificationIconsAdapter.updateItems(icons)
+        }
+    }
+
     fun onScroll() {
         blurBG.invalidate()
         summaryAdapter.onScroll()
@@ -154,6 +171,8 @@ fun bindHomeViewHolder(
     holder.updateSummary()
     holder.updatePinned()
     holder.updateRecents()
+    holder.updateNotificationIcons()
+    holder.notificationIconsRecycler.backgroundTintList = ColorStateList.valueOf(ColorTheme.wallColor and 0xffffff or 0x88000000.toInt())
     (holder.itemView.background as InvertedRoundRectDrawable).outerColor = ColorTheme.uiBG
     holder.searchCard.setCardBackgroundColor(ColorTheme.searchBarBG)
     holder.searchIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)

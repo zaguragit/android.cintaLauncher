@@ -2,7 +2,6 @@ package io.posidon.android.cintalauncher.ui.feed.items.viewHolders
 
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.shapes.RoundRectShape
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -40,10 +39,6 @@ open class FeedItemViewHolder(itemView: View) : RecyclerView.ViewHolder(Swipeabl
             v.parent.requestDisallowInterceptTouchEvent(true)
             false
         }
-    }
-    val actionButtonShape = run {
-        val r = itemView.dp(128)
-        RoundRectShape(floatArrayOf(r, r, r, r, r, r, r, r), null, null)
     }
 }
 

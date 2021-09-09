@@ -124,12 +124,14 @@ class LauncherActivity : FragmentActivity() {
                         .translationY(0f)
                         .setInterpolator(DecelerateInterpolator())
                         .setDuration(100L)
+                        .setStartDelay(50L)
                         .onEnd { feedFilterRecycler.isVisible = true }
                 } else {
                     feedFilterRecycler.animate()
                         .translationY(feedFilterRecycler.height.toFloat())
                         .setInterpolator(AccelerateInterpolator())
                         .setDuration(100L)
+                        .setStartDelay(0L)
                         .onEnd { feedFilterRecycler.isVisible = false }
                 }
             }

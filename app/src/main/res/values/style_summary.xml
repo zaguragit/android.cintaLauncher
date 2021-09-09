@@ -56,4 +56,17 @@
         <item name="android:shadowDy">4</item>
         <item name="android:shadowRadius">12</item>
     </style>
+
+    <style name="Theme.CintaLauncher.NotificationIcons.Container" parent="Theme.CintaLauncher">
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/round_bg</item>
+        <item name="android:layout_marginHorizontal">28dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.NotificationIcons.Icon" parent="Theme.CintaLauncher">
+        <item name="android:layout_width">16dp</item>
+        <item name="android:layout_height">16dp</item>
+        <item name="android:layout_marginHorizontal">6dp</item>
+    </style>
 </resources>
