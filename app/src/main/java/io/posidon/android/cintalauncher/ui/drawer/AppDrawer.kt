@@ -127,6 +127,11 @@ class AppDrawer(
         view.isVisible = true
         activity.feedRecycler.stopScroll()
         scrollBar.controller.showSelection = true
+        activity.feedFilterRecycler.animate()
+            .alpha(0f)
+            .setDuration(100)
+            .setInterpolator(DecelerateInterpolator())
+            .onEnd { activity.feedRecycler.isVisible = false }
         activity.feedRecycler.animate()
             .alpha(0f)
             .scaleX(1.1f)
@@ -165,6 +170,12 @@ class AppDrawer(
         if (!isOpen) return
         ItemLongPress.currentPopup?.dismiss()
         scrollBar.controller.showSelection = false
+        activity.feedFilterRecycler.isVisible = true
+        activity.feedFilterRecycler.animate()
+            .alpha(1f)
+            .setDuration(100)
+            .setInterpolator(DecelerateInterpolator())
+            .onEnd { activity.feedRecycler.isVisible = true }
         activity.feedRecycler.isInvisible = false
         activity.feedRecycler.animate()
             .alpha(1f)
