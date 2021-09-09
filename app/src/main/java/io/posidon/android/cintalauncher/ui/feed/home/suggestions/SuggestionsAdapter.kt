@@ -24,7 +24,7 @@ class SuggestionsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuggestionViewHolder {
         return SuggestionViewHolder(LayoutInflater.from(parent.context)
-            .inflate(R.layout.feed_home_suggestion, parent, false) as CardView, map)
+            .inflate(R.layout.smart_suggestion, parent, false) as CardView, map)
     }
 
     override fun onBindViewHolder(holder: SuggestionViewHolder, i: Int) {

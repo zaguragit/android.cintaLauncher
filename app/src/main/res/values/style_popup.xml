@@ -3,8 +3,9 @@
     <style name="Theme.CintaLauncher.ListPopup.Container" parent="Theme.CintaLauncher">
         <item name="cardBackgroundColor">@color/drawer_bottom_bar</item>
         <item name="cardCornerRadius">@dimen/item_card_radius</item>
-        <item name="cardElevation">@dimen/item_card_elevation</item>
-        <item name="cardUseCompatPadding">true</item>
+
+        <item name="android:layout_margin">@dimen/item_card_margin</item>
+        <item name="android:elevation">@dimen/item_card_elevation</item>
     </style>
 
     <style name="Theme.CintaLauncher.ListPopup.Recycler" parent="Theme.CintaLauncher">
@@ -61,12 +62,11 @@
     <style name="Theme.CintaLauncher.ItemPopup.Container" parent="Theme.CintaLauncher">
         <item name="cardBackgroundColor">@color/drawer_bottom_bar</item>
         <item name="cardCornerRadius">@dimen/item_card_radius</item>
-        <item name="cardElevation">@dimen/item_card_elevation</item>
-        <item name="cardUseCompatPadding">true</item>
+        <item name="android:elevation">@dimen/item_card_elevation</item>
     </style>
 
     <style name="Theme.CintaLauncher.ItemPopup.Shortcut.Icon" parent="Theme.CintaLauncher">
-        <item name="android:padding">8dp</item>
+        <item name="android:padding">10dp</item>
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>
     </style>

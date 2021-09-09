@@ -18,7 +18,7 @@
         android:layout_gravity="end"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/media_card_padding"
         android:paddingTop="@dimen/media_card_padding"
@@ -37,6 +37,11 @@
             android:layout_height="wrap_content"
             android:lines="1"
             android:ellipsize="end"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="invisible"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -4,8 +4,8 @@
         <item name="cardCornerRadius">@dimen/item_card_radius</item>
         <item name="android:padding">4dp</item>
 
-        <item name="cardElevation">@dimen/item_card_elevation</item>
-        <item name="cardUseCompatPadding">true</item>
+        <item name="android:layout_margin">@dimen/item_card_margin</item>
+        <item name="android:elevation">@dimen/item_card_elevation</item>
     </style>
 
     <style name="Theme.CintaLauncher.SearchBar.Text" parent="Theme.CintaLauncher">
@@ -48,10 +48,10 @@
 
     <style name="Theme.CintaLauncher.SearchResult.InstantAnswer.Card" parent="Theme.CintaLauncher">
         <item name="cardCornerRadius">@dimen/item_card_radius</item>
-        <item name="cardElevation">@dimen/item_card_elevation</item>
-        <item name="cardPreventCornerOverlap">true</item>
-        <item name="cardUseCompatPadding">true</item>
         <item name="cardBackgroundColor">@color/default_card_bg</item>
+
+        <item name="android:layout_margin">@dimen/item_card_margin</item>
+        <item name="android:elevation">@dimen/item_card_elevation</item>
     </style>
 
     <style name="Theme.CintaLauncher.SearchResult.InstantAnswer.Source" parent="Theme.CintaLauncher">
@@ -108,11 +108,5 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/feed_card_text_dark_title</item>
         <item name="android:padding">@dimen/feed_card_spacing</item>
-    </style>
-
-    <style name="Theme.CintaLauncher.SearchResult.Group.Container" parent="Theme.CintaLauncher">
-    </style>
-
-    <style name="Theme.CintaLauncher.SearchResult.Group.Recycler" parent="Theme.CintaLauncher">
     </style>
 </resources>

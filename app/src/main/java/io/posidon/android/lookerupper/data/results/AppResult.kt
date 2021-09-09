@@ -23,6 +23,9 @@ class AppResult(
         app.open(view.context, view)
     }
 
-    inline fun getShortcuts(launcherApps: LauncherApps): List<ShortcutInfo> =
-        app.getShortcuts(launcherApps)
+    inline fun getStaticShortcuts(launcherApps: LauncherApps): List<ShortcutInfo> =
+        app.getStaticShortcuts(launcherApps)
+
+    inline fun getDynamicShortcuts(launcherApps: LauncherApps): List<ShortcutInfo> =
+        app.getDynamicShortcuts(launcherApps)
 }

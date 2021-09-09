@@ -61,8 +61,8 @@ class FeedAdapter(
                 .inflate(R.layout.feed_item_plain, parent, false))
             TYPE_SMALL -> FeedItemSmallViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_small, parent, false))
-            TYPE_BIG_IMAGE -> FeedItemBigImageViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.feed_item_big_image, parent, false))
+            TYPE_BIG_IMAGE -> FeedItemImageViewHolder(LayoutInflater.from(parent.context)
+                .inflate(R.layout.feed_item_image, parent, false))
             TYPE_PROGRESS -> FeedItemViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_plain, parent, false))
             TYPE_EMPTY -> EmptyFeedItemViewHolder(LayoutInflater.from(parent.context)
@@ -98,7 +98,7 @@ class FeedAdapter(
         when (holder.itemViewType) {
             TYPE_PLAIN -> bindFeedItemViewHolder(holder as FeedItemViewHolder, item, color)
             TYPE_SMALL -> bindFeedItemSmallViewHolder(holder as FeedItemSmallViewHolder, item as FeedItemSmall, color)
-            TYPE_BIG_IMAGE -> bindFeedItemBigImageViewHolder(holder as FeedItemBigImageViewHolder, item as FeedItemWithBigImage, color)
+            TYPE_BIG_IMAGE -> bindFeedItemBigImageViewHolder(holder as FeedItemImageViewHolder, item as FeedItemWithBigImage, color)
             TYPE_PROGRESS -> bindFeedItemViewHolder(holder as FeedItemViewHolder, item as FeedItemWithProgress, color)
         }
         holder as FeedItemViewHolder

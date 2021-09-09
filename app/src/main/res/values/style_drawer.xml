@@ -26,12 +26,9 @@
     </style>
 
     <style name="Theme.CintaLauncher.Drawer.Item.Container" parent="Theme.CintaLauncher">
-        <item name="cardBackgroundColor">@color/drawer_bottom_bar</item>
         <item name="cardCornerRadius">@dimen/item_card_radius</item>
-        <item name="android:padding">4dp</item>
-
-        <item name="cardElevation">@dimen/item_card_elevation</item>
-        <item name="cardUseCompatPadding">true</item>
+        <item name="android:layout_margin">@dimen/item_card_margin</item>
+        <item name="android:elevation">@dimen/item_card_elevation</item>
     </style>
 
     <style name="Theme.CintaLauncher.Drawer.Item.Label" parent="Theme.CintaLauncher">

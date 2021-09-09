@@ -22,12 +22,21 @@ class AppProvider(
 
     class AppCollection(size: Int) : AppLoader.AppCollection<AppResult> {
         val list = ArrayList<AppResult>(size)
-        val shortcuts = LinkedList<ShortcutResult>()
+        val staticShortcuts = LinkedList<ShortcutResult>()
+        val dynamicShortcuts = LinkedList<ShortcutResult>()
 
         override fun add(context: Context, app: AppResult) {
             list += app
             val launcherApps = context.getSystemService(LauncherApps::class.java)
-            shortcuts.addAll(app.getShortcuts(launcherApps).map {
+            staticShortcuts.addAll(app.getStaticShortcuts(launcherApps).map {
+                ShortcutResult(
+                    it,
+                    (it.longLabel ?: it.shortLabel).toString(),
+                    launcherApps.getShortcutIconDrawable(it, context.resources.displayMetrics.densityDpi) ?: ColorDrawable(),
+                    app
+                )
+            })
+            dynamicShortcuts.addAll(app.getDynamicShortcuts(launcherApps).map {
                 ShortcutResult(
                     it,
                     (it.longLabel ?: it.shortLabel).toString(),
@@ -39,9 +48,6 @@ class AppProvider(
 
         override fun finalize(context: Context) {
             list.sortWith { a, b ->
-                a.title.compareTo(b.title)
-            }
-            shortcuts.sortWith { a, b ->
                 a.title.compareTo(b.title)
             }
         }
@@ -59,12 +65,14 @@ class AppProvider(
 
     val appLoader = AppLoader(::makeAppResult, ::AppCollection)
     var apps = emptyList<AppResult>()
-    var shortcuts = emptyList<ShortcutResult>()
+    var staticShortcuts = emptyList<ShortcutResult>()
+    var dynamicShortcuts = emptyList<ShortcutResult>()
 
     override fun Activity.onCreate() {
         appLoader.async(this, searcher.settings.getStrings("icon_packs") ?: emptyArray()) {
             apps = it.list
-            shortcuts = it.shortcuts
+            staticShortcuts = it.staticShortcuts
+            dynamicShortcuts = it.dynamicShortcuts
         }
     }
 
@@ -72,8 +80,8 @@ class AppProvider(
         val results = LinkedList<SearchResult>()
         apps.forEach {
             val r = FuzzySearch.tokenSortPartialRatio(query.toString(), it.title) / 100f
-            if (r > .7f) {
-                results += if (results.size < 3) {
+            if (r > .8f) {
+                results += if (results.size < 6) {
                     it.relevance = Relevance(r.times(2f).coerceAtLeast(1f))
                     it
                 } else {
@@ -82,41 +90,22 @@ class AppProvider(
                 }
             }
         }
-        val tmpShortcuts = LinkedList<ShortcutResult>()
-        shortcuts.forEach {
+        staticShortcuts.forEach {
             val l = FuzzySearch.tokenSortPartialRatio(query.toString(), it.title) / 100f
             val a = FuzzySearch.tokenSortPartialRatio(query.toString(), it.app.title) / 100f
-            val r = (a * a * .5f + l * l).pow(.3f)
-            if (r > .8f) {
-                it.relevance = Relevance(if (l >= .95) r.coerceAtLeast(0.98f) else r.coerceAtMost(0.9f))
-                tmpShortcuts += it
+            val r = (a * a * .5f + l * l).pow(.2f)
+            if (r > .95f) {
+                it.relevance = Relevance(l)
+                results += it
             }
         }
-        tmpShortcuts.groupBy {
-            it.app
-        }.forEach { (app, children) ->
-            when {
-                children.size == 1 -> results += children[0].also { it.showSubtitle = true }
-                children.maxOf { it.relevance.value } - children.minOf { it.relevance.value } > 0.16f ->
-                    results += children.also { it.forEach { it.showSubtitle = true } }
-                else -> {
-                    val compactApp = results.find { it is CompactAppResult && it.app === app.app }?.also { results.remove(it) }
-                    results += if (compactApp != null) {
-                        GroupedResult(children.let {
-                            it.forEach { it.showSubtitle = false }
-                            it.toMutableList<SearchResult>().also { it.add(0, compactApp) }
-                        })
-                    } else {
-                        val nonCompactApp = results.any { it is AppResult && it.app === app.app }
-                        GroupedResult(children.let {
-                            if (!nonCompactApp) {
-                                it.forEach { it.showSubtitle = false }
-                                it.toMutableList<SearchResult>()
-                                    .also { it.add(0, CompactAppResult(app.app)) }
-                            } else it.onEach { it.showSubtitle = true }
-                        })
-                    }
-                }
+        dynamicShortcuts.forEach {
+            val l = FuzzySearch.tokenSortPartialRatio(query.toString(), it.title) / 100f
+            val a = FuzzySearch.tokenSortPartialRatio(query.toString(), it.app.title) / 100f
+            val r = (a * a * .2f + l * l).pow(.3f)
+            if (r > .9f) {
+                it.relevance = Relevance(if (l >= .95) r.coerceAtLeast(0.98f) else r.coerceAtMost(0.9f))
+                results += it
             }
         }
         return results

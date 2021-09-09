@@ -56,7 +56,7 @@ class PinnedItemsAdapter(
                 .inflate(R.layout.feed_home_drop_target, parent, false) as CardView, map)
                 .also { dropTarget = it }
             else -> AppViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.app_drawer_item, parent, false) as CardView, map)
+                .inflate(R.layout.app_card, parent, false) as CardView, map)
         }
     }
 

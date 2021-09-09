@@ -4,7 +4,6 @@ import android.app.ActivityOptions
 import android.content.ComponentName
 import android.content.Context
 import android.content.pm.LauncherApps
-import android.content.pm.LauncherApps.ShortcutQuery
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutInfo
 import android.graphics.drawable.*
@@ -136,9 +135,18 @@ class App(
 
     override fun toString() = "$packageName/$name/${userHandle.hashCode()}"
 
-    fun getShortcuts(launcherApps: LauncherApps): List<ShortcutInfo> {
-        val shortcutQuery = ShortcutQuery()
-        shortcutQuery.setQueryFlags(ShortcutQuery.FLAG_MATCH_DYNAMIC or ShortcutQuery.FLAG_MATCH_MANIFEST or ShortcutQuery.FLAG_MATCH_PINNED)
+    fun getStaticShortcuts(launcherApps: LauncherApps): List<ShortcutInfo> {
+        val shortcutQuery = LauncherApps.ShortcutQuery()
+        shortcutQuery.setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST)
+        shortcutQuery.setPackage(packageName)
+        return try {
+            launcherApps.getShortcuts(shortcutQuery, Process.myUserHandle())!!
+        } catch (e: Exception) { emptyList() }
+    }
+
+    fun getDynamicShortcuts(launcherApps: LauncherApps): List<ShortcutInfo> {
+        val shortcutQuery = LauncherApps.ShortcutQuery()
+        shortcutQuery.setQueryFlags(LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC)
         shortcutQuery.setPackage(packageName)
         return try {
             launcherApps.getShortcuts(shortcutQuery, Process.myUserHandle())!!

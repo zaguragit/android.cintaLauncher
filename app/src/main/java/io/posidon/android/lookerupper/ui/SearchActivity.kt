@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.color.ColorThemeOptions
+import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
@@ -37,13 +39,16 @@ class SearchActivity : FragmentActivity() {
         adapter.update(list)
     }
 
+    val container by lazy { findViewById<View>(R.id.search_bar_container)!! }
+    val searchBar by lazy { findViewById<View>(R.id.search_bar)!! }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         settings.init(this)
         searcher.onCreate(this)
+        ColorTheme.onCreate(ColorThemeOptions(settings.colorThemeDayNight), this)
         loadColors()
-        val container = findViewById<View>(R.id.search_bar_container)!!
         val recyclerView = findViewById<RecyclerView>(R.id.recycler)!!
         adapter = SearchAdapter(this, recyclerView, false)
         recyclerView.run {
@@ -89,13 +94,13 @@ class SearchActivity : FragmentActivity() {
                 it.alpha = 120
             },
         ))
-        findViewById<View>(R.id.search_bar_container).backgroundTintList =
+        searchBar.backgroundTintList =
             ColorStateList.valueOf(ColorTheme.searchBarBG)
-        findViewById<TextView>(R.id.search_bar_text).run {
+        searchBar.findViewById<TextView>(R.id.search_bar_text).run {
             setTextColor(ColorTheme.searchBarFG)
             highlightColor = ColorTheme.searchBarFG and 0x00ffffff or 0x66000000
         }
-        findViewById<ImageView>(R.id.search_bar_icon).imageTintList =
+        searchBar.findViewById<ImageView>(R.id.search_bar_icon).imageTintList =
             ColorStateList.valueOf(ColorTheme.searchBarFG)
     }
 }

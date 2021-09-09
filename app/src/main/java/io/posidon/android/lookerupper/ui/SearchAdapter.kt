@@ -6,7 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.lookerupper.data.results.*
-import io.posidon.android.lookerupper.ui.viewHolders.*
+import io.posidon.android.lookerupper.ui.viewHolders.AppSearchViewHolder
+import io.posidon.android.lookerupper.ui.viewHolders.CompactSearchViewHolder
+import io.posidon.android.lookerupper.ui.viewHolders.ContactSearchViewHolder
+import io.posidon.android.lookerupper.ui.viewHolders.SearchViewHolder
 import io.posidon.android.lookerupper.ui.viewHolders.instantAnswer.AnswerSearchViewHolder
 import java.util.*
 
@@ -23,7 +26,6 @@ class SearchAdapter(
             is AppResult -> RESULT_APP
             is CompactResult -> RESULT_COMPACT
             is ContactResult -> RESULT_CONTACT
-            is GroupedResult -> RESULT_GROUP
             is InstantAnswerResult -> RESULT_ANSWER
             else -> throw Exception("Invalid search result")
         }
@@ -31,10 +33,9 @@ class SearchAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         return when (viewType) {
-            RESULT_APP -> AppSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.app_drawer_item, parent, false), activity, map)
+            RESULT_APP -> AppSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.smart_suggestion, parent, false), activity, map)
             RESULT_COMPACT -> CompactSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_result_compact, parent, false), activity, isOnCard)
             RESULT_CONTACT -> ContactSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_result_contact, parent, false), isOnCard)
-            RESULT_GROUP -> GroupedResultSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_result_group, parent, false), activity, map, recyclerView)
             RESULT_ANSWER -> AnswerSearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_result_answer, parent, false), map)
             else -> throw Exception("Invalid view type")
         }
@@ -64,6 +65,5 @@ class SearchAdapter(
         const val RESULT_CONTACT = 2
         const val RESULT_ANSWER = 3
         const val RESULT_COMPACT = 4
-        const val RESULT_GROUP = 5
     }
 }

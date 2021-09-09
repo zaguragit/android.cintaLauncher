@@ -48,7 +48,6 @@ class SwipeableLayout(
         setCardBackgroundColor(0)
         cardElevation = 0f
         radius = 0f
-        preventCornerOverlap = true
         addView(backView)
         addView(frontView)
         layoutParams = frontView.layoutParams

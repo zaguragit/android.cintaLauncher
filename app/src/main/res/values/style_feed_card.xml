@@ -3,10 +3,8 @@
 
     <style name="Theme.CintaLauncher.FeedCard.ImageCard" parent="Theme.CintaLauncher">
         <item name="cardCornerRadius">@dimen/item_card_radius</item>
-        <item name="cardElevation">@dimen/item_card_elevation</item>
-        <item name="cardPreventCornerOverlap">true</item>
-        <item name="cardUseCompatPadding">true</item>
-        <item name="cardBackgroundColor">@color/default_card_bg</item>
+        <item name="android:layout_marginHorizontal">8dp</item>
+        <item name="android:elevation">4dp</item>
     </style>
 
     <style name="Theme.CintaLauncher.FeedCard.CardBehind" parent="Theme.CintaLauncher">
@@ -58,9 +56,8 @@
     <style name="Theme.CintaLauncher.FeedCard.Actions.Container" parent="Theme.CintaLauncher">
         <item name="android:layout_marginTop">8dp</item>
         <item name="cardCornerRadius">6dp</item>
-        <item name="cardElevation">@dimen/item_card_elevation</item>
-        <item name="cardPreventCornerOverlap">true</item>
-        <item name="cardUseCompatPadding">true</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:elevation">4dp</item>
     </style>
 
     <style name="Theme.CintaLauncher.FeedCard.Action.Container" parent="Theme.CintaLauncher">

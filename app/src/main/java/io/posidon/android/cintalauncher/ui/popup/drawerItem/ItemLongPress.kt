@@ -28,7 +28,7 @@ object ItemLongPress {
     fun makePopupWindow(context: Context, item: LauncherItem, backgroundColor: Int, textColor: Int, onInfo: (View) -> Unit): PopupWindow {
         val content = LayoutInflater.from(context).inflate(R.layout.long_press_item_popup, null)
         if (item is App) {
-            val shortcuts = item.getShortcuts(context.getSystemService(LauncherApps::class.java))
+            val shortcuts = item.getStaticShortcuts(context.getSystemService(LauncherApps::class.java))
             if (shortcuts.isNotEmpty()) {
                 val recyclerView = content.findViewById<RecyclerView>(R.id.recycler)
                 recyclerView.isNestedScrollingEnabled = false
@@ -76,7 +76,7 @@ object ItemLongPress {
                 item.showProperties(view, backgroundColor, textColor)
             }
             popupWindow.isFocusable = false
-            popupWindow.showAtLocation(view, gravity, x, y)
+            popupWindow.showAtLocation(view, gravity, x, y + (view.resources.getDimension(R.dimen.item_card_margin) * 2).toInt())
 
             view.setOnDragListener { v, event ->
                 when (event.action) {
