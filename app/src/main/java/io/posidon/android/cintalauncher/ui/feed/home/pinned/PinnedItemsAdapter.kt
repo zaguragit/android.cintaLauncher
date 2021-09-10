@@ -69,8 +69,7 @@ class PinnedItemsAdapter(
             bindDropTargetViewHolder(holder)
             return
         }
-        val i = adapterPositionToI(ii)
-        val item = items[i]
+        val item = items[adapterPositionToI(ii)]
         holder as AppViewHolder
         bindAppViewHolder(
             holder,
@@ -78,11 +77,13 @@ class PinnedItemsAdapter(
             false,
             navbarHeight,
             onDragStart = {
+                val i = adapterPositionToI(holder.adapterPosition)
                 items.removeAt(i)
                 dropTargetIndex = holder.adapterPosition
                 notifyItemChanged(holder.adapterPosition)
                 updatePins(it)
             },
+            isRemoveHandled = true,
         )
     }
 
@@ -121,6 +122,7 @@ class PinnedItemsAdapter(
     }
 
     fun onDrop(v: View, i: Int, clipData: ClipData) {
+        if (i != dropTargetIndex) throw IllegalStateException("PinnedItemsAdapter -> i = $i, dropTargetIndex = $dropTargetIndex")
         val item = launcherContext.appManager.parseLauncherItem(clipData.getItemAt(0).text.toString())!!
         items.add(i, item)
         dropTargetIndex = -1

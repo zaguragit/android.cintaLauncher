@@ -90,6 +90,7 @@ fun bindAppViewHolder(
     navbarHeight: Int,
     onDragOut: (view: View) -> Unit = {},
     onDragStart: (view: View) -> Unit = {},
+    isRemoveHandled: Boolean = false,
 ) {
     holder.itemView.setOnDragListener(null)
     
@@ -141,7 +142,8 @@ fun bindAppViewHolder(
             item,
             navbarHeight,
             onDragOut = onDragOut,
-            onDragStart = onDragStart
+            onDragStart = onDragStart,
+            isRemoveHandled = isRemoveHandled,
         )
         true
     }

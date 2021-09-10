@@ -149,6 +149,7 @@ class LauncherActivity : FragmentActivity() {
     fun onDrag(v: View, event: DragEvent): Boolean {
         val viewUnder = feedRecycler.findChildViewUnder(event.x, event.y)
         if (viewUnder != null && feedRecycler.findContainingViewHolder(viewUnder) is HomeViewHolder) {
+            println("drag: " + event.action)
             when (event.action) {
                 DragEvent.ACTION_DRAG_STARTED,
                 DragEvent.ACTION_DRAG_ENTERED,

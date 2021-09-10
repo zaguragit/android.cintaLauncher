@@ -67,6 +67,7 @@ object ItemLongPress {
         navbarHeight: Int,
         onDragStart: (view: View) -> Unit = {},
         onDragOut: (view: View) -> Unit = {},
+        isRemoveHandled: Boolean = false,
     ) {
         if (currentPopup == null) {
             val context = view.context
@@ -85,10 +86,11 @@ object ItemLongPress {
                         onDragOut(v)
                     }
                     DragEvent.ACTION_DRAG_STARTED -> {
-                        v.visibility = View.INVISIBLE
+                        if (!isRemoveHandled) v.visibility = View.INVISIBLE
                     }
-                    DragEvent.ACTION_DRAG_ENDED -> {
-                        v.visibility = View.VISIBLE
+                    DragEvent.ACTION_DRAG_ENDED,
+                    DragEvent.ACTION_DROP -> {
+                        if (!isRemoveHandled) v.visibility = View.VISIBLE
                         currentPopup?.isFocusable = true
                         currentPopup?.update()
                     }
