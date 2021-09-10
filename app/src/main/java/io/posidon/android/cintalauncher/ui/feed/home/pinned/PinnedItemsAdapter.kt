@@ -19,7 +19,6 @@ class PinnedItemsAdapter(
     val launcherContext: LauncherContext,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val suggestionsManager = launcherContext.appManager.suggestionsManager
     val navbarHeight = launcherActivity.getNavigationBarHeight()
 
     private var dropTargetIndex = -1
@@ -77,12 +76,11 @@ class PinnedItemsAdapter(
             holder,
             item,
             false,
-            suggestionsManager,
             navbarHeight,
             onDragStart = {
                 items.removeAt(i)
-                dropTargetIndex = ii
-                notifyItemChanged(ii)
+                dropTargetIndex = holder.adapterPosition
+                notifyItemChanged(holder.adapterPosition)
                 updatePins(it)
             },
         )

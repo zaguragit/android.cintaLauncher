@@ -20,6 +20,7 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.providers.feed.notification.NotificationService
 import io.posidon.android.cintalauncher.providers.feed.summary.NotificationSummariesProvider
+import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.feed.home.pinned.PinnedItemsAdapter
@@ -57,7 +58,7 @@ class HomeViewHolder(
         layoutManager = GridLayoutManager(itemView.context, 3, RecyclerView.VERTICAL, true)
         adapter = pinnedAdapter
     }
-    val recentlyOpenedAdapter = SuggestionsAdapter(launcherActivity, launcherContext)
+    val recentlyOpenedAdapter = SuggestionsAdapter(launcherActivity)
     val recentlyOpenedRecycler = summaryCard.findViewById<RecyclerView>(R.id.recents_recycler)!!.apply {
         layoutManager = GridLayoutManager(itemView.context, 3, RecyclerView.VERTICAL, false)
         adapter = recentlyOpenedAdapter
@@ -119,7 +120,7 @@ class HomeViewHolder(
     }
 
     fun updateRecents() {
-        val recent = launcherContext.appManager.suggestionsManager.getSuggestions()
+        val recent = SuggestionsManager.getNonPinnedSuggestions(launcherContext.appManager.pinnedItems).let { it.subList(0, it.size.coerceAtMost(3)) }
         if (recent.isEmpty()) {
             recentlyOpenedRecycler.isVisible = false
         } else {

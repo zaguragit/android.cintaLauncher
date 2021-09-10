@@ -6,7 +6,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.applyIfNotNull
+import io.posidon.android.lookerupper.data.results.CompactAppResult
 import io.posidon.android.lookerupper.data.results.CompactResult
 import io.posidon.android.lookerupper.data.results.SearchResult
 
@@ -27,7 +29,12 @@ class CompactSearchViewHolder(
         applyIfNotNull(subtitle, result.subtitle, TextView::setText)
         text.setTextColor(if (isOnCard) ColorTheme.cardTitle else ColorTheme.uiTitle)
         subtitle.setTextColor(if (isOnCard) ColorTheme.cardDescription else ColorTheme.uiDescription)
-        itemView.setOnClickListener(result::open)
+        itemView.setOnClickListener {
+            if (result is CompactAppResult) {
+                SuggestionsManager.onItemOpened(it.context, result.app)
+            }
+            result.open(it)
+        }
         itemView.setOnLongClickListener(result.onLongPress?.let { { v -> it(v, activity) } })
     }
 }

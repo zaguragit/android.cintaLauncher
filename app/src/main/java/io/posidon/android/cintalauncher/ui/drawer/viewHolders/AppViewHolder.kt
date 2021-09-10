@@ -87,7 +87,6 @@ fun bindAppViewHolder(
     holder: AppViewHolder,
     item: LauncherItem,
     isDimmed: Boolean,
-    suggestionsManager: SuggestionsManager,
     navbarHeight: Int,
     onDragOut: (view: View) -> Unit = {},
     onDragStart: (view: View) -> Unit = {},
@@ -131,7 +130,7 @@ fun bindAppViewHolder(
     }
 
     holder.itemView.setOnClickListener {
-        suggestionsManager.onItemOpened(it.context, item)
+        SuggestionsManager.onItemOpened(it.context, item)
         item.open(it.context.applicationContext, it)
     }
     holder.itemView.setOnLongClickListener {

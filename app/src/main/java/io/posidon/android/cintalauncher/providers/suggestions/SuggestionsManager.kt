@@ -24,15 +24,24 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.pow
 
-class SuggestionsManager {
+object SuggestionsManager {
+
+    private const val CONTEXT_DATA_HOUR_OF_DAY = 0
+    private const val CONTEXT_DATA_BATTERY = 1
+    private const val CONTEXT_DATA_HAS_HEADSET = 2
+    private const val CONTEXT_DATA_HAS_WIFI = 3
+    private const val CONTEXT_DATA_IS_PLUGGED_IN = 4
+    private const val CONTEXT_DATA_IS_WEEKEND = 5
+    private const val CONTEXT_DATA_SIZE = 6
+    private const val MAX_CONTEXT_COUNT = 6
 
     private var contextMap = ContextMap<LauncherItem>(CONTEXT_DATA_SIZE, ::differentiator)
-
     private var suggestions = emptyList<LauncherItem>()
+    private val contextLock = ReentrantLock()
 
     fun getSuggestions(): List<LauncherItem> = suggestions
 
-    private val contextLock = ReentrantLock()
+    fun getNonPinnedSuggestions(pinnedItems: List<LauncherItem>): List<LauncherItem> = suggestions - pinnedItems
 
     fun onItemOpened(context: Context, item: LauncherItem) {
         thread(isDaemon = true, name = "SuggestionManager: saving opening context") {
@@ -112,9 +121,7 @@ class SuggestionsManager {
 
                     contextMap.calculateDistance(currentData, data) + timeF
                 }
-                sortedEntries
-                    .subList(0, sortedEntries.size.coerceAtMost(3))
-                    .map { it.key }
+                sortedEntries.map { it.key }
             }
         }
     }
@@ -183,33 +190,22 @@ class SuggestionsManager {
         }
     }
 
-    companion object {
-        private const val CONTEXT_DATA_HOUR_OF_DAY = 0
-        private const val CONTEXT_DATA_BATTERY = 1
-        private const val CONTEXT_DATA_HAS_HEADSET = 2
-        private const val CONTEXT_DATA_HAS_WIFI = 3
-        private const val CONTEXT_DATA_IS_PLUGGED_IN = 4
-        private const val CONTEXT_DATA_IS_WEEKEND = 5
-        private const val CONTEXT_DATA_SIZE = 6
-        private const val MAX_CONTEXT_COUNT = 4
-
-        fun checkUsageAccessPermission(context: Context): Boolean {
-            val aom = context.getSystemService(AppOpsManager::class.java)
-            val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                aom.unsafeCheckOpNoThrow(
-                    AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    Process.myUid(), context.packageName
-                )
-            } else aom.checkOpNoThrow(
+    fun checkUsageAccessPermission(context: Context): Boolean {
+        val aom = context.getSystemService(AppOpsManager::class.java)
+        val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            aom.unsafeCheckOpNoThrow(
                 AppOpsManager.OPSTR_GET_USAGE_STATS,
                 Process.myUid(), context.packageName
             )
+        } else aom.checkOpNoThrow(
+            AppOpsManager.OPSTR_GET_USAGE_STATS,
+            Process.myUid(), context.packageName
+        )
 
-            return if (mode == AppOpsManager.MODE_DEFAULT) {
-                context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
-            } else {
-                mode == AppOpsManager.MODE_ALLOWED
-            }
+        return if (mode == AppOpsManager.MODE_DEFAULT) {
+            context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
+        } else {
+            mode == AppOpsManager.MODE_ALLOWED
         }
     }
 }

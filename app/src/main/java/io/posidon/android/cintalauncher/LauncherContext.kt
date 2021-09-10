@@ -19,8 +19,6 @@ class LauncherContext {
 
     inner class AppManager {
 
-        val suggestionsManager = SuggestionsManager()
-
         val pinnedItems: List<LauncherItem> get() = _pinnedItems
 
         fun <T : Context> loadApps(context: T, onEnd: T.(apps: AppCollection) -> Unit) {
@@ -30,7 +28,7 @@ class LauncherContext {
             ) { apps: AppCollection ->
                 appsByName = apps.byName
                 _pinnedItems = settings.getStrings(PINNED_KEY)?.mapNotNull { LauncherItem.parse(it, appsByName) }?.toMutableList() ?: ArrayList()
-                suggestionsManager.onAppsLoaded(this, context, settings)
+                SuggestionsManager.onAppsLoaded(this, context, settings)
                 onEnd(context, apps)
             }
         }

@@ -35,6 +35,7 @@ import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.providers.feed.FeedFilter
 import io.posidon.android.cintalauncher.providers.feed.notification.NotificationProvider
 import io.posidon.android.cintalauncher.providers.feed.rss.RssProvider
+import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.storage.*
 import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
 import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
@@ -81,7 +82,7 @@ class LauncherActivity : FragmentActivity() {
     lateinit var feedAdapter: FeedAdapter
     lateinit var feedFilterAdapter: FeedFilterAdapter
 
-    lateinit var wallpaperManager: WallpaperManager
+    private lateinit var wallpaperManager: WallpaperManager
 
     var colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
 
@@ -100,43 +101,7 @@ class LauncherActivity : FragmentActivity() {
         feedAdapter.setHasStableIds(true)
         feedRecycler.setItemViewCacheSize(20)
         feedRecycler.adapter = feedAdapter
-        feedRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    feedAdapter.onScroll(0)
-                    showFilters(recyclerView.canScrollVertically(-1))
-                }
-            }
-
-            var lastScrollCheck = false
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val scrollCheck = recyclerView.canScrollVertically(-1)
-                feedAdapter.onScroll(0)
-                if (scrollCheck != lastScrollCheck) {
-                    showFilters(scrollCheck)
-                }
-                lastScrollCheck = scrollCheck
-            }
-
-            fun showFilters(show: Boolean) {
-                if (show) {
-                    feedFilterRecycler.isVisible = true
-                    feedFilterRecycler.animate()
-                        .translationY(0f)
-                        .setInterpolator(DecelerateInterpolator())
-                        .setDuration(100L)
-                        .setStartDelay(50L)
-                        .onEnd { feedFilterRecycler.isVisible = true }
-                } else {
-                    feedFilterRecycler.animate()
-                        .translationY(feedFilterRecycler.height.toFloat())
-                        .setInterpolator(AccelerateInterpolator())
-                        .setDuration(100L)
-                        .setStartDelay(0L)
-                        .onEnd { feedFilterRecycler.isVisible = false }
-                }
-            }
-        })
+        feedRecycler.addOnScrollListener(feedScrollListener)
 
         feedFilterAdapter = FeedFilterAdapter(launcherContext)
         feedFilterRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
@@ -158,35 +123,7 @@ class LauncherActivity : FragmentActivity() {
             }
         }
 
-        homeContainer.setOnDragListener { v, event ->
-            val viewUnder = feedRecycler.findChildViewUnder(event.x, event.y)
-            if (viewUnder != null && feedRecycler.findContainingViewHolder(viewUnder) is HomeViewHolder) {
-                when (event.action) {
-                    DragEvent.ACTION_DRAG_STARTED,
-                    DragEvent.ACTION_DRAG_ENTERED,
-                    DragEvent.ACTION_DRAG_LOCATION -> {
-                        val i = feedAdapter.getPinnedItemIndex(event.x, event.y)
-                        val pinnedItems = launcherContext.appManager.pinnedItems
-                        feedAdapter.showDropTarget(if (i == -1) pinnedItems.size else i)
-                    }
-                    DragEvent.ACTION_DRAG_ENDED -> {
-                        feedAdapter.updatePinned()
-                    }
-                    DragEvent.ACTION_DRAG_EXITED -> {
-                        feedAdapter.showDropTarget(-1)
-                    }
-                    DragEvent.ACTION_DROP -> {
-                        val i = feedAdapter.getPinnedItemIndex(event.x, event.y)
-                        if (i == -1)
-                            return@setOnDragListener false
-                        feedAdapter.onDrop(v, i, event.clipData)
-                    }
-                }
-            } else {
-                feedAdapter.showDropTarget(-1)
-            }
-            true
-        }
+        homeContainer.setOnDragListener(::onDrag)
 
         appDrawer.init()
 
@@ -209,6 +146,76 @@ class LauncherActivity : FragmentActivity() {
         }
     }
 
+    fun onDrag(v: View, event: DragEvent): Boolean {
+        val viewUnder = feedRecycler.findChildViewUnder(event.x, event.y)
+        if (viewUnder != null && feedRecycler.findContainingViewHolder(viewUnder) is HomeViewHolder) {
+            when (event.action) {
+                DragEvent.ACTION_DRAG_STARTED,
+                DragEvent.ACTION_DRAG_ENTERED,
+                DragEvent.ACTION_DRAG_LOCATION -> {
+                    val i = feedAdapter.getPinnedItemIndex(event.x, event.y)
+                    val pinnedItems = launcherContext.appManager.pinnedItems
+                    feedAdapter.showDropTarget(if (i == -1) pinnedItems.size else i)
+                }
+                DragEvent.ACTION_DRAG_ENDED -> {
+                    feedAdapter.updatePinned()
+                }
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    feedAdapter.showDropTarget(-1)
+                }
+                DragEvent.ACTION_DROP -> {
+                    val i = feedAdapter.getPinnedItemIndex(event.x, event.y)
+                    if (i == -1)
+                        return false
+                    feedAdapter.onDrop(v, i, event.clipData)
+                }
+            }
+        } else {
+            feedAdapter.showDropTarget(-1)
+        }
+        return true
+    }
+
+    val feedScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                feedAdapter.onScroll(0)
+                showFilters(recyclerView.canScrollVertically(-1))
+            }
+        }
+
+        var lastScrollCheck = false
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            val scrollCheck = recyclerView.canScrollVertically(-1)
+            feedAdapter.onScroll(0)
+            if (scrollCheck != lastScrollCheck) {
+                showFilters(scrollCheck)
+            }
+            lastScrollCheck = scrollCheck
+        }
+
+        fun showFilters(show: Boolean) {
+            if (show) {
+                feedFilterRecycler.isVisible = true
+                feedFilterRecycler.animate().apply {
+                    interpolator = DecelerateInterpolator()
+                    translationY(0f)
+                    duration = 100L
+                    startDelay = 50L
+                    onEnd { feedFilterRecycler.isVisible = true }
+                }
+            } else {
+                feedFilterRecycler.animate().apply {
+                    interpolator = AccelerateInterpolator()
+                    translationY(feedFilterRecycler.height.toFloat())
+                    duration = 100L
+                    startDelay = 0L
+                    onEnd { feedFilterRecycler.isVisible = false }
+                }
+            }
+        }
+    }
+
     override fun onBackPressed() {
         if (appDrawer.isOpen) appDrawer.close()
         else feedRecycler.scrollToPosition(0)
@@ -223,7 +230,7 @@ class LauncherActivity : FragmentActivity() {
         if (shouldUpdate) {
             reloadScrollbarController()
         } else {
-            launcherContext.appManager.suggestionsManager.onResume(this)
+            SuggestionsManager.onResume(this)
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             thread (isDaemon = true) {
@@ -256,7 +263,7 @@ class LauncherActivity : FragmentActivity() {
             appDrawer.close()
         }
         PopupUtils.dismissCurrent()
-        launcherContext.appManager.suggestionsManager.onPause(settings, this)
+        SuggestionsManager.onPause(settings, this)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

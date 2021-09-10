@@ -55,7 +55,6 @@ class AppDrawerAdapter(
                 holder as AppViewHolder,
                 (item as AppItem).item,
                 indexer?.isDimmed(item.item) ?: false,
-                launcherActivity.launcherContext.appManager.suggestionsManager,
                 launcherActivity.getNavigationBarHeight(),
                 onDragOut = { launcherActivity.appDrawer.close(it) }
             )

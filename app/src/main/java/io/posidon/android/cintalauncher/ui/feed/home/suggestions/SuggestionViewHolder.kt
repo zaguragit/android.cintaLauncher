@@ -26,7 +26,6 @@ class SuggestionViewHolder(
 fun bindSuggestionViewHolder(
     holder: SuggestionViewHolder,
     item: LauncherItem,
-    suggestionsManager: SuggestionsManager,
     navbarHeight: Int,
     onDragOut: (view: View) -> Unit = {},
 ) {
@@ -40,7 +39,7 @@ fun bindSuggestionViewHolder(
     holder.icon.setImageDrawable(item.icon)
 
     holder.itemView.setOnClickListener {
-        suggestionsManager.onItemOpened(it.context, item)
+        SuggestionsManager.onItemOpened(it.context, item)
         item.open(it.context.applicationContext, it)
     }
     holder.itemView.setOnLongClickListener {

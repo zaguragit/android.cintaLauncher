@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
@@ -38,7 +39,10 @@ class AppSearchViewHolder(
         label.setTextColor(ColorTheme.titleColorForBG(itemView.context, backgroundColor))
         icon.setImageDrawable(result.icon)
 
-        itemView.setOnClickListener(result::open)
+        itemView.setOnClickListener {
+            SuggestionsManager.onItemOpened(it.context, result.app)
+            result.open(it)
+        }
         itemView.setOnLongClickListener {
             ItemLongPress.onItemLongPress(
                 it,

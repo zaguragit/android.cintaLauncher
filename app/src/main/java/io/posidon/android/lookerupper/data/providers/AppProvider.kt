@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.os.UserHandle
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
 import io.posidon.android.cintalauncher.data.items.App
+import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
 import io.posidon.android.launcherutils.AppLoader
 import io.posidon.android.lookerupper.data.SearchQuery
 import io.posidon.android.lookerupper.data.Searcher
@@ -78,8 +79,11 @@ class AppProvider(
 
     override fun getResults(query: SearchQuery): List<SearchResult> {
         val results = LinkedList<SearchResult>()
+        val suggestions = SuggestionsManager.getSuggestions().let { it.subList(0, it.size.coerceAtMost(6)) }
         apps.forEach {
-            val r = FuzzySearch.tokenSortPartialRatio(query.toString(), it.title) / 100f
+            val i = suggestions.indexOf(it.app)
+            val suggestionFactor = if(i == -1) 0f else (suggestions.size - i).toFloat() / suggestions.size
+            val r = FuzzySearch.tokenSortPartialRatio(query.toString(), it.title) / 100f + suggestionFactor * 0.5f
             if (r > .8f) {
                 results += if (results.size < 6) {
                     it.relevance = Relevance(r.times(2f).coerceAtLeast(1f))
