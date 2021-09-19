@@ -90,14 +90,33 @@ class HomeViewHolder(
             when (e.action) {
                 MotionEvent.ACTION_DOWN -> {
                     launcherActivity.appDrawer.open(v)
-                    launcherActivity.appDrawer.scrollIcon.onTouchEvent(e)
+                    launcherActivity.appDrawer.scrollIcon.onTouchEvent(makeMotionEventForAppDrawerScrollIcon(e))
                 }
                 else ->
-                    launcherActivity.appDrawer.scrollIcon.onTouchEvent(e)
+                    launcherActivity.appDrawer.scrollIcon.onTouchEvent(makeMotionEventForAppDrawerScrollIcon(e))
             }
             parent.requestDisallowInterceptTouchEvent(true)
             true
         }
+    }
+
+    private fun makeMotionEventForAppDrawerScrollIcon(e: MotionEvent): MotionEvent {
+        val location = IntArray(2)
+        launcherActivity.appDrawer.scrollIcon.getLocationOnScreen(location)
+        return MotionEvent.obtain(
+            e.downTime,
+            e.eventTime,
+            e.action,
+            e.rawX - location[0],
+            e.rawY - location[1],
+            e.pressure,
+            e.size,
+            e.metaState,
+            e.xPrecision,
+            e.yPrecision,
+            e.deviceId,
+            e.edgeFlags,
+        )
     }
 
     val blurBG = searchCard.findViewById<SeeThoughView>(R.id.blur_bg)!!

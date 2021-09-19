@@ -13,7 +13,7 @@
     <style name="Theme.CintaLauncher.FeedFilter.Container" parent="Theme.CintaLauncher">
         <item name="android:paddingHorizontal">12dp</item>
         <item name="android:background">@drawable/ripple</item>
-        <item name="android:minHeight">38dp</item>
+        <item name="android:minHeight">@dimen/feed_filter_height</item>
     </style>
 
     <style name="Theme.CintaLauncher.FeedFilter.Text" parent="Theme.CintaLauncher">

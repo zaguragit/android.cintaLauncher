@@ -21,6 +21,7 @@ import posidon.android.conveniencelib.dp
 
 open class FeedItemViewHolder(itemView: View) : RecyclerView.ViewHolder(SwipeableLayout(itemView)) {
     val swipeableLayout = this.itemView as SwipeableLayout
+    val container = itemView
     val source = itemView.findViewById<TextView>(R.id.source)!!
     val separator = itemView.findViewById<View>(R.id.separator)!!
     val time = itemView.findViewById<TextView>(R.id.time)!!

@@ -102,12 +102,19 @@ class FeedAdapter(
             TYPE_PROGRESS -> bindFeedItemViewHolder(holder as FeedItemViewHolder, item as FeedItemWithProgress, color)
         }
         holder as FeedItemViewHolder
+        val verticalPadding = holder.itemView.resources.getDimension(R.dimen.feed_card_padding_vertical).toInt()
         if (i == 1) {
             holder.separator.isInvisible = true
         } else {
             holder.separator.isInvisible = false
             holder.separator.setBackgroundColor(ColorTheme.uiHint and 0x00ffffff or 0x24ffffff)
         }
+        holder.container.setPadding(
+            holder.container.paddingLeft,
+            holder.container.paddingTop,
+            holder.container.paddingRight,
+            if (i == itemCount - 1) verticalPadding + holder.itemView.resources.getDimension(R.dimen.feed_filter_height).toInt() else verticalPadding,
+        )
     }
 
     fun updateItems(items: List<FeedItem>) {

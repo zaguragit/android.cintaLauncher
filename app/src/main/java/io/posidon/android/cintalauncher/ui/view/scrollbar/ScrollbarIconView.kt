@@ -7,6 +7,7 @@ import android.graphics.drawable.shapes.RoundRectShape
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.ImageView
 import android.widget.PopupWindow
@@ -51,23 +52,23 @@ class ScrollbarIconView @JvmOverloads constructor(
                         showPopup(orientation)
                         currentOrientation = orientation
                     }
-                    currentWindow?.contentView?.onTouchEvent(makeMotionEventForPopup(e))
+                    currentWindow?.let { it.contentView.onTouchEvent(makeMotionEventForPopup(it.contentView, e)) }
                 }
             }
             MotionEvent.ACTION_UP -> {
-                currentWindow?.contentView?.onTouchEvent(makeMotionEventForPopup(e))
+                currentWindow?.let { it.contentView.onTouchEvent(makeMotionEventForPopup(it.contentView, e)) }
                 currentWindow?.dismiss()
             }
         }
         return true
     }
 
-    private fun makeMotionEventForPopup(e: MotionEvent) = MotionEvent.obtain(
+    private fun makeMotionEventForPopup(contentView: View, e: MotionEvent) = MotionEvent.obtain(
         e.downTime,
         e.eventTime,
         e.action,
-        e.rawX,
-        currentWindow?.contentView!!.height - this.height + e.y,
+        contentView.width - this.width + e.x,
+        contentView.height - this.height + e.y,
         e.pressure,
         e.size,
         e.metaState,

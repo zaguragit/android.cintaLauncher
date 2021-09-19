@@ -18,4 +18,6 @@
     <dimen name="popup_card_elevation">4dp</dimen>
 
     <dimen name="scroll_bar_height">56dp</dimen>
+
+    <dimen name="feed_filter_height">38dp</dimen>
 </resources>
