@@ -3,7 +3,7 @@ package io.posidon.android.cintalauncher.ui.view.scrollbar.hue
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.viewHolders.AppItem
-import io.posidon.android.cintalauncher.ui.view.HighlightSectionIndexer
+import io.posidon.android.cintalauncher.ui.view.recycler.HighlightSectionIndexer
 
 class HueSectionIndexer(
     private val scrollbarController: HueScrollbarController

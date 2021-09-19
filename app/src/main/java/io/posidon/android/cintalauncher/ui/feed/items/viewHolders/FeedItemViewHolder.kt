@@ -15,8 +15,8 @@ import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.items.formatTimeAgo
 import io.posidon.android.cintalauncher.ui.feed.items.ActionsAdapter
-import io.posidon.android.cintalauncher.ui.view.DividerItemDecorator
 import io.posidon.android.cintalauncher.ui.view.SwipeableLayout
+import io.posidon.android.cintalauncher.ui.view.recycler.DividerItemDecorator
 import posidon.android.conveniencelib.dp
 
 open class FeedItemViewHolder(itemView: View) : RecyclerView.ViewHolder(SwipeableLayout(itemView)) {

@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.ui.view
+package io.posidon.android.cintalauncher.ui.view.recycler
 
 import android.content.Context
 import android.graphics.Canvas

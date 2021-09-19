@@ -84,7 +84,7 @@ open class Scrollbar : View {
             MotionEvent.ACTION_MOVE -> {
                 val i = coordsToIndex(event.x, event.y)
                 controller.indexer.getPositionForSection(i).let {
-                    recycler?.scrollToPosition(it)
+                    recycler?.scrollToPositionAndCenter(it)
                     controller.indexer.highlight(it)
                 }
                 invalidate()
@@ -94,7 +94,7 @@ open class Scrollbar : View {
                 parent.requestDisallowInterceptTouchEvent(true)
                 val i = coordsToIndex(event.x, event.y)
                 controller.indexer.getPositionForSection(i).let {
-                    recycler?.scrollToPosition(it)
+                    recycler?.scrollToPositionAndCenter(it)
                     controller.indexer.highlight(it)
                 }
                 invalidate()
@@ -108,6 +108,12 @@ open class Scrollbar : View {
             }
         }
         return true
+    }
+
+    private fun RecyclerView.scrollToPositionAndCenter(i: Int) {
+        val l = layoutManager as LinearLayoutManager
+        val center = height / 3
+        l.scrollToPositionWithOffset(i, center)
     }
 
     fun coordsToIndex(x: Float, y: Float): Int {

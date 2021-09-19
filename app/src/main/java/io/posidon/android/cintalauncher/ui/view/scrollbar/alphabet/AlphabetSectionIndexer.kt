@@ -2,7 +2,7 @@ package io.posidon.android.cintalauncher.ui.view.scrollbar.alphabet
 
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
-import io.posidon.android.cintalauncher.ui.view.HighlightSectionIndexer
+import io.posidon.android.cintalauncher.ui.view.recycler.HighlightSectionIndexer
 
 class AlphabetSectionIndexer : HighlightSectionIndexer {
     private var savedSections = emptyArray<Char>()

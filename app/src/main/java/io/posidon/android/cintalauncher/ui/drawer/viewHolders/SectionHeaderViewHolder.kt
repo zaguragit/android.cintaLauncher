@@ -11,7 +11,7 @@ import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter.Companion.SECTION_HEADER
 import io.posidon.android.cintalauncher.ui.popup.drawer.DrawerLongPressPopup
-import io.posidon.android.cintalauncher.ui.view.HighlightSectionIndexer
+import io.posidon.android.cintalauncher.ui.view.recycler.HighlightSectionIndexer
 import posidon.android.conveniencelib.getNavigationBarHeight
 
 class SectionHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

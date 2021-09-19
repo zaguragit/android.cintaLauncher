@@ -5,7 +5,7 @@ import android.graphics.Canvas
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
-import io.posidon.android.cintalauncher.ui.view.HighlightSectionIndexer
+import io.posidon.android.cintalauncher.ui.view.recycler.HighlightSectionIndexer
 import java.util.*
 
 abstract class ScrollbarController(val scrollbar: Scrollbar) {
