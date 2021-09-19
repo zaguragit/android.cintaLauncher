@@ -79,6 +79,22 @@ class HomeViewHolder(
         }
     }
     val searchIcon = searchCard.findViewById<ImageView>(R.id.search_bar_icon)!!
+    @SuppressLint("ClickableViewAccessibility")
+    val appDrawerIcon = searchCard.findViewById<ImageView>(R.id.app_drawer_icon)!!.apply {
+        setOnTouchListener { v, e ->
+            when (e.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    launcherActivity.appDrawer.open(v)
+                    launcherActivity.appDrawer.scrollIcon.onTouchEvent(e)
+                }
+                else ->
+                    launcherActivity.appDrawer.scrollIcon.onTouchEvent(e)
+            }
+            parent.requestDisallowInterceptTouchEvent(true)
+            true
+        }
+    }
+
     val blurBG = searchCard.findViewById<SeeThoughView>(R.id.blur_bg)!!
 
     val vertical = itemView.findViewById<LinearLayout>(R.id.vertical)!!
@@ -177,6 +193,7 @@ fun bindHomeViewHolder(
     (holder.itemView.background as InvertedRoundRectDrawable).outerColor = ColorTheme.uiBG
     holder.searchCard.setCardBackgroundColor(ColorTheme.searchBarBG)
     holder.searchIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
+    holder.appDrawerIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
     holder.blurBG.drawable = acrylicBlur?.smoothBlur?.let { BitmapDrawable(holder.itemView.resources, it) }
     holder.time.setTextColor(ColorTheme.wallTitle)
     holder.date.setTextColor(ColorTheme.wallDescription)

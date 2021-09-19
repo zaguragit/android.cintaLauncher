@@ -11,18 +11,15 @@
         <item name="android:paddingBottom">96dp</item>
     </style>
 
-    <style name="Theme.CintaLauncher.Drawer.BottomBar" parent="Theme.CintaLauncher">
-        <item name="android:background">@color/drawer_bottom_bar</item>
-        <item name="android:layout_height">64dp</item>
+    <style name="Theme.CintaLauncher.Drawer.FloatingButton" parent="Theme.CintaLauncher">
+        <item name="android:background">@drawable/round_bg</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:elevation">32dp</item>
     </style>
 
-    <style name="Theme.CintaLauncher.Drawer.ExitButton" parent="Theme.CintaLauncher">
-        <item name="android:background">@drawable/round_bg</item>
-        <item name="tint">#ffffff</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:layout_width">96dp</item>
-        <item name="android:layout_height">38dp</item>
-        <item name="android:elevation">32dp</item>
+    <style name="Theme.CintaLauncher.Drawer.FloatingButton.Icon" parent="Theme.CintaLauncher">
+        <item name="android:padding">8dp</item>
     </style>
 
     <style name="Theme.CintaLauncher.Drawer.Item.Container" parent="Theme.CintaLauncher">

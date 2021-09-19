@@ -52,7 +52,7 @@ fun bindSectionHeaderViewHolder(
         false
     }
     holder.itemView.setOnLongClickListener {
-        DrawerLongPressPopup.show(holder.itemView, x, y, launcherActivity.getNavigationBarHeight(), launcherActivity.settings, launcherActivity::reloadScrollbarController, launcherActivity::loadApps)
+        DrawerLongPressPopup.show(holder.itemView, x, y, launcherActivity.getNavigationBarHeight(), launcherActivity.settings, launcherActivity::loadApps)
         true
     }
 }

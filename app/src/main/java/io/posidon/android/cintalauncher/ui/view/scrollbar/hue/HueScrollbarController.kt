@@ -8,6 +8,7 @@ import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
 import io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarController
+import posidon.android.conveniencelib.dp
 import java.util.*
 
 class HueScrollbarController(
@@ -16,29 +17,34 @@ class HueScrollbarController(
 
     private val paint by scrollbar::paint
 
+    private var dotRadius = 0f
+    private var activeDotRadius = 0f
+
     override fun draw(canvas: Canvas) {
         val insideHeight = scrollbar.height - scrollbar.paddingTop - scrollbar.paddingBottom.toFloat()
         val insideWidth = scrollbar.width - scrollbar.paddingLeft - scrollbar.paddingRight.toFloat()
-        val (a, b) = if (scrollbar.orientation == Scrollbar.VERTICAL) {
-            insideHeight / indexer.sections.lastIndex.toFloat() to insideWidth / 2f + scrollbar.paddingLeft
+        val (dotWidth, dotHeight) = if (scrollbar.orientation == Scrollbar.VERTICAL) {
+            insideWidth / 2f + scrollbar.paddingLeft to insideHeight / indexer.sections.lastIndex.toFloat()
         } else {
             insideWidth / indexer.sections.lastIndex.toFloat() to insideHeight / 2f + scrollbar.paddingTop
         }
         for (i in indexer.sections.indices) {
             val (x, y) = if (scrollbar.orientation == Scrollbar.VERTICAL) {
-                b to a * i + scrollbar.paddingTop
+                dotWidth to dotHeight * i + scrollbar.paddingTop
             } else {
-                a * i + scrollbar.paddingLeft to b
+                dotWidth * i + scrollbar.paddingLeft to dotHeight
             }
-            val isHighlighted = showSelection && i >= scrollbar.currentScrolledSectionStart && i <= scrollbar.currentScrolledSectionEnd
+            val isHighlighted = i >= scrollbar.currentScrolledSectionStart && i <= scrollbar.currentScrolledSectionEnd
             val hsl = floatArrayOf(indexer.sections[i], 1f, if (isHighlighted) 0.4f else 0.3f)
             paint.color = ColorUtils.HSLToColor(hsl)
-            val r = if (isHighlighted) insideHeight / 3f * 2f else insideHeight / 3f
+            val r = if (isHighlighted) activeDotRadius else dotRadius
             canvas.drawCircle(x, y, r, paint)
         }
     }
 
     override fun updateTheme(context: Context) {
+        dotRadius = scrollbar.dp(4)
+        activeDotRadius = scrollbar.dp(8)
         scrollbar.invalidate()
     }
 

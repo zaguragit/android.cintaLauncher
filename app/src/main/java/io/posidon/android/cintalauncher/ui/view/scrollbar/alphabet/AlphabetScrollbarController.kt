@@ -34,18 +34,18 @@ class AlphabetScrollbarController(
         if (this.indexer.sections.isNotEmpty()) {
             val insideHeight = scrollbar.height - scrollbar.paddingTop - scrollbar.paddingBottom
             val insideWidth = scrollbar.width - scrollbar.paddingLeft - scrollbar.paddingRight
-            val (a, b) = if (scrollbar.orientation == Scrollbar.VERTICAL) {
-                insideHeight / this.indexer.sections.lastIndex.toFloat() to insideWidth / 2f + scrollbar.paddingLeft
+            val (symbolWidth, symbolHeight) = if (scrollbar.orientation == Scrollbar.VERTICAL) {
+                insideWidth / 2f + scrollbar.paddingLeft to insideHeight / this.indexer.sections.lastIndex.toFloat()
             } else {
                 insideWidth / this.indexer.sections.lastIndex.toFloat() to (insideHeight + paint.textSize) / 2f + scrollbar.paddingTop
             }
             for (i in this.indexer.sections.indices) {
                 val (x, y) = if (scrollbar.orientation == Scrollbar.VERTICAL) {
-                    b to a * i + scrollbar.paddingTop
+                    symbolWidth to symbolHeight * i + scrollbar.paddingTop
                 } else {
-                    a * i + scrollbar.paddingLeft to b
+                    symbolWidth * i + scrollbar.paddingLeft to symbolHeight
                 }
-                if (showSelection && i >= scrollbar.currentScrolledSectionStart && i <= scrollbar.currentScrolledSectionEnd) {
+                if (i >= scrollbar.currentScrolledSectionStart && i <= scrollbar.currentScrolledSectionEnd) {
                     val tmp = paint.typeface
                     paint.typeface = scrollbar.boldTypeface
                     paint.color = highlightColor

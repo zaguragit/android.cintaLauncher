@@ -34,7 +34,6 @@ object DrawerLongPressPopup {
         touchY: Float,
         navbarHeight: Int,
         settings: Settings,
-        reloadScrollbarController: () -> Unit,
         reloadApps: () -> Unit,
     ) {
         val content = LayoutInflater.from(parent.context).inflate(R.layout.list_popup, null)
@@ -57,7 +56,7 @@ object DrawerLongPressPopup {
                         settings,
                         reloadScrollbarController = {
                             cardView.post {
-                                reloadScrollbarController()
+                                reloadApps()
                                 update()
                             }
                         },

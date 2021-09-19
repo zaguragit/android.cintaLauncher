@@ -13,12 +13,6 @@ abstract class ScrollbarController(val scrollbar: Scrollbar) {
 
     abstract val indexer: HighlightSectionIndexer
 
-    var showSelection = true
-        set(value) {
-            field = value
-            scrollbar.invalidate()
-        }
-
     abstract fun updateTheme(context: Context)
     abstract fun loadSections(apps: AppCollection)
     abstract fun createSectionHeaderItem(

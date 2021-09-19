@@ -14,16 +14,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"/>
-    <FrameLayout
-        style="@style/Theme.CintaLauncher.Drawer.BottomBar"
-        android:id="@+id/bottom_bar"
-        android:layout_width="match_parent"
-        android:layout_gravity="bottom">
+    <LinearLayout
+        style="@style/Theme.CintaLauncher.Drawer.FloatingButton"
+        android:id="@+id/floating_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom|end">
+        <io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarIconView
+            style="@style/Theme.CintaLauncher.Drawer.FloatingButton.Icon"
+            android:id="@+id/app_drawer_icon"
+            android:layout_width="@dimen/search_bar_height"
+            android:layout_height="@dimen/search_bar_height"
+            android:src="@drawable/ic_drawer_scroll"/>
         <ImageView
-            style="@style/Theme.CintaLauncher.Drawer.ExitButton"
+            style="@style/Theme.CintaLauncher.Drawer.FloatingButton.Icon"
             android:id="@+id/back_button"
-            android:layout_gravity="center"
+            android:layout_width="@dimen/search_bar_height"
+            android:layout_height="@dimen/search_bar_height"
             android:src="@drawable/ic_swipe_up"
-            android:scaleY="-1"/>
-    </FrameLayout>
+            android:scaleY="-1"
+            android:padding="10dp"/>
+    </LinearLayout>
 </FrameLayout>

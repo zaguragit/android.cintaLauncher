@@ -50,8 +50,7 @@ interface ColorTheme {
     val appDrawerSectionColor: Int
     val appDrawerItemBase: Int
 
-    val scrollBarDefaultBG: Int
-    val scrollBarTintBG: Int
+    val scrollBarBG: Int
 
     val searchBarBG: Int
     val searchBarFG: Int
@@ -186,7 +185,6 @@ interface ColorTheme {
                 ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT -> loadWallColorTheme(activity, colorThemeOptions, onFinished)
                 ColorThemeSetting.COLOR_THEME_WALLPAPER_TINT_SYSTEM_ASSISTED -> colors()?.let {
                     loadSystemWallColorTheme(activity, colorThemeOptions, onFinished, it)
-                    println(it)
                 } ?: loadDefaultColorTheme(activity, colorThemeOptions, onFinished)
                 else -> loadDefaultColorTheme(activity, colorThemeOptions, onFinished)
             }
@@ -243,10 +241,8 @@ interface ColorTheme {
             get() = colorThemeInstance.appDrawerSectionColor
         override val appDrawerItemBase: Int
             get() = colorThemeInstance.appDrawerItemBase
-        override val scrollBarDefaultBG: Int
-            get() = colorThemeInstance.scrollBarDefaultBG
-        override val scrollBarTintBG: Int
-            get() = colorThemeInstance.scrollBarTintBG
+        override val scrollBarBG: Int
+            get() = colorThemeInstance.scrollBarBG
         override val searchBarBG: Int
             get() = colorThemeInstance.searchBarBG
         override val searchBarFG: Int

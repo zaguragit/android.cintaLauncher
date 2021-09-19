@@ -48,7 +48,15 @@ open class Scrollbar : View {
         isAntiAlias = true
     }
 
-    val boldTypeface: Typeface
+    var boldTypeface: Typeface
+        private set
+
+    var typeface: Typeface
+        get() = paint.typeface
+        set(value) {
+            paint.typeface = value
+            boldTypeface = Typeface.create(paint.typeface, Typeface.BOLD)
+        }
 
     var recycler: RecyclerView? = null
         set(value) {
@@ -134,9 +142,10 @@ open class Scrollbar : View {
         }
     }
 
+    @IntDef(VERTICAL, HORIZONTAL)
+    annotation class Orientation
+
     companion object {
-        @IntDef(VERTICAL, HORIZONTAL)
-        annotation class Orientation
 
         const val VERTICAL = 0
         const val HORIZONTAL = 1

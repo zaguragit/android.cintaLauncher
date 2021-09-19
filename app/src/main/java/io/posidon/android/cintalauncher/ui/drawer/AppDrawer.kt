@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
@@ -24,25 +23,27 @@ import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.popup.drawer.DrawerLongPressPopup
 import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
+import io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarIconView
 import posidon.android.conveniencelib.getNavigationBarHeight
 import posidon.android.conveniencelib.getStatusBarHeight
 import posidon.android.conveniencelib.onEnd
 import kotlin.math.abs
 
 class AppDrawer(
-    private val activity: LauncherActivity,
-    private val scrollBar: Scrollbar
+    private val activity: LauncherActivity
 ) {
 
     val view = activity.findViewById<View>(R.id.app_drawer_container)!!
 
     private val adapter = AppDrawerAdapter(activity)
 
-    private val bottomBar = view.findViewById<View>(R.id.bottom_bar)
-
     private val recycler = view.findViewById<RecyclerView>(R.id.app_recycler)
-    private val closeButton = view.findViewById<ImageView>(R.id.back_button).apply {
+    private val floatingButtons = view.findViewById<View>(R.id.floating_buttons)
+    private val closeButton = floatingButtons.findViewById<ImageView>(R.id.back_button).apply {
         setOnClickListener(::close)
+    }
+    val scrollIcon = floatingButtons.findViewById<ScrollbarIconView>(R.id.app_drawer_icon)!!.apply {
+        appDrawer = this@AppDrawer
     }
 
     private var popupX = 0f
@@ -62,11 +63,10 @@ class AppDrawer(
         }
         recycler.adapter = adapter
         recycler.setOnScrollChangeListener { _, _, _, _, _ -> adapter.onScroll() }
-        scrollBar.onStartScroll = ::open
 
         val onLongPress = Runnable {
             recycler.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            DrawerLongPressPopup.show(recycler, popupX, popupY, activity.getNavigationBarHeight(), activity.settings, activity::reloadScrollbarController, activity::loadApps)
+            DrawerLongPressPopup.show(recycler, popupX, popupY, activity.getNavigationBarHeight(), activity.settings, activity::loadApps)
         }
         var lastRecyclerViewDownTouchEvent: MotionEvent? = null
         recycler.setOnTouchListener { v, event ->
@@ -100,19 +100,19 @@ class AppDrawer(
 
     var appSections: List<List<App>>? = null
 
-    fun update(appSections: List<List<App>>) {
+    fun update(scrollBar: Scrollbar, appSections: List<List<App>>) {
         this.appSections = appSections
         adapter.updateAppSections(appSections, activity, scrollBar.controller)
         scrollBar.postInvalidate()
         view.postInvalidate()
+        scrollBar.recycler = this@AppDrawer.recycler
     }
 
     fun updateColorTheme() {
         view.background = ColorDrawable(ColorTheme.appDrawerColor and 0xffffff or 0xaa000000.toInt())
-        bottomBar.background = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(ColorTheme.appDrawerBottomBarColor and 0xffffff or 0x88000000.toInt(), 0))
-        closeButton.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
+        floatingButtons.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
         closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))
-        scrollBar.recycler = this@AppDrawer.recycler
+        scrollIcon.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))
     }
 
     val isOpen get() = view.isVisible
@@ -126,7 +126,6 @@ class AppDrawer(
         recycler.setPadding(recycler.paddingLeft, sbh, recycler.paddingRight, recycler.paddingBottom)
         view.isVisible = true
         activity.feedRecycler.stopScroll()
-        scrollBar.controller.showSelection = true
         activity.feedFilterRecycler.animate()
             .alpha(0f)
             .setDuration(100)
@@ -169,7 +168,6 @@ class AppDrawer(
     fun close(v: View? = null) {
         if (!isOpen) return
         ItemLongPress.currentPopup?.dismiss()
-        scrollBar.controller.showSelection = false
         activity.feedFilterRecycler.isVisible = true
         activity.feedFilterRecycler.animate()
             .alpha(1f)

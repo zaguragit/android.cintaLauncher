@@ -124,17 +124,15 @@ class AndroidOMR1WallColorTheme(
         hsl
     })
 
-    override val scrollBarDefaultBG = run {
+    override val scrollBarBG = run {
         val rgb = primary.toArgb()
         val lab = DoubleArray(3)
         ColorUtils.colorToLAB(rgb, lab)
         val drawerLab = DoubleArray(3)
-        ColorUtils.colorToLAB(appDrawerColor, lab)
+        ColorUtils.colorToLAB(appDrawerColor, drawerLab)
         lab[0] = lab[0].coerceAtMost(drawerLab[0] - 5.0)
         ColorUtils.LABToColor(lab[0], lab[1], lab[2])
     }
-
-    override val scrollBarTintBG = scrollBarDefaultBG and 0x00ffffff or 0xcc000000.toInt()
 
     override val searchBarBG = appDrawerItemBase
 

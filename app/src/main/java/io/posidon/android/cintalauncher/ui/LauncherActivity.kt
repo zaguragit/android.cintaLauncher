@@ -18,7 +18,6 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.graphics.toRectF
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentActivity
@@ -39,20 +38,15 @@ import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.storage.*
 import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
 import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
-import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.SCROLLBAR_CONTROLLER_BY_HUE
-import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.scrollbarController
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
 import io.posidon.android.cintalauncher.ui.feed.FeedAdapter
 import io.posidon.android.cintalauncher.ui.feed.filters.FeedFilterAdapter
 import io.posidon.android.cintalauncher.ui.feed.home.HomeViewHolder
 import io.posidon.android.cintalauncher.ui.popup.PopupUtils
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
-import io.posidon.android.cintalauncher.ui.view.scrollbar.alphabet.AlphabetScrollbarController
-import io.posidon.android.cintalauncher.ui.view.scrollbar.hue.HueScrollbarController
-import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
+import io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarIconView
 import io.posidon.android.cintalauncher.util.StackTraceActivity
 import io.posidon.android.cintalauncher.util.blur.AcrylicBlur
-import io.posidon.android.launcherutils.GestureNavContract
 import io.posidon.android.launcherutils.LiveWallpaper
 import posidon.android.conveniencelib.*
 import kotlin.concurrent.thread
@@ -71,13 +65,10 @@ class LauncherActivity : FragmentActivity() {
     val homeContainer by lazy { findViewById<View>(R.id.home_container) }
     val feedRecycler by lazy { findViewById<RecyclerView>(R.id.feed_recycler)!! }
     val feedFilterRecycler by lazy { findViewById<RecyclerView>(R.id.feed_filters_recycler)!! }
-    val scrollBar by lazy { findViewById<Scrollbar>(R.id.scroll_bar)!! }
-
-    val scrollBarContainer by lazy { findViewById<View>(R.id.scroll_bar_container)!! }
 
     val blurBG by lazy { findViewById<View>(R.id.blur_bg)!! }
 
-    val appDrawer by lazy { AppDrawer(this, scrollBar) }
+    val appDrawer by lazy { AppDrawer(this) }
 
     lateinit var feedAdapter: FeedAdapter
     lateinit var feedFilterAdapter: FeedFilterAdapter
@@ -85,6 +76,9 @@ class LauncherActivity : FragmentActivity() {
     private lateinit var wallpaperManager: WallpaperManager
 
     var colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
+
+    val scrollBar: Scrollbar get() = appDrawer.scrollIcon.scrollBar
+    val scrollBarIcon: ScrollbarIconView get() = appDrawer.scrollIcon
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -228,11 +222,7 @@ class LauncherActivity : FragmentActivity() {
         super.onResume()
         notificationProvider.update()
         val shouldUpdate = settings.reload(applicationContext)
-        if (shouldUpdate) {
-            reloadScrollbarController()
-        } else {
-            SuggestionsManager.onResume(this)
-        }
+        SuggestionsManager.onResume(this)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             thread (isDaemon = true) {
                 ColorTheme.onResumePreOMR1(
@@ -247,12 +237,9 @@ class LauncherActivity : FragmentActivity() {
             if (acrylicBlur == null) {
                 loadBlur(wallpaperManager, ::updateBlur)
             }
-            if (shouldUpdate) {
-                thread(name = "Reloading color theme", isDaemon = true, block = this::reloadColorThemeSync)
-            }
         }
         val current = System.currentTimeMillis()
-        if (current - lastUpdateTime > 1000L * 60L * 5L) {
+        if (shouldUpdate || current - lastUpdateTime > 1000L * 60L * 5L) {
             lastUpdateTime = current
             thread (isDaemon = true, block = RssProvider::update)
         }
@@ -291,9 +278,6 @@ class LauncherActivity : FragmentActivity() {
         val r = resources.getDimension(R.dimen.dock_corner_radius)
         if (b == null) {
             blurBG.background = null
-            scrollBarContainer.background = ColorDrawable(ColorTheme.scrollBarDefaultBG)
-            homeContainer.foreground = InvertedRoundRectDrawable(
-                floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r), 0f, ColorTheme.scrollBarDefaultBG)
             return
         }
         blurBG.background = LayerDrawable(arrayOf(
@@ -303,36 +287,12 @@ class LauncherActivity : FragmentActivity() {
             BitmapDrawable(resources, b.insaneBlur).also {
                 it.alpha = 160
             },
-        )).apply {
-            setLayerInsetBottom(0, -scrollBarContainer.measuredHeight)
-            setLayerInsetBottom(1, -scrollBarContainer.measuredHeight)
-            setLayerInsetBottom(2, -scrollBarContainer.measuredHeight)
-            setLayerInsetBottom(3, -scrollBarContainer.measuredHeight)
-        }
-        scrollBarContainer.background = LayerDrawable(arrayOf(
-            BitmapDrawable(resources, b.fullBlur),
-            ColorDrawable(ColorTheme.scrollBarTintBG)
-        )).apply { setLayerInsetTop(0, scrollBarContainer.measuredHeight - Device.screenHeight(this@LauncherActivity)) }
-        homeContainer.foreground = LayerDrawable(arrayOf(
-            InvertedRoundRectDrawable(
-                floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r),
-                0f,
-                0xff000000.toInt()
-            ).apply {
-                outerPaint.shader = BitmapShader(b.fullBlur, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-            },
-            InvertedRoundRectDrawable(
-                floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r),
-                0f,
-                ColorTheme.scrollBarTintBG
-            )
         ))
         feedAdapter.onScroll(feedRecycler.scrollY)
     }
 
     private fun updateColorTheme() {
         feedAdapter.updateColorTheme()
-        scrollBar.controller.updateTheme(this)
         feedFilterAdapter.updateColorTheme()
         updateBlur()
         appDrawer.updateColorTheme()
@@ -358,34 +318,13 @@ class LauncherActivity : FragmentActivity() {
         } else ColorTheme.onResumePreOMR1(this, settings.colorTheme, colorThemeOptions, LauncherActivity::updateColorTheme)
     }
 
-    fun reloadScrollbarController() {
-        updateScrollbarController()
-        loadApps()
-    }
-
-    private fun updateScrollbarController() {
-        when (settings.scrollbarController) {
-            SCROLLBAR_CONTROLLER_BY_HUE -> {
-                if (scrollBar.controller !is HueScrollbarController) {
-                    scrollBar.controller = HueScrollbarController(scrollBar)
-                }
-            }
-            else -> {
-                if (scrollBar.controller !is AlphabetScrollbarController) {
-                    scrollBar.controller = AlphabetScrollbarController(scrollBar)
-                }
-            }
-        }
-        scrollBar.controller.updateTheme(this)
-    }
-
     private fun onWallpaperChanged() {
         loadBlur(wallpaperManager, ::updateBlur)
     }
 
     private fun handleGestureContract(intent: Intent) {
-        val gnc = GestureNavContract.fromIntent(intent)
-        gnc?.sendEndPosition(scrollBar.clipBounds.toRectF(), null)
+        //val gnc = GestureNavContract.fromIntent(intent)
+        //gnc?.sendEndPosition(scrollBar.clipBounds.toRectF(), null)
     }
 
     fun loadFeed(items: List<FeedItem>) {
@@ -397,8 +336,9 @@ class LauncherActivity : FragmentActivity() {
 
     fun loadApps() {
         launcherContext.appManager.loadApps(this) { apps: AppCollection ->
+            scrollBarIcon.reloadController(settings)
             scrollBar.controller.loadSections(apps)
-            appDrawer.update(apps.sections)
+            appDrawer.update(scrollBar, apps.sections)
             runOnUiThread {
                 feedAdapter.onAppsLoaded()
             }
@@ -420,8 +360,8 @@ class LauncherActivity : FragmentActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
 
-        feedRecycler.setPadding(0, getStatusBarHeight(), 0, 0)
-        scrollBar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+        feedRecycler.setPadding(0, getStatusBarHeight(), 0, getNavigationBarHeight())
+        feedFilterRecycler.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             bottomMargin = getNavigationBarHeight()
         }
     }
