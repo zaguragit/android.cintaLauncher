@@ -360,7 +360,7 @@ class LauncherActivity : FragmentActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
 
-        feedRecycler.setPadding(0, getStatusBarHeight(), 0, getNavigationBarHeight())
+        feedRecycler.setPadding(0, 0, 0, getNavigationBarHeight())
         feedFilterRecycler.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             bottomMargin = getNavigationBarHeight()
         }

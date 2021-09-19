@@ -33,6 +33,7 @@ import io.posidon.android.cintalauncher.util.InvertedRoundRectDrawable
 import io.posidon.android.lookerupper.ui.SearchActivity
 import posidon.android.conveniencelib.dp
 import posidon.android.conveniencelib.getNavigationBarHeight
+import posidon.android.conveniencelib.getStatusBarHeight
 import kotlin.math.ceil
 
 class HomeViewHolder(
@@ -43,9 +44,11 @@ class HomeViewHolder(
     itemView: View,
 ) : RecyclerView.ViewHolder(itemView) {
 
-    val weekDay = itemView.findViewById<TextView>(R.id.week_day)!!
-    val time = itemView.findViewById<TextView>(R.id.time)!!
-    val date = itemView.findViewById<TextView>(R.id.date)!!
+    val clockContainer = itemView.findViewById<View>(R.id.clock_container)!!
+
+    val weekDay = clockContainer.findViewById<TextView>(R.id.week_day)!!
+    val time = clockContainer.findViewById<TextView>(R.id.time)!!
+    val date = clockContainer.findViewById<TextView>(R.id.date)!!
 
     val summaryCard = itemView.findViewById<View>(R.id.summary_card)!!
     val summaryAdapter = SummaryAdapter()
@@ -64,10 +67,12 @@ class HomeViewHolder(
         adapter = recentlyOpenedAdapter
     }
     val notificationIconsAdapter = NotificationIconsAdapter()
+    val notificationIconsContainer = itemView.findViewById<View>(R.id.notification_icon_container)!!
     val notificationIconsRecycler = itemView.findViewById<RecyclerView>(R.id.notification_icon_list)!!.apply {
         layoutManager = LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
         adapter = notificationIconsAdapter
     }
+    val notificationIconsText = itemView.findViewById<TextView>(R.id.notification_icon_text)!!
 
     val searchCard = itemView.findViewById<CardView>(R.id.search_bar_container)!!.apply {
         setOnClickListener {
@@ -112,6 +117,7 @@ class HomeViewHolder(
         val r = itemView.context.resources.getDimension(R.dimen.dock_corner_radius)
         itemView.background = InvertedRoundRectDrawable(
             floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r), 0f, 0)
+        clockContainer.setPadding(0, itemView.context.getStatusBarHeight(), 0, 0)
     }
 
     fun updateSummary() {
@@ -136,7 +142,10 @@ class HomeViewHolder(
     }
 
     fun updateRecents() {
-        val recent = SuggestionsManager.getNonPinnedSuggestions(launcherContext.appManager.pinnedItems).let { it.subList(0, it.size.coerceAtMost(3)) }
+        val recent = SuggestionsManager.getNonPinnedSuggestions(launcherContext.appManager.pinnedItems).let { it.subList(0, run {
+            val l = it.size.coerceAtMost(6)
+            if (l < 6) l.coerceAtMost(3) else l
+        }) }
         if (recent.isEmpty()) {
             recentlyOpenedRecycler.isVisible = false
         } else {
@@ -150,10 +159,13 @@ class HomeViewHolder(
             it.sourceIcon?.constantState
         }.mapNotNull { it.key?.newDrawable() }
         if (icons.isEmpty()) {
-            notificationIconsRecycler.isVisible = false
+            notificationIconsContainer.isVisible = false
         } else {
-            notificationIconsRecycler.isVisible = true
-            notificationIconsAdapter.updateItems(icons)
+            notificationIconsContainer.isVisible = true
+            if (notificationIconsAdapter.updateItems(icons)) {
+                notificationIconsText.text =
+                    itemView.resources.getQuantityString(R.plurals.x_notifications, icons.size, icons.size)
+            }
         }
     }
 
@@ -189,7 +201,6 @@ fun bindHomeViewHolder(
     holder.updatePinned()
     holder.updateRecents()
     holder.updateNotificationIcons()
-    holder.notificationIconsRecycler.backgroundTintList = ColorStateList.valueOf(ColorTheme.wallColor and 0xffffff or 0x88000000.toInt())
     (holder.itemView.background as InvertedRoundRectDrawable).outerColor = ColorTheme.uiBG
     holder.searchCard.setCardBackgroundColor(ColorTheme.searchBarBG)
     holder.searchIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
@@ -199,6 +210,8 @@ fun bindHomeViewHolder(
     holder.date.setTextColor(ColorTheme.wallDescription)
     holder.weekDay.setTextColor(ColorTheme.wallDescription)
     holder.scrollIndicator.imageTintList = ColorStateList.valueOf(ColorTheme.wallHint)
+    holder.notificationIconsText.setTextColor(ColorTheme.wallTitle)
+    holder.clockContainer.backgroundTintList = ColorStateList.valueOf(ColorTheme.wallColor)
     holder.itemView.setOnTouchListener { _, e ->
         when (e.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN -> {

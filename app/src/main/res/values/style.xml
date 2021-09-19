@@ -8,7 +8,7 @@
     </style>
 
     <style name="Theme.CintaLauncher.Time" parent="Theme.CintaLauncher">
-        <item name="android:textSize">72sp</item>
+        <item name="android:textSize">64sp</item>
         <item name="android:fontFamily">@font/barlow_regular</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:layout_marginStart">28dp</item>
@@ -20,13 +20,13 @@
     </style>
 
     <style name="Theme.CintaLauncher.WeekDay" parent="Theme.CintaLauncher">
-        <item name="android:textSize">32sp</item>
+        <item name="android:textSize">28sp</item>
         <item name="android:fontFamily">@font/barlow_regular</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
     <style name="Theme.CintaLauncher.Date" parent="Theme.CintaLauncher">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">@font/barlow_regular</item>
         <item name="android:includeFontPadding">false</item>
     </style>

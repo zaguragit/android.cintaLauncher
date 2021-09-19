@@ -30,8 +30,10 @@ class NotificationIconsAdapter : RecyclerView.Adapter<NotificationIconsAdapter.I
 
     override fun getItemCount() = items.size
 
-    fun updateItems(items: List<Drawable>) {
+    fun updateItems(items: List<Drawable>): Boolean {
+        val numberChanged = this.items.size != items.size
         this.items = items
         notifyDataSetChanged()
+        return numberChanged
     }
 }

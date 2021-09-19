@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.ui.popup.drawerItem
+package io.posidon.android.cintalauncher.ui.popup.appItem
 
 import android.content.ClipData
 import android.content.ClipDescription
@@ -69,44 +69,43 @@ object ItemLongPress {
         onDragOut: (view: View) -> Unit = {},
         isRemoveHandled: Boolean = false,
     ) {
-        if (currentPopup == null) {
-            val context = view.context
-            context.vibrate(14)
-            val (x, y, gravity) = PopupUtils.getPopupLocationFromView(view, navbarHeight)
-            val popupWindow = makePopupWindow(context, item, backgroundColor, textColor) {
-                item.showProperties(view, backgroundColor, textColor)
-            }
-            popupWindow.isFocusable = false
-            popupWindow.showAtLocation(view, gravity, x, y + (view.resources.getDimension(R.dimen.item_card_margin) * 2).toInt())
-
-            view.setOnDragListener { v, event ->
-                when (event.action) {
-                    DragEvent.ACTION_DRAG_EXITED -> {
-                        currentPopup?.dismiss()
-                        onDragOut(v)
-                    }
-                    DragEvent.ACTION_DRAG_STARTED -> {
-                        if (!isRemoveHandled) v.visibility = View.INVISIBLE
-                    }
-                    DragEvent.ACTION_DRAG_ENDED,
-                    DragEvent.ACTION_DROP -> {
-                        if (!isRemoveHandled) v.visibility = View.VISIBLE
-                        currentPopup?.isFocusable = true
-                        currentPopup?.update()
-                    }
-                }
-                true
-            }
-
-            val shadow = View.DragShadowBuilder(view)
-            val clipData = ClipData(
-                item.label,
-                arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
-                ClipData.Item(item.toString()))
-
-            view.startDragAndDrop(clipData, shadow, null, View.DRAG_FLAG_OPAQUE or View.DRAG_FLAG_GLOBAL)
-
-            onDragStart(view)
+        currentPopup?.dismiss()
+        val context = view.context
+        context.vibrate(14)
+        val (x, y, gravity) = PopupUtils.getPopupLocationFromView(view, navbarHeight)
+        val popupWindow = makePopupWindow(context, item, backgroundColor, textColor) {
+            item.showProperties(view, backgroundColor, textColor)
         }
+        popupWindow.isFocusable = false
+        popupWindow.showAtLocation(view, gravity, x, y + (view.resources.getDimension(R.dimen.item_card_margin) * 2).toInt())
+
+        view.setOnDragListener { v, event ->
+            when (event.action) {
+                DragEvent.ACTION_DRAG_EXITED -> {
+                    currentPopup?.dismiss()
+                    onDragOut(v)
+                }
+                DragEvent.ACTION_DRAG_STARTED -> {
+                    if (!isRemoveHandled) v.visibility = View.INVISIBLE
+                }
+                DragEvent.ACTION_DRAG_ENDED,
+                DragEvent.ACTION_DROP -> {
+                    if (!isRemoveHandled) v.visibility = View.VISIBLE
+                    currentPopup?.isFocusable = true
+                    currentPopup?.update()
+                }
+            }
+            true
+        }
+
+        val shadow = View.DragShadowBuilder(view)
+        val clipData = ClipData(
+            item.label,
+            arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
+            ClipData.Item(item.toString()))
+
+        view.startDragAndDrop(clipData, shadow, null, View.DRAG_FLAG_OPAQUE or View.DRAG_FLAG_GLOBAL)
+
+        onDragStart(view)
     }
 }

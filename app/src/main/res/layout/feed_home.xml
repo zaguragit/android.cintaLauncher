@@ -7,47 +7,66 @@
     android:orientation="vertical"
     android:id="@+id/vertical">
     <LinearLayout
+        android:id="@+id/clock_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-        <TextClock
-            android:id="@+id/time"
-            style="@style/Theme.CintaLauncher.Time"
+        android:orientation="vertical"
+        android:background="@drawable/gradient_clock_bg">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <TextClock
+                android:id="@+id/time"
+                style="@style/Theme.CintaLauncher.Time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:format24Hour="H:mm"
+                android:format12Hour="h:mm"/>
+            <LinearLayout
+                style="@style/Theme.CintaLauncher.DayContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="end">
+                <TextClock
+                    android:id="@+id/week_day"
+                    style="@style/Theme.CintaLauncher.WeekDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:format24Hour="cccc"
+                    android:format12Hour="cccc"/>
+                <TextClock
+                    android:id="@+id/date"
+                    style="@style/Theme.CintaLauncher.Date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:format24Hour="d MMMM"
+                    android:format12Hour="d MMMM"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/Theme.CintaLauncher.NotificationIcons.Container"
+            android:id="@+id/notification_icon_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:format24Hour="H:mm"
-            android:format12Hour="h:mm"/>
-        <LinearLayout
-            style="@style/Theme.CintaLauncher.DayContainer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="end">
-            <TextClock
-                android:id="@+id/week_day"
-                style="@style/Theme.CintaLauncher.WeekDay"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                style="@style/Theme.CintaLauncher.NotificationIcons.Text"
+                android:id="@+id/notification_icon_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:format24Hour="cccc"
-                android:format12Hour="cccc"/>
-            <TextClock
-                android:id="@+id/date"
-                style="@style/Theme.CintaLauncher.Date"
+                android:layout_height="wrap_content"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/notification_icon_list"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:format24Hour="d MMMM"
-                android:format12Hour="d MMMM"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        style="@style/Theme.CintaLauncher.NotificationIcons.Container"
-        android:id="@+id/notification_icon_list"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 
     <RelativeLayout
         android:id="@+id/swipe_up_indicator_container"

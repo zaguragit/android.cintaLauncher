@@ -15,6 +15,14 @@
 
     <string name="properties">Properties</string>
 
+    <plurals name="x_notifications">
+        <item quantity="few">%1$d notifications</item>
+        <item quantity="many">%1$d notifications</item>
+        <item quantity="one">%1$d notification</item>
+        <item quantity="other">%1$d notifications</item>
+        <item quantity="two">%1$d notifications</item>
+    </plurals>
+
     <!-- filters start -->
         <string name="news">News</string>
         <string name="notifications">Notifications</string>

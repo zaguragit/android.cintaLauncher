@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.ui.popup.drawerItem
+package io.posidon.android.cintalauncher.ui.popup.appItem
 
 import android.content.Context
 import android.content.pm.LauncherApps

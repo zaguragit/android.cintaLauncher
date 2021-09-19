@@ -10,7 +10,7 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.acrylicBlur
-import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
+import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import io.posidon.android.lookerupper.data.results.AppResult
 import io.posidon.android.lookerupper.data.results.SearchResult

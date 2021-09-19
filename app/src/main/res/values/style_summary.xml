@@ -58,8 +58,12 @@
 
     <style name="Theme.CintaLauncher.NotificationIcons.Container" parent="Theme.CintaLauncher">
         <item name="android:padding">10dp</item>
-        <item name="android:layout_marginHorizontal">28dp</item>
-        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_margin">@dimen/item_card_margin</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.NotificationIcons.Text" parent="Theme.CintaLauncher">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginHorizontal">6dp</item>
     </style>
 
     <style name="Theme.CintaLauncher.NotificationIcons.Icon" parent="Theme.CintaLauncher">

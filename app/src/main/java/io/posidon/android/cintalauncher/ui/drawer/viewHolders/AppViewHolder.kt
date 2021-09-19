@@ -26,7 +26,7 @@ import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter.Companion.APP_ITEM
-import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
+import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import posidon.android.conveniencelib.toBitmap
 

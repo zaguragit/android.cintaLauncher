@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
-import io.posidon.android.cintalauncher.ui.popup.drawerItem.ItemLongPress
+import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import posidon.android.conveniencelib.getNavigationBarHeight
 
 class CompactAppResult(
