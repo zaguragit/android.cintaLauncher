@@ -5,15 +5,13 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.LayerDrawable
-import android.view.HapticFeedbackConstants
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewConfiguration
+import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
@@ -30,7 +28,7 @@ import posidon.android.conveniencelib.onEnd
 import kotlin.math.abs
 
 class AppDrawer(
-    private val activity: LauncherActivity
+    val activity: LauncherActivity
 ) {
 
     val view = activity.findViewById<View>(R.id.app_drawer_container)!!
@@ -38,7 +36,12 @@ class AppDrawer(
     private val adapter = AppDrawerAdapter(activity)
 
     private val recycler = view.findViewById<RecyclerView>(R.id.app_recycler)
-    private val floatingButtons = view.findViewById<View>(R.id.floating_buttons)
+    private val floatingButtons = view.findViewById<View>(R.id.floating_buttons).apply {
+        updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            val m = resources.getDimension(R.dimen.app_drawer_fab).toInt()
+            bottomMargin = activity.getNavigationBarHeight() + m
+        }
+    }
     private val closeButton = floatingButtons.findViewById<ImageView>(R.id.back_button).apply {
         setOnClickListener(::close)
     }

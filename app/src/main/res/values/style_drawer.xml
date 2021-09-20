@@ -13,7 +13,7 @@
 
     <style name="Theme.CintaLauncher.Drawer.FloatingButton" parent="Theme.CintaLauncher">
         <item name="android:background">@drawable/round_bg</item>
-        <item name="android:layout_margin">16dp</item>
+        <item name="android:layout_margin">@dimen/app_drawer_fab</item>
         <item name="android:padding">4dp</item>
         <item name="android:elevation">32dp</item>
     </style>

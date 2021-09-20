@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.ImageView
 import android.widget.PopupWindow
 import androidx.core.content.res.ResourcesCompat
@@ -22,6 +21,7 @@ import io.posidon.android.cintalauncher.ui.view.scrollbar.alphabet.AlphabetScrol
 import io.posidon.android.cintalauncher.ui.view.scrollbar.hue.HueScrollbarController
 import posidon.android.conveniencelib.Device
 import posidon.android.conveniencelib.dp
+import posidon.android.conveniencelib.getNavigationBarHeight
 import kotlin.math.abs
 
 @SuppressLint("AppCompatCustomView")
@@ -93,10 +93,12 @@ class ScrollbarIconView @JvmOverloads constructor(
             Scrollbar.VERTICAL -> scrollBar.setPadding(0, p, 0, p)
         }
         scrollBar.typeface = ResourcesCompat.getFont(context, R.font.jet_brains_mono)!!
+        val location = IntArray(2)
+        getLocationOnScreen(location)
         currentWindow = PopupWindow(
             scrollBar,
             when (orientation) {
-                Scrollbar.HORIZONTAL -> MATCH_PARENT
+                Scrollbar.HORIZONTAL -> -Device.screenWidth(context) + (location[0] + this@ScrollbarIconView.width) * 2
                 else -> this@ScrollbarIconView.height
             },
             when (orientation) {
@@ -108,8 +110,6 @@ class ScrollbarIconView @JvmOverloads constructor(
             setOnDismissListener {
                 currentWindow = null
             }
-            val location = IntArray(2)
-            getLocationOnScreen(location)
 
             showAtLocation(
                 this@ScrollbarIconView,
@@ -123,7 +123,7 @@ class ScrollbarIconView @JvmOverloads constructor(
                 },
                 when (orientation) {
                     Scrollbar.HORIZONTAL -> location[1]
-                    else -> Device.screenHeight(context) - location[1] - this@ScrollbarIconView.height
+                    else -> Device.screenHeight(context) - location[1] - this@ScrollbarIconView.height + (appDrawer?.activity?.getNavigationBarHeight() ?: 0)
                 },
             )
         }

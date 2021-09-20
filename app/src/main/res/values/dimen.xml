@@ -20,4 +20,6 @@
     <dimen name="scroll_bar_height">56dp</dimen>
 
     <dimen name="feed_filter_height">38dp</dimen>
+
+    <dimen name="app_drawer_fab">16dp</dimen>
 </resources>
