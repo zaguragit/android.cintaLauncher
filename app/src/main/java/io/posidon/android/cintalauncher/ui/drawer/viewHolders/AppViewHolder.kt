@@ -94,7 +94,7 @@ fun bindAppViewHolder(
 ) {
     holder.itemView.setOnDragListener(null)
     
-    holder.blurBG.drawable = BitmapDrawable(holder.itemView.resources, acrylicBlur?.smoothBlur)
+    holder.blurBG.drawable = BitmapDrawable(holder.itemView.resources, acrylicBlur?.insaneBlur)
     holder.map[item] = holder.blurBG::invalidate
 
     val backgroundColor = ColorTheme.tintAppDrawerItem(item.getColor())

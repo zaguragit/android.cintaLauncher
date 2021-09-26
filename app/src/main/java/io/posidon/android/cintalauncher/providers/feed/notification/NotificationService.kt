@@ -10,6 +10,7 @@ import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
+import android.os.Build
 import android.os.UserHandle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
@@ -25,7 +26,6 @@ import io.posidon.android.cintalauncher.util.StackTraceActivity
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
-
 
 class NotificationService : NotificationListenerService() {
 
@@ -71,6 +71,13 @@ class NotificationService : NotificationListenerService() {
                 if (notifications != null) {
                     while (i < notifications.size) {
                         val notification = notifications[i]
+                        if (
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                            && notification.notification.bubbleMetadata?.isNotificationSuppressed == true
+                        ) {
+                            i++
+                            continue
+                        }
                         val isSummary = notification.notification.flags and Notification.FLAG_GROUP_SUMMARY != 0
                         if (!isSummary) {
                             val isMusic = notification.notification.extras

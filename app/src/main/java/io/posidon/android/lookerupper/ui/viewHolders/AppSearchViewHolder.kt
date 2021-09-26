@@ -30,7 +30,7 @@ class AppSearchViewHolder(
     override fun onBind(result: SearchResult) {
         result as AppResult
 
-        blurBG.drawable = BitmapDrawable(itemView.resources, acrylicBlur?.smoothBlur)
+        blurBG.drawable = BitmapDrawable(itemView.resources, acrylicBlur?.insaneBlur)
         map[result] = blurBG::invalidate
 
         val backgroundColor = ColorTheme.tintAppDrawerItem(result.getColor())

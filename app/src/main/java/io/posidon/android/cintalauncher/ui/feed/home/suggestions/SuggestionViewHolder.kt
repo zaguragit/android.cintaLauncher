@@ -29,7 +29,7 @@ fun bindSuggestionViewHolder(
     navbarHeight: Int,
     onDragOut: (view: View) -> Unit = {},
 ) {
-    holder.blurBG.drawable = BitmapDrawable(holder.itemView.resources, acrylicBlur?.smoothBlur)
+    holder.blurBG.drawable = BitmapDrawable(holder.itemView.resources, acrylicBlur?.insaneBlur)
     holder.map[item] = holder.blurBG::invalidate
 
     val backgroundColor = ColorTheme.tintAppDrawerItem(item.getColor())

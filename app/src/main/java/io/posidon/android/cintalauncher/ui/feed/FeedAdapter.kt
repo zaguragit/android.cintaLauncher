@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.palette.graphics.Palette
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
@@ -32,17 +33,17 @@ class FeedAdapter(
 
     inline val context: Context get() = activity
 
-    private var itemList: List<FeedItem> = emptyList()
+    private var items: List<FeedItem> = emptyList()
 
-    fun getFeedItem(i: Int) = itemList[i - 1]
+    fun getFeedItem(i: Int) = items[i - 1]
 
-    override fun getItemCount() = if (itemList.isEmpty()) 2 else itemList.size + 1
+    override fun getItemCount() = if (items.isEmpty()) 2 else items.size + 1
 
-    override fun getItemId(i: Int) = if (i == 0) 0 else if (itemList.isEmpty()) -1 else getFeedItem(i).id
+    override fun getItemId(i: Int) = if (i == 0) 0 else if (items.isEmpty()) -1 else getFeedItem(i).id
 
     override fun getItemViewType(i: Int) = when {
         i == 0 -> TYPE_HOME
-        itemList.isEmpty() -> TYPE_EMPTY
+        items.isEmpty() -> TYPE_EMPTY
         else -> when (getFeedItem(i)) {
             is FeedItemWithBigImage -> TYPE_BIG_IMAGE
             is FeedItemSmall -> TYPE_SMALL
@@ -63,8 +64,8 @@ class FeedAdapter(
                 .inflate(R.layout.feed_item_small, parent, false))
             TYPE_BIG_IMAGE -> FeedItemImageViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_image, parent, false))
-            TYPE_PROGRESS -> FeedItemViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.feed_item_plain, parent, false))
+            TYPE_PROGRESS -> FeedItemProgressViewHolder(LayoutInflater.from(parent.context)
+                .inflate(R.layout.feed_item_progress, parent, false))
             TYPE_EMPTY -> EmptyFeedItemViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_empty, parent, false))
             else -> throw RuntimeException("Invalid view holder type")
@@ -99,7 +100,7 @@ class FeedAdapter(
             TYPE_PLAIN -> bindFeedItemViewHolder(holder as FeedItemViewHolder, item, color)
             TYPE_SMALL -> bindFeedItemSmallViewHolder(holder as FeedItemSmallViewHolder, item as FeedItemSmall, color)
             TYPE_BIG_IMAGE -> bindFeedItemBigImageViewHolder(holder as FeedItemImageViewHolder, item as FeedItemWithBigImage, color)
-            TYPE_PROGRESS -> bindFeedItemViewHolder(holder as FeedItemViewHolder, item as FeedItemWithProgress, color)
+            TYPE_PROGRESS -> bindFeedItemProgressViewHolder(holder as FeedItemProgressViewHolder, item as FeedItemWithProgress, color)
         }
         holder as FeedItemViewHolder
         val verticalPadding = holder.itemView.resources.getDimension(R.dimen.feed_card_padding_vertical).toInt()
@@ -118,8 +119,10 @@ class FeedAdapter(
     }
 
     fun updateItems(items: List<FeedItem>) {
-        this.itemList = items
-        notifyDataSetChanged()
+        val diffCallback = FeedDiffCallback(this.items, items)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        this.items = items
+        diffResult.dispatchUpdatesTo(this)
     }
 
     private val scrollIndicatorDrawable = ContextCompat.getDrawable(context, R.drawable.loading)!!
@@ -134,7 +137,7 @@ class FeedAdapter(
 
     fun updateColorTheme() {
         themedColorCache.clear()
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, itemCount)
     }
 
     fun onAppsLoaded() {

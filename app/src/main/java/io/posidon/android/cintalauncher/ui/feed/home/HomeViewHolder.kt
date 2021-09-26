@@ -132,7 +132,7 @@ class HomeViewHolder(
             height = parentView.measuredHeight - parentView.paddingBottom - parentView.paddingTop
         }
         val s = itemView.dp(24).toInt()
-        indicatorContainer.addView(scrollIndicator, LinearLayout.LayoutParams(s, s))
+        //indicatorContainer.addView(scrollIndicator, LinearLayout.LayoutParams(s, s))
         val r = itemView.context.resources.getDimension(R.dimen.dock_corner_radius)
         itemView.background = InvertedRoundRectDrawable(
             floatArrayOf(0f, 0f, 0f, 0f, r, r, r, r), 0f, 0)
