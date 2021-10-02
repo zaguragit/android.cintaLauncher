@@ -16,7 +16,7 @@ class SuggestedAppsProvider: FeedItemProvider() {
             object : FeedItemSuggestedApps {
                 override val apps = it
                 override val color = 0
-                override val title = "appss___"
+                override val title = ""
                 override val sourceIcon = null
                 override val description = null
                 override val source = null

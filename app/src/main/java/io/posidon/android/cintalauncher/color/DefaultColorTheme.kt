@@ -18,7 +18,7 @@ class DefaultColorTheme(
     override val wallDescription = textColorForBG(context, wallColor)
     override val wallHint = hintColorForBG(context, wallColor)
 
-    override val uiBG = context.getColor(R.color.feed_bg)
+    override val uiBG = context.getColor(if (options.mode == ColorThemeOptions.DayNight.LIGHT) R.color.feed_bg_light else R.color.feed_bg)
     override val uiTitle = titleColorForBG(context, uiBG)
     override val uiDescription = textColorForBG(context, uiBG)
     override val uiHint = hintColorForBG(context, uiBG)
@@ -28,13 +28,12 @@ class DefaultColorTheme(
     override val cardDescription = context.getColor(R.color.feed_card_text_dark_description)
     override val cardHint = context.getColor(R.color.feed_card_text_dark_hint)
 
-    override val appDrawerColor = context.getColor(R.color.drawer_bg)
-    override val appDrawerBottomBarColor = context.getColor(R.color.drawer_bottom_bar)
+    override val appDrawerColor = context.getColor(if (options.mode == ColorThemeOptions.DayNight.LIGHT) R.color.drawer_bg_light else R.color.drawer_bg)
 
     override val buttonColor = context.getColor(R.color.button_bg)
 
-    override val appDrawerSectionColor = context.getColor(R.color.feed_card_text_light_description)
-    override val appDrawerItemBase get() = DEFAULT_DRAWER_ITEM_BASE
+    override val appDrawerSectionColor = context.getColor(if (options.mode == ColorThemeOptions.DayNight.LIGHT) R.color.feed_card_text_dark_description else R.color.feed_card_text_light_description)
+    override val appDrawerItemBase = context.getColor(if (options.mode == ColorThemeOptions.DayNight.LIGHT) R.color.drawer_item_base_light else R.color.drawer_item_base)
 
     override val scrollBarBG = 0xff000000.toInt()
 
@@ -56,7 +55,17 @@ class DefaultColorTheme(
         }
     }
 
-    companion object {
-        const val DEFAULT_DRAWER_ITEM_BASE = -0xdad9d9
+    override fun tintAppDrawerItem(color: Int): Int {
+        return if (options.isDarkModeColor(appDrawerItemBase))
+            Colors.blend(appDrawerItemBase, color, .7f)
+        else {
+            Colors.blend(appDrawerItemBase, color, .9f)
+            val baseLab = DoubleArray(3)
+            ColorUtils.colorToLAB(appDrawerItemBase, baseLab)
+            val colorLab = DoubleArray(3)
+            ColorUtils.colorToLAB(color, colorLab)
+            colorLab[0] = colorLab[0].coerceAtLeast(baseLab[0] + 36.0)
+            return ColorUtils.LABToColor(colorLab[0], colorLab[1], colorLab[2])
+        }
     }
 }

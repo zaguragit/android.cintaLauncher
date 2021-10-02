@@ -61,6 +61,8 @@ class Settings {
 
     private var isInitialized: Boolean = false
 
+    private val editor = SettingsEditor(this)
+
     class SettingsEditor(val settings: Settings) {
 
         operator fun set(key: String, value: Int) {
@@ -105,8 +107,6 @@ class Settings {
         @JvmName("set1")
         inline infix fun String.set(value: Array<String>?) = set(this, value)
     }
-
-    private val editor = SettingsEditor(this)
 
     fun edit(context: Context, block: SettingsEditor.() -> Unit) {
         thread(name = "Settings edit thread") {

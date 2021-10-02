@@ -1,7 +1,6 @@
 package io.posidon.android.cintalauncher.color
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.WallpaperColors
 import android.app.WallpaperManager
@@ -43,7 +42,6 @@ interface ColorTheme {
     val cardHint: Int
 
     val appDrawerColor: Int
-    val appDrawerBottomBarColor: Int
 
     val buttonColor: Int
 
@@ -70,28 +68,17 @@ interface ColorTheme {
         } else {
             val lab = doubleArrayOf(0.0, 0.0, 0.0)
             ColorUtils.colorToLAB(color, lab)
-            lab[0] = lab[0].coerceAtLeast(cardLAB[0] - .05f)
-                .coerceAtMost(cardLAB[0] + .05f)
+            lab[0] = lab[0].coerceAtLeast(cardLAB[0] - 10f)
+                .coerceAtMost(cardLAB[0] + 10f)
+            lab[1] = lab[1].coerceAtLeast(cardLAB[1] - 40f)
+                .coerceAtMost(cardLAB[1] + 40f)
+            lab[2] = lab[2].coerceAtLeast(cardLAB[2] - 40f)
+                .coerceAtMost(cardLAB[2] + 40f)
             ColorUtils.LABToColor(lab[0], lab[1], lab[2])
         }
     }
 
-    @SuppressLint("Range")
-    fun actionButtonFG(color: Int): Int {
-        return if (Colors.getLuminance(color) > .7f) {
-            val lab = doubleArrayOf(0.0, 0.0, 0.0)
-            ColorUtils.colorToLAB(color, lab)
-            ColorUtils.LABToColor(lab[0] * .5 - 10.0, lab[1].coerceAtMost(75.0), lab[2])
-        } else {
-            val lab = doubleArrayOf(0.0, 0.0, 0.0)
-            ColorUtils.colorToLAB(color, lab)
-            ColorUtils.LABToColor(lab[0] * 1.5 + 30 + lab[1].coerceAtLeast(0.0) * .25, lab[1].coerceAtMost(60.0), lab[2])
-        }
-    }
-
-    fun tintAppDrawerItem(color: Int): Int {
-        return Colors.blend(appDrawerItemBase, color, .7f)
-    }
+    fun tintAppDrawerItem(color: Int): Int
 
     fun textColorForBG(context: Context, background: Int): Int {
         return if (Colors.getLuminance(background) > .6f)
@@ -233,8 +220,6 @@ interface ColorTheme {
             get() = colorThemeInstance.cardHint
         override val appDrawerColor: Int
             get() = colorThemeInstance.appDrawerColor
-        override val appDrawerBottomBarColor: Int
-            get() = colorThemeInstance.appDrawerBottomBarColor
         override val buttonColor: Int
             get() = colorThemeInstance.buttonColor
         override val appDrawerSectionColor: Int
@@ -253,9 +238,6 @@ interface ColorTheme {
 
         override fun actionButtonBG(color: Int): Int =
             colorThemeInstance.actionButtonBG(color)
-
-        override fun actionButtonFG(color: Int): Int =
-            colorThemeInstance.actionButtonFG(color)
 
         override fun tintAppDrawerItem(color: Int): Int =
             colorThemeInstance.tintAppDrawerItem(color)

@@ -3,15 +3,24 @@
     <color name="default_card_bg">#fff8f8f8</color>
     <color name="card_bg_dark">#171717</color>
     <color name="button_bg">#363636</color>
+
     <color name="feed_card_text_dark_title">#ff000000</color>
     <color name="feed_card_text_dark_description">#d2000000</color>
     <color name="feed_card_text_dark_hint">#55000000</color>
+
     <color name="feed_card_text_light_title">#ffe2e2e2</color>
     <color name="feed_card_text_light_description">#d2e2e2e2</color>
     <color name="feed_card_text_light_hint">#55e2e2e2</color>
+
     <color name="accent">#ff9249</color>
     <color name="feed_bg">#bc252525</color>
 
     <color name="drawer_bg">@color/card_bg_dark</color>
+    <color name="drawer_item_base">#252525</color>
+
     <color name="drawer_bottom_bar">#252525</color>
+
+    <color name="feed_bg_light">#ccf8f8f8</color>
+    <color name="drawer_bg_light">#f0f0f0</color>
+    <color name="drawer_item_base_light">#ffffff</color>
 </resources>

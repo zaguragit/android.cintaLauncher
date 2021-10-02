@@ -100,13 +100,6 @@ class PalleteTintedColorTheme(
         ColorUtils.LABToColor(lab[0], lab[1], lab[2])
     }
 
-    override val appDrawerBottomBarColor = run {
-        val isLight = Colors.getLuminance(appDrawerColor) > .7f
-        val lab = DoubleArray(3)
-        ColorUtils.colorToLAB(appDrawerColor, lab)
-        lab[0] *= if (isLight) .8 else 1.2
-        ColorUtils.LABToColor(lab[0], lab[1], lab[2])
-    }
     override val buttonColor = run {
         val swatch = wallpaper.vibrantSwatch ?: wallpaper.dominantSwatch ?: return@run context.getColor(R.color.button_bg)
         val hsl = swatch.hsl

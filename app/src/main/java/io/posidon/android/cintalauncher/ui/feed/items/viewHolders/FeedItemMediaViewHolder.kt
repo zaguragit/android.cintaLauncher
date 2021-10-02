@@ -80,26 +80,9 @@ class FeedItemMediaViewHolder(
         title.setOnClickListener(item::onTap)
         description.setOnClickListener(item::onTap)
 
-        val backgroundColor = Colors.blend(item.color, ColorTheme.appDrawerItemBase, .4f)
-        val titleColor = ColorTheme.titleColorForBG(itemView.context, backgroundColor)
-        val textColor = ColorTheme.textColorForBG(itemView.context, backgroundColor)
-
+        val titleColor = Colors.blend(ColorTheme.adjustColorForContrast(ColorTheme.uiBG, item.color), ColorTheme.uiTitle, .3f)
         val titleTintList = ColorStateList.valueOf(titleColor)
 
-        title.setTextColor(titleColor)
-        title.setShadowLayer(
-            title.shadowRadius,
-            title.shadowDx,
-            title.shadowDy,
-            backgroundColor
-        )
-        description.setShadowLayer(
-            description.shadowRadius,
-            description.shadowDx,
-            description.shadowDy,
-            backgroundColor
-        )
-        description.setTextColor(textColor)
         previous.imageTintList = titleTintList
         play.imageTintList = titleTintList
         next.imageTintList = titleTintList

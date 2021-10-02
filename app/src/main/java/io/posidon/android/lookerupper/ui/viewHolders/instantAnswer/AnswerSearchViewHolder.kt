@@ -50,7 +50,7 @@ class AnswerSearchViewHolder(
         sourceAction.text = itemView.context.getString(R.string.read_more_at_source, result.sourceName)
 
         val bg = ColorTheme.actionButtonBG(ColorTheme.accentColor)
-        val fg = ColorTheme.actionButtonFG(bg)
+        val fg = ColorTheme.titleColorForBG(itemView.context, bg)
         val hint = ColorTheme.hintColorForBG(itemView.context, bg)
         actionsContainer.setCardBackgroundColor(bg)
         sourceAction.setTextColor(fg)

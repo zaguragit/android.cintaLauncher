@@ -142,9 +142,9 @@ class LauncherActivity : FragmentActivity() {
 
     override fun onResume() {
         super.onResume()
-        notificationProvider.update()
-        val shouldUpdate = settings.reload(applicationContext)
         SuggestionsManager.onResume(this)
+        suggestedAppsProvider.update()
+        val shouldUpdate = settings.reload(applicationContext)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             thread (isDaemon = true) {
                 ColorTheme.onResumePreOMR1(
@@ -263,6 +263,7 @@ class LauncherActivity : FragmentActivity() {
 
     fun loadApps() {
         launcherContext.appManager.loadApps(this) { apps: AppCollection ->
+            suggestedAppsProvider.update()
             bottomBar.appDrawerIcon.reloadController(settings)
             bottomBar.scrollBar.controller.loadSections(apps)
             appDrawer.update(bottomBar.scrollBar, apps.sections)
