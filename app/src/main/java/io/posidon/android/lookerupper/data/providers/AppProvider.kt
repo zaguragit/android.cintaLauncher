@@ -4,10 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.LauncherApps
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.os.UserHandle
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
-import io.posidon.android.cintalauncher.data.items.App
+import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.launcherutils.AppLoader
 import io.posidon.android.lookerupper.data.SearchQuery
@@ -21,7 +19,7 @@ class AppProvider(
     val searcher: Searcher
 ) : SearchProvider {
 
-    class AppCollection(size: Int) : AppLoader.AppCollection<AppResult> {
+    class Collection(size: Int) : AppLoader.AppCollection<AppResult> {
         val list = ArrayList<AppResult>(size)
         val staticShortcuts = LinkedList<ShortcutResult>()
         val dynamicShortcuts = LinkedList<ShortcutResult>()
@@ -54,17 +52,17 @@ class AppProvider(
         }
     }
 
-    private fun makeAppResult(packageName: String, name: String, profile: UserHandle, label: String, icon: Drawable, extra: AppLoader.ExtraAppInfo) = AppResult(App(
-        packageName,
-        name,
-        profile,
-        label,
-        icon,
-        extra.banner,
-        searcher.settings
-    ))
-
-    val appLoader = AppLoader(::makeAppResult, ::AppCollection)
+    val appLoader = AppLoader({ packageName, name, profile, label, icon, extra ->
+        AppResult(AppCollection.createApp(
+            packageName,
+            name,
+            profile,
+            label,
+            icon,
+            extra,
+            searcher.settings
+        ))
+    }, ::Collection)
     var apps = emptyList<AppResult>()
     var staticShortcuts = emptyList<ShortcutResult>()
     var dynamicShortcuts = emptyList<ShortcutResult>()

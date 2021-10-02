@@ -70,13 +70,13 @@ class LauncherContext {
         }
 
         private val appLoader = AppLoader({ packageName, name, profile, label, icon, extra ->
-            App(
+            AppCollection.createApp(
                 packageName,
                 name,
                 profile,
                 label,
                 icon,
-                extra.banner,
+                extra,
                 settings
             )
         }, ::AppCollection)

@@ -142,9 +142,13 @@ class LauncherActivity : FragmentActivity() {
 
     override fun onResume() {
         super.onResume()
-        SuggestionsManager.onResume(this)
-        suggestedAppsProvider.update()
+        SuggestionsManager.onResume(this) {
+            suggestedAppsProvider.update()
+        }
         val shouldUpdate = settings.reload(applicationContext)
+        if (shouldUpdate) {
+            loadApps()
+        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             thread (isDaemon = true) {
                 ColorTheme.onResumePreOMR1(

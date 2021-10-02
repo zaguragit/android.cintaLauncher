@@ -12,7 +12,7 @@ interface LauncherItem {
     val icon: Drawable
     val label: String
 
-    fun getColor(): Int = -0xdad9d9
+    fun getColor(): Int = 0
 
     /**
      * What to do when the item is clicked

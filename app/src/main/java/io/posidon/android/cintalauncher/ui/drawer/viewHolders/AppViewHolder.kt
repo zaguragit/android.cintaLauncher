@@ -11,13 +11,11 @@ import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.target.ViewTarget
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
@@ -28,6 +26,7 @@ import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter.Companion.APP_ITEM
 import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
+import posidon.android.conveniencelib.Colors
 import posidon.android.conveniencelib.toBitmap
 
 class AppViewHolder(
@@ -43,10 +42,12 @@ class AppViewHolder(
     val blurBG = itemView.findViewById<SeeThoughView>(R.id.blur_bg)!!
 
     val requestOptions = RequestOptions()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
         .downsample(DownsampleStrategy.AT_MOST)
 
-    val imageRequestListener = object : RequestListener<Drawable> {
+    class ImageRequestListener(
+        val holder: AppViewHolder,
+        val color: Int,
+    ) : RequestListener<Drawable> {
         override fun onLoadFailed(
             e: GlideException?,
             model: Any?,
@@ -61,14 +62,13 @@ class AppViewHolder(
             dataSource: DataSource?,
             isFirstResource: Boolean
         ): Boolean {
-            target as ViewTarget<*, *>
+            val palette = Palette.from(resource.toBitmap(32, 32)).generate()
+            val backgroundColor = ColorTheme.tintAppDrawerItem(palette.getDominantColor(color))
+            val actuallyBackgroundColor = Colors.blend(color, backgroundColor, holder.imageView.alpha)
 
-            val palette = Palette.from(resource.toBitmap()).generate()
-            val backgroundColor = ColorTheme.tintAppDrawerItem((palette.vibrantSwatch ?: palette.dominantSwatch)?.rgb ?: ColorTheme.appDrawerItemBase)
-
-            card.setCardBackgroundColor(backgroundColor)
-            label.setTextColor(ColorTheme.titleColorForBG(itemView.context, backgroundColor))
-            notificationView.setTextColor(ColorTheme.textColorForBG(itemView.context, backgroundColor))
+            holder.card.setCardBackgroundColor(backgroundColor)
+            holder.label.setTextColor(ColorTheme.titleColorForBG(holder.itemView.context, actuallyBackgroundColor))
+            holder.notificationView.setTextColor(ColorTheme.textColorForBG(holder.itemView.context, actuallyBackgroundColor))
 
             target.onResourceReady(resource, null)
             return true
@@ -124,7 +124,7 @@ fun bindAppViewHolder(
         Glide.with(holder.itemView.context)
             .load(banner.background)
             .apply(holder.requestOptions)
-            .listener(holder.imageRequestListener)
+            .listener(AppViewHolder.ImageRequestListener(holder, item.getColor()))
             .into(holder.imageView)
     }
 
