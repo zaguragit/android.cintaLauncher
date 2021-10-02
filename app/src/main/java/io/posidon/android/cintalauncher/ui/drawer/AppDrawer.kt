@@ -2,16 +2,13 @@ package io.posidon.android.cintalauncher.ui.drawer
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.LayerDrawable
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.widget.ImageView
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
@@ -21,7 +18,6 @@ import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.popup.drawer.DrawerLongPressPopup
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
-import io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarIconView
 import posidon.android.conveniencelib.getNavigationBarHeight
 import posidon.android.conveniencelib.getStatusBarHeight
 import posidon.android.conveniencelib.onEnd
@@ -36,18 +32,6 @@ class AppDrawer(
     private val adapter = AppDrawerAdapter(activity)
 
     private val recycler = view.findViewById<RecyclerView>(R.id.app_recycler)
-    private val floatingButtons = view.findViewById<View>(R.id.floating_buttons).apply {
-        updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            val m = resources.getDimension(R.dimen.app_drawer_fab).toInt()
-            bottomMargin = activity.getNavigationBarHeight() + m
-        }
-    }
-    private val closeButton = floatingButtons.findViewById<ImageView>(R.id.back_button).apply {
-        setOnClickListener(::close)
-    }
-    val scrollIcon = floatingButtons.findViewById<ScrollbarIconView>(R.id.app_drawer_icon)!!.apply {
-        appDrawer = this@AppDrawer
-    }
 
     private var popupX = 0f
     private var popupY = 0f
@@ -65,7 +49,6 @@ class AppDrawer(
             }
         }
         recycler.adapter = adapter
-        recycler.setOnScrollChangeListener { _, _, _, _, _ -> adapter.onScroll() }
 
         val onLongPress = Runnable {
             recycler.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
@@ -113,9 +96,7 @@ class AppDrawer(
 
     fun updateColorTheme() {
         view.background = ColorDrawable(ColorTheme.appDrawerColor and 0xffffff or 0xaa000000.toInt())
-        floatingButtons.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
-        closeButton.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))
-        scrollIcon.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(activity, ColorTheme.buttonColor))
+        adapter.notifyItemRangeChanged(0, adapter.itemCount)
     }
 
     val isOpen get() = view.isVisible
@@ -123,6 +104,7 @@ class AppDrawer(
     private var currentValueAnimator: ValueAnimator? = null
 
     fun open(v: View) {
+        activity.bottomBar.appDrawerCloseIcon.isVisible = true
         if (isOpen) return
         ItemLongPress.currentPopup?.dismiss()
         val sbh = v.context.getStatusBarHeight()
@@ -169,6 +151,7 @@ class AppDrawer(
     }
 
     fun close(v: View? = null) {
+        activity.bottomBar.appDrawerCloseIcon.isVisible = false
         if (!isOpen) return
         ItemLongPress.currentPopup?.dismiss()
         activity.feedFilterRecycler.isVisible = true

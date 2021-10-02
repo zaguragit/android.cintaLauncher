@@ -14,11 +14,8 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,19 +29,19 @@ import io.posidon.android.cintalauncher.data.feed.items.isToday
 import io.posidon.android.cintalauncher.providers.app.AppCallback
 import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.providers.feed.FeedFilter
+import io.posidon.android.cintalauncher.providers.feed.notification.MediaProvider
 import io.posidon.android.cintalauncher.providers.feed.notification.NotificationProvider
 import io.posidon.android.cintalauncher.providers.feed.rss.RssProvider
-import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
+import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestedAppsProvider
+import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.storage.*
 import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
 import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
+import io.posidon.android.cintalauncher.ui.bottomBar.BottomBar
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
 import io.posidon.android.cintalauncher.ui.feed.FeedAdapter
 import io.posidon.android.cintalauncher.ui.feed.filters.FeedFilterAdapter
-import io.posidon.android.cintalauncher.ui.feed.home.HomeViewHolder
 import io.posidon.android.cintalauncher.ui.popup.PopupUtils
-import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
-import io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarIconView
 import io.posidon.android.cintalauncher.util.StackTraceActivity
 import io.posidon.android.cintalauncher.util.blur.AcrylicBlur
 import io.posidon.android.launcherutils.LiveWallpaper
@@ -61,6 +58,8 @@ class LauncherActivity : FragmentActivity() {
     val settings by launcherContext::settings
 
     val notificationProvider = NotificationProvider(this)
+    val mediaProvider = MediaProvider(this)
+    val suggestedAppsProvider = SuggestedAppsProvider()
 
     val homeContainer by lazy { findViewById<View>(R.id.home_container) }
     val feedRecycler by lazy { findViewById<RecyclerView>(R.id.feed_recycler)!! }
@@ -69,6 +68,7 @@ class LauncherActivity : FragmentActivity() {
     val blurBG by lazy { findViewById<View>(R.id.blur_bg)!! }
 
     val appDrawer by lazy { AppDrawer(this) }
+    val bottomBar by lazy { BottomBar(this) }
 
     lateinit var feedAdapter: FeedAdapter
     lateinit var feedFilterAdapter: FeedFilterAdapter
@@ -76,9 +76,6 @@ class LauncherActivity : FragmentActivity() {
     private lateinit var wallpaperManager: WallpaperManager
 
     var colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
-
-    val scrollBar: Scrollbar get() = appDrawer.scrollIcon.scrollBar
-    val scrollBarIcon: ScrollbarIconView get() = appDrawer.scrollIcon
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,12 +92,10 @@ class LauncherActivity : FragmentActivity() {
         feedAdapter.setHasStableIds(true)
         feedRecycler.setItemViewCacheSize(20)
         feedRecycler.adapter = feedAdapter
-        feedRecycler.addOnScrollListener(feedScrollListener)
 
         feedFilterAdapter = FeedFilterAdapter(launcherContext)
         feedFilterRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         feedFilterRecycler.adapter = feedFilterAdapter
-
         feedFilterAdapter.updateItems(
             FeedFilter(getString(R.string.today), filter = FeedItem::isToday),
             FeedFilter(getString(R.string.news)) {
@@ -111,13 +106,11 @@ class LauncherActivity : FragmentActivity() {
             },
         )
 
-        launcherContext.feed.init(settings, notificationProvider, RssProvider, onUpdate = this::loadFeed) {
+        launcherContext.feed.init(settings, notificationProvider, RssProvider, mediaProvider, suggestedAppsProvider, onUpdate = this::loadFeed) {
             runOnUiThread {
                 feedAdapter.onFeedInitialized()
             }
         }
-
-        homeContainer.setOnDragListener(::onDrag)
 
         appDrawer.init()
 
@@ -137,77 +130,6 @@ class LauncherActivity : FragmentActivity() {
                 }
             }
             onWallpaperChanged()
-        }
-    }
-
-    fun onDrag(v: View, event: DragEvent): Boolean {
-        val viewUnder = feedRecycler.findChildViewUnder(event.x, event.y)
-        if (viewUnder != null && feedRecycler.findContainingViewHolder(viewUnder) is HomeViewHolder) {
-            println("drag: " + event.action)
-            when (event.action) {
-                DragEvent.ACTION_DRAG_STARTED,
-                DragEvent.ACTION_DRAG_ENTERED,
-                DragEvent.ACTION_DRAG_LOCATION -> {
-                    val i = feedAdapter.getPinnedItemIndex(event.x, event.y)
-                    val pinnedItems = launcherContext.appManager.pinnedItems
-                    feedAdapter.showDropTarget(if (i == -1) pinnedItems.size else i)
-                }
-                DragEvent.ACTION_DRAG_ENDED -> {
-                    feedAdapter.updatePinned()
-                }
-                DragEvent.ACTION_DRAG_EXITED -> {
-                    feedAdapter.showDropTarget(-1)
-                }
-                DragEvent.ACTION_DROP -> {
-                    val i = feedAdapter.getPinnedItemIndex(event.x, event.y)
-                    if (i == -1)
-                        return false
-                    feedAdapter.onDrop(v, i, event.clipData)
-                }
-            }
-        } else {
-            feedAdapter.showDropTarget(-1)
-        }
-        return true
-    }
-
-    val feedScrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                feedAdapter.onScroll(0)
-                showFilters(recyclerView.canScrollVertically(-1))
-            }
-        }
-
-        var lastScrollCheck = false
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            val scrollCheck = recyclerView.canScrollVertically(-1)
-            feedAdapter.onScroll(0)
-            if (scrollCheck != lastScrollCheck) {
-                showFilters(scrollCheck)
-            }
-            lastScrollCheck = scrollCheck
-        }
-
-        fun showFilters(show: Boolean) {
-            if (show) {
-                feedFilterRecycler.isVisible = true
-                feedFilterRecycler.animate().apply {
-                    interpolator = DecelerateInterpolator()
-                    translationY(0f)
-                    duration = 100L
-                    startDelay = 50L
-                    onEnd { feedFilterRecycler.isVisible = true }
-                }
-            } else {
-                feedFilterRecycler.animate().apply {
-                    interpolator = AccelerateInterpolator()
-                    translationY(feedFilterRecycler.height.toFloat())
-                    duration = 100L
-                    startDelay = 0L
-                    onEnd { feedFilterRecycler.isVisible = false }
-                }
-            }
         }
     }
 
@@ -274,28 +196,33 @@ class LauncherActivity : FragmentActivity() {
     }
 
     fun updateBlur() {
-        val b = acrylicBlur
-        val r = resources.getDimension(R.dimen.dock_corner_radius)
-        if (b == null) {
-            blurBG.background = null
-            return
+        blurBG.background = acrylicBlur?.let { b ->
+            LayerDrawable(arrayOf(
+                BitmapDrawable(resources, b.partialBlurSmall),
+                BitmapDrawable(resources, b.partialBlurMedium),
+                BitmapDrawable(resources, b.fullBlur),
+                BitmapDrawable(resources, b.insaneBlur).also {
+                    it.alpha = 160
+                },
+            ))
         }
-        blurBG.background = LayerDrawable(arrayOf(
-            BitmapDrawable(resources, b.partialBlurSmall),
-            BitmapDrawable(resources, b.partialBlurMedium),
-            BitmapDrawable(resources, b.fullBlur),
-            BitmapDrawable(resources, b.insaneBlur).also {
-                it.alpha = 160
-            },
-        ))
-        feedAdapter.onScroll(feedRecycler.scrollY)
+        bottomBar.blurBG.drawable = acrylicBlur?.insaneBlur?.let { BitmapDrawable(resources, it) }
+        homeContainer.background = acrylicBlur?.let { b ->
+            LayerDrawable(arrayOf(
+                BitmapDrawable(resources, b.smoothBlur).also {
+                    it.alpha = 100
+                },
+            ))
+        }
     }
 
     private fun updateColorTheme() {
         feedAdapter.updateColorTheme()
+        feedRecycler.setBackgroundColor(ColorTheme.uiBG)
         feedFilterAdapter.updateColorTheme()
         updateBlur()
         appDrawer.updateColorTheme()
+        bottomBar.updateColorTheme()
     }
 
     @RequiresApi(Build.VERSION_CODES.O_MR1)
@@ -336,11 +263,11 @@ class LauncherActivity : FragmentActivity() {
 
     fun loadApps() {
         launcherContext.appManager.loadApps(this) { apps: AppCollection ->
-            scrollBarIcon.reloadController(settings)
-            scrollBar.controller.loadSections(apps)
-            appDrawer.update(scrollBar, apps.sections)
+            bottomBar.appDrawerIcon.reloadController(settings)
+            bottomBar.scrollBar.controller.loadSections(apps)
+            appDrawer.update(bottomBar.scrollBar, apps.sections)
             runOnUiThread {
-                feedAdapter.onAppsLoaded()
+                bottomBar.onAppsLoaded()
             }
             Log.d("Cinta", "updated apps (${apps.size} items)")
         }
@@ -360,10 +287,22 @@ class LauncherActivity : FragmentActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
 
-        feedRecycler.setPadding(0, 0, 0, getNavigationBarHeight())
-        feedFilterRecycler.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            bottomMargin = getNavigationBarHeight()
+        val searchBarY = getNavigationBarHeight() + resources.getDimension(R.dimen.item_card_margin).toInt()
+        val feedFilterY = searchBarY + resources.getDimension(R.dimen.search_bar_height).toInt()
+
+        bottomBar.view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = searchBarY
         }
+
+        feedFilterRecycler.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = feedFilterY
+        }
+    }
+
+    fun getFeedBottomMargin(): Int {
+        val searchBarY = getNavigationBarHeight() + resources.getDimension(R.dimen.item_card_margin).toInt()
+        val feedFilterY = searchBarY + resources.getDimension(R.dimen.search_bar_height).toInt()
+        return feedFilterY + resources.getDimension(R.dimen.feed_filter_height).toInt()
     }
 
     companion object {

@@ -7,7 +7,6 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.items.App
-import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.drawer.viewHolders.*
 import io.posidon.android.cintalauncher.ui.view.recycler.HighlightSectionIndexer
@@ -37,7 +36,7 @@ class AppDrawerAdapter(
             SECTION_HEADER -> SectionHeaderViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.app_drawer_section_header, parent, false))
             APP_ITEM -> AppViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.app_card, parent, false) as CardView, map)
+                    .inflate(R.layout.app_card, parent, false) as CardView)
             else -> throw RuntimeException("Invalid view holder type")
         }
     }
@@ -56,7 +55,6 @@ class AppDrawerAdapter(
                 (item as AppItem).item,
                 indexer?.isDimmed(item.item) ?: false,
                 launcherActivity.getNavigationBarHeight(),
-                onDragOut = { launcherActivity.appDrawer.close(it) }
             )
         }
     }
@@ -74,14 +72,6 @@ class AppDrawerAdapter(
         items = newItems.toTypedArray()
         controller.updateAdapterIndexer(this, appSections)
         activity.runOnUiThread(::notifyDataSetChanged)
-    }
-
-    val map = HashMap<LauncherItem, () -> Unit>()
-
-    fun onScroll() {
-        map.forEach {
-            it.value()
-        }
     }
 
     companion object {

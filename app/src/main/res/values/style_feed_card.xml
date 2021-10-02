@@ -55,14 +55,14 @@
 
     <style name="Theme.CintaLauncher.FeedCard.Actions.Container" parent="Theme.CintaLauncher">
         <item name="android:layout_marginTop">8dp</item>
-        <item name="cardCornerRadius">6dp</item>
+        <item name="cardCornerRadius">@dimen/feed_card_action_radius</item>
         <item name="android:layout_margin">8dp</item>
         <item name="android:elevation">4dp</item>
     </style>
 
     <style name="Theme.CintaLauncher.FeedCard.Action.Container" parent="Theme.CintaLauncher">
-        <item name="android:paddingVertical">6dp</item>
-        <item name="android:paddingHorizontal">12dp</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:paddingHorizontal">15dp</item>
         <item name="android:background">@drawable/ripple</item>
     </style>
 

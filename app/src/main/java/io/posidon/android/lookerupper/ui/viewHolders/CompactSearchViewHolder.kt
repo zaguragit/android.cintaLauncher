@@ -6,7 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
+import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.applyIfNotNull
 import io.posidon.android.lookerupper.data.results.CompactAppResult
 import io.posidon.android.lookerupper.data.results.CompactResult

@@ -26,7 +26,8 @@ class FeedDiffCallback(val old: List<FeedItem>, val new: List<FeedItem>) : DiffU
             && o.title == n.title
             && o.description == n.description
             && o.source == n.source
-            && o.instant.toEpochMilli() == n.instant.toEpochMilli()
+            && o.instant == n.instant
             && o.isDismissible == n.isDismissible
+            && (oldI == oldListSize - 1) == (newI == newListSize - 1)
     }
 }

@@ -82,9 +82,6 @@ class SearchActivity : FragmentActivity() {
             container.post {
                 setPadding(paddingLeft, container.measuredHeight, paddingRight, paddingBottom)
             }
-            setOnScrollChangeListener { _, _, _, _, _ ->
-                this@SearchActivity.adapter.onScroll()
-            }
         }
         findViewById<EditText>(R.id.search_bar_text).run {
             doOnTextChanged { text, start, before, count ->

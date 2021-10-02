@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="bottom"
     android:orientation="vertical"
     android:id="@+id/vertical">
@@ -10,8 +10,7 @@
         android:id="@+id/clock_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/gradient_clock_bg">
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,39 +65,5 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/swipe_up_indicator_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="16dp"/>
-
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="invisible"/>
-
-    <LinearLayout
-        android:id="@+id/summary_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:orientation="vertical">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/summary_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/pinned_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <include layout="@layout/feed_home_search_bar"/>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recents_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
     </LinearLayout>
 </LinearLayout>

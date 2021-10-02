@@ -16,8 +16,7 @@ import io.posidon.android.lookerupper.data.results.SearchResult
 import io.posidon.android.lookerupper.ui.viewHolders.SearchViewHolder
 
 class AnswerSearchViewHolder(
-    itemView: View,
-    val map: HashMap<SearchResult, () -> Unit>
+    itemView: View
 ) : SearchViewHolder(itemView) {
 
     val card = itemView.findViewById<CardView>(R.id.card)!!
@@ -41,7 +40,6 @@ class AnswerSearchViewHolder(
         result as InstantAnswerResult
 
         blurBG.drawable = BitmapDrawable(itemView.resources, acrylicBlur?.smoothBlur)
-        map[result] = blurBG::invalidate
 
         card.setCardBackgroundColor(ColorTheme.cardBG)
         title.setTextColor(ColorTheme.cardTitle)

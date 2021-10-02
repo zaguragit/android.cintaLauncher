@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable
 import android.os.UserHandle
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
 import io.posidon.android.cintalauncher.data.items.App
-import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
+import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.launcherutils.AppLoader
 import io.posidon.android.lookerupper.data.SearchQuery
 import io.posidon.android.lookerupper.data.Searcher

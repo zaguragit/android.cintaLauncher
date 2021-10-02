@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:id="@+id/container"
     style="@style/Theme.CintaLauncher.FeedCard.CardBehind">
     <View
         android:id="@+id/separator"

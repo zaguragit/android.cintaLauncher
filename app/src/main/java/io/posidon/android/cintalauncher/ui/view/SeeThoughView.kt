@@ -21,6 +21,13 @@ class SeeThoughView : View {
 
     private val lastScreenLocation = IntArray(2)
 
+    init {
+        viewTreeObserver.addOnPreDrawListener {
+            invalidate()
+            true
+        }
+    }
+
     override fun isDirty(): Boolean {
         return super.isDirty() || run {
             val location = IntArray(2)

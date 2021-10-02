@@ -14,17 +14,15 @@ import android.os.Build
 import android.os.UserHandle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import io.posidon.android.cintalauncher.BuildConfig
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
-import io.posidon.android.cintalauncher.data.feed.summary.SummaryItem
-import io.posidon.android.cintalauncher.data.feed.summary.media.MediaSummary
-import io.posidon.android.cintalauncher.providers.feed.summary.MediaItemCreator
-import io.posidon.android.cintalauncher.providers.feed.summary.NotificationSummaryCreator
+import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithMedia
+import io.posidon.android.cintalauncher.providers.feed.media.MediaItemCreator
 import io.posidon.android.cintalauncher.util.StackTraceActivity
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.collections.HashMap
 import kotlin.concurrent.thread
 
 class NotificationService : NotificationListenerService() {
@@ -64,8 +62,6 @@ class NotificationService : NotificationListenerService() {
     private fun loadNotifications(notifications: Array<StatusBarNotification>?) {
         thread(name = "NotificationService loading thread", isDaemon = true) {
             var tmpNotifications: MutableList<FeedItem> = ArrayList()
-            val tmpMessageNotifications = ArrayList<StatusBarNotification>()
-            val tmpSummaries = ArrayList<SummaryItem>()
             var i = 0
             try {
                 if (notifications != null) {
@@ -86,11 +82,6 @@ class NotificationService : NotificationListenerService() {
                                 i++
                                 continue
                             }
-                            val messagingStyle = NotificationCompat.MessagingStyle.extractMessagingStyleFromNotification(
-                                notification.notification)
-                            if (messagingStyle != null) {
-                                tmpMessageNotifications += notification
-                            }
                             tmpNotifications += NotificationCreator.create(
                                 applicationContext,
                                 notification,
@@ -101,34 +92,11 @@ class NotificationService : NotificationListenerService() {
                     }
                 }
                 tmpNotifications = tmpNotifications.distinctBy { it.uid }.toMutableList()
-                tmpMessageNotifications.groupBy {
-                    it.groupKey
-                }.flatMapTo(tmpSummaries) { (_, notifications) ->
-                    if (notifications.size == 1) {
-                        notifications.map {
-                            val messagingStyle = NotificationCompat.MessagingStyle.extractMessagingStyleFromNotification(it.notification)
-                            if (messagingStyle != null) {
-                                NotificationSummaryCreator.create(
-                                    applicationContext,
-                                    it,
-                                    messagingStyle
-                                )
-                            } else throw Exception("Non-message notification got into the summary")
-                        }
-                    } else {
-                        listOf(
-                            NotificationSummaryCreator.createCompressed(
-                            applicationContext,
-                            notifications
-                        ))
-                    }
-                }
             }
             catch (e: Exception) { e.printStackTrace() }
             lock.lock()
             Companion.notifications = tmpNotifications
-            notificationSummaries = tmpSummaries
-            onUpdate()
+            listeners.forEach { (_, x) -> x() }
             onSummaryUpdate()
             lock.unlock()
         }
@@ -166,13 +134,9 @@ class NotificationService : NotificationListenerService() {
         var notifications: MutableList<FeedItem> = ArrayList()
             private set
 
-        var notificationSummaries: MutableList<SummaryItem> = ArrayList<SummaryItem>()
+        var mediaItem: FeedItemWithMedia? = null
             private set
 
-        var mediaItem: MediaSummary? = null
-            private set
-
-        private var onUpdate: () -> Unit = {}
         private var onSummaryUpdate: () -> Unit = {}
 
         private val lock = ReentrantLock()
@@ -187,12 +151,10 @@ class NotificationService : NotificationListenerService() {
             return controllers[0]
         }
 
-        fun setOnUpdate(onUpdate: () -> Unit) {
-            Companion.onUpdate = onUpdate
-        }
+        private val listeners = HashMap<String, () -> Unit>()
 
-        fun setOnSummaryUpdate(onSummaryUpdate: () -> Unit) {
-            Companion.onSummaryUpdate = onSummaryUpdate
+        fun setOnUpdate(key: String, onUpdate: () -> Unit) {
+            listeners[key] = onUpdate
         }
     }
 }

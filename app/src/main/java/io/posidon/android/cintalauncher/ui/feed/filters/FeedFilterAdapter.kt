@@ -34,7 +34,7 @@ class FeedFilterAdapter(
         val (item, isEnabled) = items[i]
         holder.text.text = item.name
         applyIfNotNull(holder.icon, item.icon, ImageView::setImageDrawable)
-        val bgColor = if (isEnabled) ColorTheme.accentColor else ColorTheme.cardBG
+        val bgColor = if (isEnabled) ColorTheme.accentColor else ColorTheme.searchBarBG
         holder.card.setCardBackgroundColor(bgColor)
         holder.text.setTextColor(ColorTheme.textColorForBG(holder.itemView.context, bgColor))
     }

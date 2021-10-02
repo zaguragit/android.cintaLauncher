@@ -18,10 +18,11 @@ import io.posidon.android.cintalauncher.ui.feed.items.ActionsAdapter
 import io.posidon.android.cintalauncher.ui.view.SwipeableLayout
 import io.posidon.android.cintalauncher.ui.view.recycler.DividerItemDecorator
 import posidon.android.conveniencelib.dp
+import java.time.Instant
 
-open class FeedItemViewHolder(itemView: View) : RecyclerView.ViewHolder(SwipeableLayout(itemView)) {
+open class FeedItemViewHolder(itemView: View) : FeedViewHolder(SwipeableLayout(itemView)) {
     val swipeableLayout = this.itemView as SwipeableLayout
-    val container = itemView
+    val container = itemView.findViewById<View>(R.id.container)!!
     val source = itemView.findViewById<TextView>(R.id.source)!!
     val separator = itemView.findViewById<View>(R.id.separator)!!
     val time = itemView.findViewById<TextView>(R.id.time)!!
@@ -41,55 +42,44 @@ open class FeedItemViewHolder(itemView: View) : RecyclerView.ViewHolder(Swipeabl
             false
         }
     }
-}
 
-fun bindFeedItemViewHolder(
-    holder: FeedItemViewHolder,
-    item: FeedItem,
-    color: Int
-) {
-    holder.swipeableLayout.reset()
-    holder.title.text = item.title
-    applyIfNotNull(holder.description, item.description, TextView::setText)
-    applyIfNotNull(holder.icon, item.sourceIcon, ImageView::setImageDrawable)
-    applyIfNotNull(holder.source, item.source, TextView::setText)
-    holder.itemView.setOnClickListener(item::onTap)
-    holder.icon.imageTintList = if (item.shouldTintIcon) ColorStateList.valueOf(color) else null
-    if (item.actions.isEmpty()) {
-        holder.actionsContainer.isVisible = false
-    } else {
-        holder.actionsContainer.isVisible = true
-        val bg = ColorTheme.actionButtonBG(item.color.let { if (it == 0) ColorTheme.accentColor else it })
-        holder.actionsContainer.setCardBackgroundColor(bg)
-        val fg = ColorTheme.actionButtonFG(bg)
-        holder.actions.adapter = ActionsAdapter(item.actions, fg)
-        holder.separatorDrawable.setColor(ColorTheme.hintColorForBG(holder.itemView.context, bg))
-    }
-    holder.time.text = item.formatTimeAgo(holder.itemView.resources)
-    holder.swipeableLayout.onSwipeAway = item::onDismiss
-    holder.swipeableLayout.isSwipeable = item.isDismissible
-    styleFeedItemViewHolder(holder, color)
-}
-
-fun styleFeedItemViewHolder(
-    holder: FeedItemViewHolder,
-    color: Int,
-) {
-    holder.source.setTextColor(color)
-    holder.itemView.setBackgroundColor(ColorTheme.uiBG)
-    holder.title.setTextColor(ColorTheme.uiTitle)
-    holder.description.setTextColor(ColorTheme.uiDescription)
-    holder.time.setTextColor(ColorTheme.uiDescription)
-    val bg = (ColorTheme.uiBG and 0xff000000.toInt()) or (ColorTheme.accentColor and 0x00ffffff)
-    holder.swipeableLayout.setSwipeColor(bg)
-    holder.swipeableLayout.setIconColor(ColorTheme.titleColorForBG(holder.itemView.context, bg))
-}
-
-inline fun <T: View, R> applyIfNotNull(view: T, value: R, block: (T, R) -> Unit) {
-    if (value == null) {
-        view.isVisible = false
-    } else {
-        view.isVisible = true
-        block(view, value)
+    override fun onBind(
+        item: FeedItem,
+        color: Int
+    ) {
+        val holder = this
+        holder.swipeableLayout.reset()
+        holder.title.text = item.title
+        applyIfNotNull(holder.description, item.description, TextView::setText)
+        applyIfNotNull(holder.icon, item.sourceIcon, ImageView::setImageDrawable)
+        applyIfNotNull(holder.source, item.source, TextView::setText)
+        holder.itemView.setOnClickListener(item::onTap)
+        holder.icon.imageTintList = if (item.shouldTintIcon) ColorStateList.valueOf(color) else null
+        if (item.actions.isEmpty()) {
+            holder.actionsContainer.isVisible = false
+        } else {
+            holder.actionsContainer.isVisible = true
+            val bg = ColorTheme.actionButtonBG(item.color.let { if (it == 0) ColorTheme.accentColor else it })
+            holder.actionsContainer.setCardBackgroundColor(bg)
+            val fg = ColorTheme.actionButtonFG(bg)
+            holder.actions.adapter = ActionsAdapter(item.actions, fg)
+            holder.separatorDrawable.setColor(ColorTheme.hintColorForBG(holder.itemView.context, bg))
+        }
+        if (item.instant == Instant.MAX) {
+            holder.time.isVisible = false
+        } else {
+            holder.time.isVisible = true
+            holder.time.text = item.formatTimeAgo(holder.itemView.resources)
+        }
+        holder.swipeableLayout.onSwipeAway = item::onDismiss
+        holder.swipeableLayout.isSwipeable = item.isDismissible
+        holder.source.setTextColor(color)
+        holder.title.setTextColor(ColorTheme.uiTitle)
+        holder.description.setTextColor(ColorTheme.uiDescription)
+        holder.time.setTextColor(ColorTheme.uiDescription)
+        val bg = (ColorTheme.uiBG and 0xff000000.toInt()) or (ColorTheme.accentColor and 0x00ffffff)
+        holder.swipeableLayout.setSwipeColor(bg)
+        holder.swipeableLayout.setIconColor(ColorTheme.titleColorForBG(holder.itemView.context, bg))
+        holder.separator.setBackgroundColor(ColorTheme.uiHint and 0x00ffffff or 0x24ffffff)
     }
 }

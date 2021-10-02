@@ -22,7 +22,7 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.data.items.LauncherItem
-import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
+import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter.Companion.APP_ITEM
@@ -31,8 +31,7 @@ import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import posidon.android.conveniencelib.toBitmap
 
 class AppViewHolder(
-    val card: CardView,
-    val map: HashMap<LauncherItem, () -> Unit>
+    val card: CardView
 ) : RecyclerView.ViewHolder(card) {
     val icon = itemView.findViewById<ImageView>(R.id.icon_image)!!
     val label = itemView.findViewById<TextView>(R.id.icon_text)!!
@@ -95,7 +94,6 @@ fun bindAppViewHolder(
     holder.itemView.setOnDragListener(null)
     
     holder.blurBG.drawable = BitmapDrawable(holder.itemView.resources, acrylicBlur?.insaneBlur)
-    holder.map[item] = holder.blurBG::invalidate
 
     val backgroundColor = ColorTheme.tintAppDrawerItem(item.getColor())
     holder.card.setCardBackgroundColor(backgroundColor)

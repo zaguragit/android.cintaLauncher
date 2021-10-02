@@ -38,9 +38,11 @@
         <entry key="app/src/main/res/drawable/round_bg.xml" value="0.37395833333333334" />
         <entry key="app/src/main/res/drawable/sign_continue.xml" value="0.37395833333333334" />
         <entry key="app/src/main/res/layout/activity_launcher.xml" value="0.11296859169199595" />
+        <entry key="app/src/main/res/layout/activity_launcher_search_bar.xml" value="0.2572463768115942" />
         <entry key="app/src/main/res/layout/activity_search.xml" value="0.20416666666666666" />
         <entry key="app/src/main/res/layout/activity_search_search_bar.xml" value="0.302536231884058" />
         <entry key="app/src/main/res/layout/activity_settings_feed_chooser.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/app_card.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/app_drawer.xml" value="0.11296859169199595" />
         <entry key="app/src/main/res/layout/app_drawer_item.xml" value="0.21041666666666667" />
         <entry key="app/src/main/res/layout/dock.xml" value="0.3578125" />
@@ -51,10 +53,15 @@
         <entry key="app/src/main/res/layout/feed_home_notification_icon.xml" value="0.32472826086956524" />
         <entry key="app/src/main/res/layout/feed_home_search_bar.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/layout/feed_home_suggestion.xml" value="0.2296195652173913" />
+        <entry key="app/src/main/res/layout/feed_item_actions.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/feed_item_big_image.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/feed_item_empty.xml" value="0.22395833333333334" />
+        <entry key="app/src/main/res/layout/feed_item_image.xml" value="0.17401215805471124" />
+        <entry key="app/src/main/res/layout/feed_item_media.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/feed_item_plain.xml" value="0.20742753623188406" />
         <entry key="app/src/main/res/layout/feed_item_progress.xml" value="0.24818840579710144" />
+        <entry key="app/src/main/res/layout/feed_item_small.xml" value="0.3578125" />
+        <entry key="app/src/main/res/layout/feed_item_suggested_apps.xml" value="0.1484375" />
         <entry key="app/src/main/res/layout/feed_summary_media.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/layout/feed_summary_notification.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/layout/list_popup.xml" value="0.19583333333333333" />
@@ -64,6 +71,7 @@
         <entry key="app/src/main/res/layout/long_press_item_popup.xml" value="0.21041666666666667" />
         <entry key="app/src/main/res/layout/long_press_item_popup_extra.xml" value="0.2" />
         <entry key="app/src/main/res/layout/long_press_item_popup_item.xml" value="0.2980072463768116" />
+        <entry key="app/src/main/res/layout/pinned_item.xml" value="0.2572463768115942" />
         <entry key="app/src/main/res/layout/search_result_answer.xml" value="0.1" />
         <entry key="app/src/main/res/layout/search_result_contact.xml" value="0.20416666666666666" />
         <entry key="app/src/main/res/layout/search_result_group.xml" value="0.3578125" />

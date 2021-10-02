@@ -1,30 +1,20 @@
 package io.posidon.android.cintalauncher.ui.feed
 
-import android.content.ClipData
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.core.content.ContextCompat
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.data.feed.items.FeedItem
-import io.posidon.android.cintalauncher.data.feed.items.FeedItemSmall
-import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
-import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithProgress
+import io.posidon.android.cintalauncher.data.feed.items.*
 import io.posidon.android.cintalauncher.ui.LauncherActivity
-import io.posidon.android.cintalauncher.ui.feed.home.HomeViewHolder
-import io.posidon.android.cintalauncher.ui.feed.home.bindHomeViewHolder
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.*
-import posidon.android.conveniencelib.Graphics
+import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.home.HomeViewHolder
+import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.home.bindHomeViewHolder
+import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.suggestions.SuggestedViewHolder
 import posidon.android.conveniencelib.toBitmap
 
 class FeedAdapter(
@@ -45,6 +35,8 @@ class FeedAdapter(
         i == 0 -> TYPE_HOME
         items.isEmpty() -> TYPE_EMPTY
         else -> when (getFeedItem(i)) {
+            is FeedItemSuggestedApps -> TYPE_SUGGESTED
+            is FeedItemWithMedia -> TYPE_MEDIA
             is FeedItemWithBigImage -> TYPE_BIG_IMAGE
             is FeedItemSmall -> TYPE_SMALL
             is FeedItemWithProgress -> TYPE_PROGRESS
@@ -56,7 +48,7 @@ class FeedAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            TYPE_HOME -> HomeViewHolder(scrollIndicator.also { homeViewHolder?.vertical?.removeView(it) }, parent, activity, activity.launcherContext, LayoutInflater.from(parent.context)
+            TYPE_HOME -> HomeViewHolder(activity, activity.launcherContext, LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_home, parent, false)).also { homeViewHolder = it }
             TYPE_PLAIN -> FeedItemViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_plain, parent, false))
@@ -66,6 +58,10 @@ class FeedAdapter(
                 .inflate(R.layout.feed_item_image, parent, false))
             TYPE_PROGRESS -> FeedItemProgressViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_progress, parent, false))
+            TYPE_MEDIA -> FeedItemMediaViewHolder(LayoutInflater.from(parent.context)
+                .inflate(R.layout.feed_item_media, parent, false))
+            TYPE_SUGGESTED -> SuggestedViewHolder(activity, LayoutInflater.from(parent.context)
+                .inflate(R.layout.feed_item_suggested_apps, parent, false))
             TYPE_EMPTY -> EmptyFeedItemViewHolder(LayoutInflater.from(parent.context)
                 .inflate(R.layout.feed_item_empty, parent, false))
             else -> throw RuntimeException("Invalid view holder type")
@@ -96,25 +92,15 @@ class FeedAdapter(
             }
             ColorTheme.adjustColorForContrast(ColorTheme.uiBG, color)
         }
-        when (holder.itemViewType) {
-            TYPE_PLAIN -> bindFeedItemViewHolder(holder as FeedItemViewHolder, item, color)
-            TYPE_SMALL -> bindFeedItemSmallViewHolder(holder as FeedItemSmallViewHolder, item as FeedItemSmall, color)
-            TYPE_BIG_IMAGE -> bindFeedItemBigImageViewHolder(holder as FeedItemImageViewHolder, item as FeedItemWithBigImage, color)
-            TYPE_PROGRESS -> bindFeedItemProgressViewHolder(holder as FeedItemProgressViewHolder, item as FeedItemWithProgress, color)
-        }
-        holder as FeedItemViewHolder
+        holder as FeedViewHolder
+        holder.onBind(item, color)
+        if (holder !is FeedItemViewHolder) return
         val verticalPadding = holder.itemView.resources.getDimension(R.dimen.feed_card_padding_vertical).toInt()
-        if (i == 1) {
-            holder.separator.isInvisible = true
-        } else {
-            holder.separator.isInvisible = false
-            holder.separator.setBackgroundColor(ColorTheme.uiHint and 0x00ffffff or 0x24ffffff)
-        }
         holder.container.setPadding(
             holder.container.paddingLeft,
             holder.container.paddingTop,
             holder.container.paddingRight,
-            if (i == itemCount - 1) verticalPadding + holder.itemView.resources.getDimension(R.dimen.feed_filter_height).toInt() else verticalPadding,
+            if (i == itemCount - 1) verticalPadding + activity.getFeedBottomMargin() else verticalPadding,
         )
     }
 
@@ -125,50 +111,12 @@ class FeedAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private val scrollIndicatorDrawable = ContextCompat.getDrawable(context, R.drawable.loading)!!
-    private val scrollIndicator = ImageView(context).apply {
-        setImageDrawable(Graphics.tryAnimate(activity, scrollIndicatorDrawable))
-        imageTintList = ColorStateList.valueOf(0xffffffff.toInt())
-    }
     fun onFeedInitialized() {
-        Graphics.clearAnimation(scrollIndicatorDrawable)
-        scrollIndicator.setImageResource(R.drawable.ic_swipe_up)
     }
 
     fun updateColorTheme() {
         themedColorCache.clear()
         notifyItemRangeChanged(0, itemCount)
-    }
-
-    fun onAppsLoaded() {
-        homeViewHolder?.updateRecents()
-        homeViewHolder?.updatePinned()
-    }
-
-    fun onScroll(scrollY: Int) {
-        val h = homeViewHolder
-        if (h != null && scrollY < h.itemView.height) {
-            h.onScroll()
-        }
-    }
-
-    fun showDropTarget(i: Int) {
-        homeViewHolder?.run {
-            if (i != -1) pinnedRecycler.isVisible = true
-            pinnedAdapter.showDropTarget(i)
-        }
-    }
-
-    fun getPinnedItemIndex(x: Float, y: Float): Int {
-        return homeViewHolder?.getPinnedItemIndex(x, y) ?: -1
-    }
-
-    fun onDrop(v: View, i: Int, clipData: ClipData) {
-        homeViewHolder?.pinnedAdapter?.onDrop(v, i, clipData)
-    }
-
-    fun updatePinned() {
-        homeViewHolder?.updatePinned()
     }
 
     companion object {
@@ -177,6 +125,8 @@ class FeedAdapter(
         private const val TYPE_SMALL = 2
         private const val TYPE_BIG_IMAGE = 3
         private const val TYPE_PROGRESS = 4
-        private const val TYPE_EMPTY = 5
+        private const val TYPE_MEDIA = 5
+        private const val TYPE_SUGGESTED = 6
+        private const val TYPE_EMPTY = 7
     }
 }

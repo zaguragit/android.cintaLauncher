@@ -16,6 +16,10 @@ interface FeedItem {
 
     val actions: Array<FeedItemAction> get() = emptyArray()
 
+    /**
+     * [Instant.MAX] if it's happening now / should on top of the feed (music playing, suggested apps...)
+     * Feed items using [Instant.MAX] won't be included in the today filter
+     */
     val instant: Instant
 
     fun onTap(view: View)
@@ -77,6 +81,7 @@ fun FeedItem.formatTimeAgo(resources: Resources): String {
 }
 
 fun FeedItem.isToday(): Boolean {
+    if (instant == Instant.MAX) return false
     val now = System.currentTimeMillis()
     val passed = now - instant.toEpochMilli()
     val seconds = passed / 1000

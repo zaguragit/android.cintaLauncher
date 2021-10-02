@@ -8,7 +8,7 @@ class NotificationProvider(val context: Context) : FeedItemProvider() {
 
     override fun onInit() {
         NotificationService.init(context)
-        NotificationService.setOnUpdate(::update)
+        NotificationService.setOnUpdate(javaClass.name, ::update)
     }
 
     override fun getUpdated(): List<FeedItem> {

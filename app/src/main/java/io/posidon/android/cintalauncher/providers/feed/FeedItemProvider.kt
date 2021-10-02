@@ -9,7 +9,7 @@ abstract class FeedItemProvider {
 
     protected lateinit var feed: Feed
         private set
-    private var itemCache: List<FeedItem>? = null
+    protected var itemCache: List<FeedItem>? = null
     protected inline val settings: Settings
         get() = feed.settings
 

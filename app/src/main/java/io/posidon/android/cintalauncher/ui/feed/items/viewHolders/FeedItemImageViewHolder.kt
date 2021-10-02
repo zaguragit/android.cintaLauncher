@@ -16,10 +16,11 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
 import posidon.android.conveniencelib.dp
 
-class FeedItemImageViewHolder(itemView: View) : FeedItemViewHolder(itemView) {
+open class FeedItemImageViewHolder(itemView: View) : FeedItemViewHolder(itemView) {
     val image = itemView.findViewById<ImageView>(R.id.image)!!
     val card = itemView.findViewById<CardView>(R.id.card)!!
     val requestOptions = RequestOptions()
@@ -57,18 +58,15 @@ class FeedItemImageViewHolder(itemView: View) : FeedItemViewHolder(itemView) {
             return true
         }
     }
-}
 
-fun bindFeedItemBigImageViewHolder(
-    holder: FeedItemImageViewHolder,
-    item: FeedItemWithBigImage,
-    color: Int
-) {
-    bindFeedItemViewHolder(holder, item, color)
-    holder.card.setCardBackgroundColor(ColorTheme.cardBG)
-    Glide.with(holder.itemView.context)
-        .load(item.image)
-        .apply(holder.requestOptions)
-        .listener(holder.imageRequestListener)
-        .into(holder.image)
+    override fun onBind(item: FeedItem, color: Int) {
+        super.onBind(item, color)
+        item as FeedItemWithBigImage
+        card.setCardBackgroundColor(ColorTheme.cardBG)
+        Glide.with(itemView.context)
+            .load(item.image)
+            .apply(requestOptions)
+            .listener(imageRequestListener)
+            .into(image)
+    }
 }

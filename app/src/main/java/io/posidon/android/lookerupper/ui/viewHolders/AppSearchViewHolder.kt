@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.providers.suggestions.SuggestionsManager
+import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
@@ -18,8 +18,7 @@ import posidon.android.conveniencelib.getNavigationBarHeight
 
 class AppSearchViewHolder(
     itemView: View,
-    val activity: Activity,
-    val map: HashMap<SearchResult, () -> Unit>
+    val activity: Activity
 ) : SearchViewHolder(itemView) {
 
     val icon = itemView.findViewById<ImageView>(R.id.icon_image)!!
@@ -31,7 +30,6 @@ class AppSearchViewHolder(
         result as AppResult
 
         blurBG.drawable = BitmapDrawable(itemView.resources, acrylicBlur?.insaneBlur)
-        map[result] = blurBG::invalidate
 
         val backgroundColor = ColorTheme.tintAppDrawerItem(result.getColor())
         card.setCardBackgroundColor(backgroundColor)

@@ -21,8 +21,7 @@
         android:id="@+id/feed_filters_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:visibility="gone"
-        android:translationY="128dp"/>
+        android:layout_gravity="bottom"/>
+    <include layout="@layout/activity_launcher_search_bar"/>
     <include layout="@layout/app_drawer"/>
 </FrameLayout>

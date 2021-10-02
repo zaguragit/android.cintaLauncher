@@ -1,13 +1,13 @@
 <resources>
     <style name="Theme.CintaLauncher.FeedFilters" parent="Theme.CintaLauncher">
-        <item name="android:layout_marginHorizontal">8dp</item>
+        <item name="android:layout_margin">3dp</item>
     </style>
 
     <style name="Theme.CintaLauncher.FeedFilter.Card" parent="Theme.CintaLauncher">
-        <item name="cardCornerRadius">12dp</item>
-        <item name="android:elevation">8dp</item>
-        <item name="android:layout_marginVertical">8dp</item>
-        <item name="android:layout_marginHorizontal">4dp</item>
+        <item name="cardCornerRadius">@dimen/feed_filter_radius</item>
+        <item name="android:elevation">@dimen/item_card_elevation</item>
+        <item name="android:layout_marginVertical">@dimen/item_card_margin</item>
+        <item name="android:layout_marginHorizontal">3dp</item>
     </style>
 
     <style name="Theme.CintaLauncher.FeedFilter.Container" parent="Theme.CintaLauncher">

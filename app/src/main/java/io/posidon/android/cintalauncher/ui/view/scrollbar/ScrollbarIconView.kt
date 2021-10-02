@@ -84,7 +84,7 @@ class ScrollbarIconView @JvmOverloads constructor(
         scrollBar.orientation = orientation
         scrollBar.controller.updateTheme(context)
         scrollBar.background = ShapeDrawable(RoundRectShape(
-            FloatArray(8) { Float.MAX_VALUE }, null, null)).apply {
+            FloatArray(8) { resources.getDimension(R.dimen.search_bar_radius) }, null, null)).apply {
             paint.color = ColorTheme.scrollBarBG
         }
         val p = dp(24).toInt()

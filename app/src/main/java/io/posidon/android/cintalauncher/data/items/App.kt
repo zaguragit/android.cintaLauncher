@@ -36,9 +36,9 @@ class App(
         val notifications = NotificationService.notifications.filter { it.meta?.sourcePackageName == packageName }
         if (banner == null && notifications.isEmpty()) return null
         val mediaItem = NotificationService.mediaItem
-        if (mediaItem != null && mediaItem.packageName == packageName) return Banner(
-            mediaItem.description + '\n' + mediaItem.subtitle,
-            mediaItem.cover,
+        if (mediaItem != null && mediaItem.meta?.sourcePackageName == packageName) return Banner(
+            mediaItem.title + '\n' + mediaItem.description,
+            mediaItem.image,
             .4f
         )
         val notification = FeedSorter.getMostRelevant(notifications)
