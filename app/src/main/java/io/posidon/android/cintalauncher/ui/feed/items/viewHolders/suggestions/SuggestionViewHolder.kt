@@ -1,7 +1,6 @@
 package io.posidon.android.cintalauncher.ui.feed.items.viewHolders.suggestions
 
 import android.graphics.drawable.BitmapDrawable
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -24,7 +23,6 @@ class SuggestionViewHolder(
     fun onBind(
         item: LauncherItem,
         navbarHeight: Int,
-        onDragOut: (view: View) -> Unit = {},
     ) {
         blurBG.drawable = BitmapDrawable(itemView.resources, acrylicBlur?.insaneBlur)
 
@@ -45,7 +43,6 @@ class SuggestionViewHolder(
                 ColorTheme.titleColorForBG(itemView.context, backgroundColor),
                 item,
                 navbarHeight,
-                onDragOut = onDragOut
             )
             true
         }

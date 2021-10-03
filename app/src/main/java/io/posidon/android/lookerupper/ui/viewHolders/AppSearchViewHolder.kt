@@ -48,7 +48,6 @@ class AppSearchViewHolder(
                 ColorTheme.titleColorForBG(itemView.context, backgroundColor),
                 result.app,
                 activity.getNavigationBarHeight(),
-                onDragOut = { activity.finish() }
             )
             true
         }

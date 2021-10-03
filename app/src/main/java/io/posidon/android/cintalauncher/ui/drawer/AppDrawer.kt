@@ -9,6 +9,8 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
@@ -108,7 +110,7 @@ class AppDrawer(
         if (isOpen) return
         ItemLongPress.currentPopup?.dismiss()
         val sbh = v.context.getStatusBarHeight()
-        recycler.setPadding(recycler.paddingLeft, sbh, recycler.paddingRight, recycler.paddingBottom)
+        recycler.setPadding(recycler.paddingLeft, sbh, recycler.paddingRight, activity.bottomBar.view.measuredHeight + activity.bottomBar.view.marginBottom + activity.bottomBar.view.marginTop)
         view.isVisible = true
         activity.feedRecycler.stopScroll()
         activity.feedFilterRecycler.animate()

@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Build
 import android.os.Bundle
+import android.view.DragEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -28,12 +29,14 @@ import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.ui.LauncherActivity.Companion.loadBlur
 import io.posidon.android.cintalauncher.ui.acrylicBlur
+import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import io.posidon.android.lookerupper.data.Searcher
 import io.posidon.android.lookerupper.data.providers.AppProvider
 import io.posidon.android.lookerupper.data.providers.ContactProvider
 import io.posidon.android.lookerupper.data.providers.DuckDuckGoProvider
 import io.posidon.android.lookerupper.data.results.SearchResult
+import kotlin.math.abs
 
 class SearchActivity : FragmentActivity() {
 
@@ -94,6 +97,36 @@ class SearchActivity : FragmentActivity() {
                     v.context.startActivity(viewSearch)
                     true
                 } else false
+            }
+        }
+        window.decorView.findViewById<View>(android.R.id.content).run {
+            setOnDragListener { _, event ->
+                when (event.action) {
+                    DragEvent.ACTION_DRAG_STARTED -> {
+                        val v = (event.localState as? View?)
+                        v?.visibility = View.INVISIBLE
+                    }
+                    DragEvent.ACTION_DRAG_LOCATION -> {
+                        val v = (event.localState as? View?)
+                        if (v != null) {
+                            val location = IntArray(2)
+                            v.getLocationOnScreen(location)
+                            val x = abs(event.x - location[0] - v.measuredWidth / 2f)
+                            val y = abs(event.y - location[1] - v.measuredHeight / 2f)
+                            if (x > v.width / 3.5f || y > v.height / 3.5f) {
+                                ItemLongPress.currentPopup?.dismiss()
+                            }
+                        }
+                    }
+                    DragEvent.ACTION_DRAG_ENDED,
+                    DragEvent.ACTION_DROP -> {
+                        val v = (event.localState as? View?)
+                        v?.visibility = View.VISIBLE
+                        ItemLongPress.currentPopup?.isFocusable = true
+                        ItemLongPress.currentPopup?.update()
+                    }
+                }
+                true
             }
         }
     }

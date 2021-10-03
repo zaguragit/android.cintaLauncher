@@ -7,9 +7,7 @@ import io.posidon.android.cintalauncher.color.ColorTheme
 
 class DropTargetViewHolder(
     val icon: ImageView,
-) : RecyclerView.ViewHolder(icon) {
-
-}
+) : RecyclerView.ViewHolder(icon)
 
 fun bindDropTargetViewHolder(
     holder: DropTargetViewHolder,

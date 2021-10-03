@@ -2,6 +2,7 @@ package io.posidon.android.cintalauncher.ui.feed
 
 import androidx.recyclerview.widget.DiffUtil
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
+import io.posidon.android.cintalauncher.data.feed.items.FeedItemSuggestedApps
 
 class FeedDiffCallback(val old: List<FeedItem>, val new: List<FeedItem>) : DiffUtil.Callback() {
     fun getOld(i: Int) = old[i - 1]
@@ -29,5 +30,6 @@ class FeedDiffCallback(val old: List<FeedItem>, val new: List<FeedItem>) : DiffU
             && o.instant == n.instant
             && o.isDismissible == n.isDismissible
             && (oldI == oldListSize - 1) == (newI == newListSize - 1)
+            && (o as? FeedItemSuggestedApps)?.apps == (n as? FeedItemSuggestedApps)?.apps
     }
 }

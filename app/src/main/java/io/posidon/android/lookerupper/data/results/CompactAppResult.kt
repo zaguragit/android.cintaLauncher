@@ -28,7 +28,6 @@ class CompactAppResult(
             ColorTheme.titleColorForBG(v.context, backgroundColor),
             app,
             activity.getNavigationBarHeight(),
-            onDragOut = { activity.finish() }
         )
         true
     }

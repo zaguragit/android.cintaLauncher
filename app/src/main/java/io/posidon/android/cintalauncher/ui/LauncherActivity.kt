@@ -42,11 +42,13 @@ import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
 import io.posidon.android.cintalauncher.ui.feed.FeedAdapter
 import io.posidon.android.cintalauncher.ui.feed.filters.FeedFilterAdapter
 import io.posidon.android.cintalauncher.ui.popup.PopupUtils
+import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.util.StackTraceActivity
 import io.posidon.android.cintalauncher.util.blur.AcrylicBlur
 import io.posidon.android.launcherutils.LiveWallpaper
 import posidon.android.conveniencelib.*
 import kotlin.concurrent.thread
+import kotlin.math.abs
 
 var acrylicBlur: AcrylicBlur? = null
     private set
@@ -114,7 +116,38 @@ class LauncherActivity : FragmentActivity() {
 
         appDrawer.init()
 
-        window.decorView.findViewById<View>(android.R.id.content).setOnTouchListener(::onTouch)
+        window.decorView.findViewById<View>(android.R.id.content).run {
+            setOnTouchListener(::onTouch)
+            setOnDragListener { _, event ->
+                when (event.action) {
+                    DragEvent.ACTION_DRAG_STARTED -> {
+                        val v = (event.localState as? View?)
+                        v?.visibility = View.INVISIBLE
+                        return@setOnDragListener true
+                    }
+                    DragEvent.ACTION_DRAG_LOCATION -> {
+                        val v = (event.localState as? View?)
+                        if (v != null) {
+                            val location = IntArray(2)
+                            v.getLocationOnScreen(location)
+                            val x = abs(event.x - location[0] - v.measuredWidth / 2f)
+                            val y = abs(event.y - location[1] - v.measuredHeight / 2f)
+                            if (x > v.width / 3.5f || y > v.height / 3.5f) {
+                                ItemLongPress.currentPopup?.dismiss()
+                            }
+                        }
+                    }
+                    DragEvent.ACTION_DRAG_ENDED,
+                    DragEvent.ACTION_DROP -> {
+                        val v = (event.localState as? View?)
+                        v?.visibility = View.VISIBLE
+                        ItemLongPress.currentPopup?.isFocusable = true
+                        ItemLongPress.currentPopup?.update()
+                    }
+                }
+                false
+            }
+        }
 
         val launcherApps = getSystemService(LauncherApps::class.java)
         launcherApps.registerCallback(AppCallback(::loadApps))

@@ -60,7 +60,6 @@ class BottomBar(val activity: LauncherActivity) {
     }
 
     fun onAppsLoaded() {
-        //homeViewHolder?.updateRecents()
         updatePinned()
     }
 
@@ -83,7 +82,6 @@ class BottomBar(val activity: LauncherActivity) {
     }
 
     fun onDrag(v: View, event: DragEvent): Boolean {
-        println("drag: " + event.action)
         when (event.action) {
             DragEvent.ACTION_DRAG_STARTED,
             DragEvent.ACTION_DRAG_ENTERED,

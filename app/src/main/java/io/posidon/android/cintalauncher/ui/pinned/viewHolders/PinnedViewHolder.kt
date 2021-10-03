@@ -17,13 +17,9 @@ fun bindPinnedViewHolder(
     holder: PinnedViewHolder,
     item: LauncherItem,
     navbarHeight: Int,
-    onDragOut: (view: View) -> Unit = {},
     onDragStart: (view: View) -> Unit = {},
 ) {
-    holder.itemView.setOnDragListener(null)
-
     holder.icon.setImageDrawable(item.icon)
-    //holder.icon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
 
     holder.itemView.setOnClickListener {
         SuggestionsManager.onItemOpened(it.context, item)
@@ -37,10 +33,8 @@ fun bindPinnedViewHolder(
             ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor),
             item,
             navbarHeight,
-            onDragOut = onDragOut,
-            onDragStart = onDragStart,
-            isRemoveHandled = true,
         )
+        onDragStart(it)
         true
     }
 }

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.pm.LauncherApps
 import android.content.pm.ShortcutInfo
 import android.content.res.ColorStateList
-import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -38,7 +37,6 @@ object ItemLongPress {
             }
         }
         val window = PopupWindow(content, ListPopupWindow.WRAP_CONTENT, ListPopupWindow.WRAP_CONTENT, true)
-        currentPopup = window
         window.setOnDismissListener {
             extraPopupWindow?.dismiss()
             currentPopup = null
@@ -57,6 +55,8 @@ object ItemLongPress {
             window.dismiss()
             onInfo(it)
         }
+
+        currentPopup = window
 
         return window
     }
@@ -84,9 +84,6 @@ object ItemLongPress {
         textColor: Int,
         item: LauncherItem,
         navbarHeight: Int,
-        onDragStart: (view: View) -> Unit = {},
-        onDragOut: (view: View) -> Unit = {},
-        isRemoveHandled: Boolean = false,
     ) {
         currentPopup?.dismiss()
         val context = view.context
@@ -107,33 +104,12 @@ object ItemLongPress {
             extraPopupWindow!!.showAtLocation(view, gravity, x, y + popupWindow.contentView.height + (view.resources.getDimension(R.dimen.item_card_margin) * 4).toInt())
         }
 
-        view.setOnDragListener { v, event ->
-            when (event.action) {
-                DragEvent.ACTION_DRAG_EXITED -> {
-                    currentPopup?.dismiss()
-                    onDragOut(v)
-                }
-                DragEvent.ACTION_DRAG_STARTED -> {
-                    if (!isRemoveHandled) v.visibility = View.INVISIBLE
-                }
-                DragEvent.ACTION_DRAG_ENDED,
-                DragEvent.ACTION_DROP -> {
-                    if (!isRemoveHandled) v.visibility = View.VISIBLE
-                    currentPopup?.isFocusable = true
-                    currentPopup?.update()
-                }
-            }
-            true
-        }
-
         val shadow = View.DragShadowBuilder(view)
         val clipData = ClipData(
             item.label,
             arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
             ClipData.Item(item.toString()))
 
-        view.startDragAndDrop(clipData, shadow, null, View.DRAG_FLAG_OPAQUE or View.DRAG_FLAG_GLOBAL)
-
-        onDragStart(view)
+        view.startDragAndDrop(clipData, shadow, view, View.DRAG_FLAG_OPAQUE or View.DRAG_FLAG_GLOBAL)
     }
 }
