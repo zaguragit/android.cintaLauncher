@@ -17,7 +17,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class AppCollection(appCount: Int) : AppLoader.AppCollection<App> {
+class AppCollection(
+    appCount: Int,
+    val settings: Settings,
+) : AppLoader.AppCollection<AppCollection.ExtraIconData> {
     val list = ArrayList<App>(appCount)
     val byName = HashMap<String, MutableList<App>>()
 
@@ -26,13 +29,35 @@ class AppCollection(appCount: Int) : AppLoader.AppCollection<App> {
     inline operator fun get(i: Int) = list[i]
     inline val size get() = list.size
 
-    override fun add(context: Context, app: App) {
-        if (app.packageName == BuildConfig.APPLICATION_ID &&
-            app.name == LauncherActivity::class.java.name
+    override fun addApp(
+        context: Context,
+        packageName: String,
+        name: String,
+        profile: UserHandle,
+        label: String,
+        icon: Drawable,
+        extra: AppLoader.ExtraAppInfo<ExtraIconData>,
+    ) {
+        if (packageName == BuildConfig.APPLICATION_ID &&
+            name == LauncherActivity::class.java.name
+        ) return
+
+        val app = createApp(
+            packageName,
+            name,
+            profile,
+            label,
+            icon,
+            extra,
+            settings
         )
-            return
+
         list.add(app)
         putInMap(app)
+    }
+
+    override fun modifyIcon(icon: Drawable, expandableBackground: Drawable?): Pair<Drawable, ExtraIconData> {
+        return modifyIcon(icon, expandableBackground, settings)
     }
 
     private fun putInMap(app: App) {
@@ -58,76 +83,28 @@ class AppCollection(appCount: Int) : AppLoader.AppCollection<App> {
     }
 
     companion object {
-        private fun scale(fg: Drawable): Drawable {
-            return InsetDrawable(
-                fg,
-                -1 / 3f
-            )
-        }
 
-        fun createApp(
-            packageName: String,
-            name: String,
-            profile: UserHandle,
-            label: String,
-            icon: Drawable,
-            extra: AppLoader.ExtraAppInfo,
-            settings: Settings
-        ): App {
+        fun modifyIcon(icon: Drawable, expandableBackground: Drawable?, settings: Settings): Pair<Drawable, ExtraIconData> {
             var color = 0
             var hsl = FloatArray(3)
             var icon = icon
-            var banner = extra.banner
-            var background = extra.background
+            var background = expandableBackground
 
             if (background != null) {
-                banner = null
-                val palette = Palette.from(background.toBitmap(32, 32)).generate()
+                val palette = Palette.from(background.toBitmap(8, 8)).generate()
                 val d = palette.dominantSwatch
                 hsl = d?.hsl ?: hsl
                 color = d?.rgb ?: color
             }
             else if (settings.doReshapeAdaptiveIcons && icon is AdaptiveIconDrawable) {
-                val b = icon.background
-                icon = when (b) {
-                    is ColorDrawable -> {
-                        color = b.color
-                        ColorUtils.colorToHSL(color, hsl)
-                        background = background ?: b
-                        scale(icon.foreground)
-                    }
-                    is ShapeDrawable -> {
-                        color = b.paint.color
-                        ColorUtils.colorToHSL(color, hsl)
-                        background = background ?: b.apply {
-                            shape = RectShape()
-                        }
-                        scale(icon.foreground)
-                    }
-                    is GradientDrawable -> {
-                        color = b.color?.defaultColor ?: Palette.from(b.toBitmap(16, 16)).generate().getDominantColor(0)
-                        ColorUtils.colorToHSL(color, hsl)
-                        background = background ?: b.apply {
-                            cornerRadius = 0f
-                        }
-                        scale(icon.foreground)
-                    }
-                    else -> {
-                        if (b != null) {
-                            val palette = Palette.from(b.toBitmap()).generate()
-                            val d = palette.dominantSwatch
-                            hsl = d?.hsl ?: hsl
-                            color = run {
-                                val def = 0
-                                var c = (d ?: return@run def).rgb
-                                if (hsl[1] < .1f) {
-                                    c = palette.getVibrantColor(c)
-                                }
-                                c
-                            }
-                        }
-                        icon
-                    }
+                val (i, b, c) = reshapeAdaptiveIcon(icon)
+                icon = i
+                background = b
+                color = c
+                ColorUtils.colorToHSL(color, hsl)
+            } else when (icon) {
+                is LayerDrawable -> {
+                    background = ColorDrawable(0xffff00ff.toInt())
                 }
             }
 
@@ -146,17 +123,101 @@ class AppCollection(appCount: Int) : AppLoader.AppCollection<App> {
 
             color = color and 0xffffff or 0xff000000.toInt()
 
+            return icon to ExtraIconData(
+                background, color, hsl
+            )
+        }
+
+        fun createApp(
+            packageName: String,
+            name: String,
+            profile: UserHandle,
+            label: String,
+            icon: Drawable,
+            extra: AppLoader.ExtraAppInfo<ExtraIconData>,
+            settings: Settings,
+        ): App {
+
             return App(
                 packageName,
                 name,
                 profile,
                 label,
                 icon,
-                background ?: banner,
-                if (background != null) .7f else .1f,
-                hsl,
-                color
+                extra.extraIconData.background ?: extra.banner,
+                if (extra.extraIconData.background != null) .7f else .1f,
+                extra.extraIconData.hsl,
+                extra.extraIconData.color
             )
         }
+
+        private fun scale(fg: Drawable): Drawable {
+            return InsetDrawable(
+                fg,
+                -1 / 3f
+            )
+        }
+
+        /**
+         * @return (icon, expandable background, color)
+         */
+        private fun reshapeAdaptiveIcon(icon: AdaptiveIconDrawable): Triple<Drawable, Drawable?, Int> {
+            var color = 0
+            val b = icon.background
+            val (foreground, background) = when (b) {
+                is ColorDrawable -> {
+                    color = b.color
+                    scale(icon.foreground) to b
+                }
+                is ShapeDrawable -> {
+                    color = b.paint.color
+                    scale(icon.foreground) to b.apply {
+                        shape = RectShape()
+                    }
+                }
+                is GradientDrawable -> {
+                    color = b.color?.defaultColor ?: Palette.from(b.toBitmap(8, 8)).generate().getDominantColor(0)
+                    scale(icon.foreground) to b.apply {
+                        cornerRadius = 0f
+                    }
+                }
+                else -> {
+                    if (b != null) {
+                        val bitmap = b.toBitmap(32, 32)
+                        val px = b.toBitmap(1, 1).getPixel(0, 0)
+                        val width = bitmap.width
+                        val height = bitmap.height
+                        val pixels = IntArray(width * height)
+                        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+                        var isOneColor = true
+                        for (pixel in pixels) {
+                            if (pixel != px) {
+                                isOneColor = false
+                                break
+                            }
+                        }
+                        if (isOneColor) {
+                            color = px
+                            scale(icon.foreground) to b
+                        } else {
+                            val palette = Palette.from(bitmap).generate()
+                            val d = palette.dominantSwatch
+                            color = run {
+                                d?.rgb ?: 0
+                            }
+                            icon to null
+                        }
+                    } else icon to null
+                }
+            }
+
+            return Triple(foreground, background, color)
+        }
     }
+
+    class ExtraIconData(
+        val background: Drawable?,
+        val color: Int,
+        val hsl: FloatArray,
+    )
 }

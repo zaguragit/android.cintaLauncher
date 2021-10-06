@@ -195,12 +195,14 @@ class Settings {
         map: HashMap<String, T>,
         mapper: (T) -> Any? = { it }
     ): JSONArray {
-        return JSONArray().apply {
-            map.forEach { entry ->
-                put(JSONArray().apply {
-                    put(entry.key)
-                    put(mapper(entry.value))
-                })
+        return settingsFileLock.withLock {
+            JSONArray().apply {
+                map.forEach { entry ->
+                    put(JSONArray().apply {
+                        put(entry.key)
+                        put(mapper(entry.value))
+                    })
+                }
             }
         }
     }

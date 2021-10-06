@@ -69,17 +69,7 @@ class LauncherContext {
             }
         }
 
-        private val appLoader = AppLoader({ packageName, name, profile, label, icon, extra ->
-            AppCollection.createApp(
-                packageName,
-                name,
-                profile,
-                label,
-                icon,
-                extra,
-                settings
-            )
-        }, ::AppCollection)
+        private val appLoader = AppLoader { AppCollection(it, settings) }
 
         private var appsByName = HashMap<String, MutableList<App>>()
 

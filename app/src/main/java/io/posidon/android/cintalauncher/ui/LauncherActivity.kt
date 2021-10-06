@@ -200,7 +200,7 @@ class LauncherActivity : FragmentActivity() {
         val current = System.currentTimeMillis()
         if (shouldUpdate || current - lastUpdateTime > 1000L * 60L * 5L) {
             lastUpdateTime = current
-            thread (isDaemon = true, block = RssProvider::update)
+            RssProvider.update()
         }
     }
 

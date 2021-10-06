@@ -40,6 +40,7 @@ class ContextMap<T>(
     }
 
     fun trimContextListIfTooBig(list: List<FloatArray>, maxContexts: Int): List<FloatArray> {
+        val s = list.size
         return if (list.size > maxContexts) {
             val matches = list.mapIndexedTo(ArrayList()) { ai, a ->
                 a to list.mapIndexedTo(ArrayList()) { i, b ->
@@ -70,6 +71,7 @@ class ContextMap<T>(
                 }
                 matches[trueI] = arr to loc.copy(first = -1)
             }
+            println("context map trim -> initial size: $s, new size: ${matches.size}")
             matches.map { it.first }
         } else list
     }

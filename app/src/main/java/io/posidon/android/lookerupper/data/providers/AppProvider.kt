@@ -4,9 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.LauncherApps
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.UserHandle
 import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
 import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
+import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.launcherutils.AppLoader
 import io.posidon.android.lookerupper.data.SearchQuery
 import io.posidon.android.lookerupper.data.Searcher
@@ -19,12 +22,33 @@ class AppProvider(
     val searcher: Searcher
 ) : SearchProvider {
 
-    class Collection(size: Int) : AppLoader.AppCollection<AppResult> {
+    class Collection(
+        size: Int,
+        val settings: Settings
+    ) : AppLoader.AppCollection<AppCollection.ExtraIconData> {
+
         val list = ArrayList<AppResult>(size)
         val staticShortcuts = LinkedList<ShortcutResult>()
         val dynamicShortcuts = LinkedList<ShortcutResult>()
 
-        override fun add(context: Context, app: AppResult) {
+        override fun addApp(
+            context: Context,
+            packageName: String,
+            name: String,
+            profile: UserHandle,
+            label: String,
+            icon: Drawable,
+            extra: AppLoader.ExtraAppInfo<AppCollection.ExtraIconData>,
+        ) {
+            val app = AppResult(AppCollection.createApp(
+                packageName,
+                name,
+                profile,
+                label,
+                icon,
+                extra,
+                settings
+            ))
             list += app
             val launcherApps = context.getSystemService(LauncherApps::class.java)
             staticShortcuts.addAll(app.getStaticShortcuts(launcherApps).map {
@@ -50,19 +74,16 @@ class AppProvider(
                 a.title.compareTo(b.title)
             }
         }
+
+        override fun modifyIcon(
+            icon: Drawable,
+            expandableBackground: Drawable?
+        ): Pair<Drawable, AppCollection.ExtraIconData> {
+            return AppCollection.modifyIcon(icon, expandableBackground, settings)
+        }
     }
 
-    val appLoader = AppLoader({ packageName, name, profile, label, icon, extra ->
-        AppResult(AppCollection.createApp(
-            packageName,
-            name,
-            profile,
-            label,
-            icon,
-            extra,
-            searcher.settings
-        ))
-    }, ::Collection)
+    val appLoader = AppLoader { Collection(it, searcher.settings) }
     var apps = emptyList<AppResult>()
     var staticShortcuts = emptyList<ShortcutResult>()
     var dynamicShortcuts = emptyList<ShortcutResult>()
