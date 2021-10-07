@@ -38,7 +38,7 @@ object RssProvider : AsyncFeedItemProvider() {
 
     override fun loadItems(): List<FeedItem> {
         val items = ArrayList<RssItem>()
-        if (!RssLoader.load(items, settings.getStrings("feed:rss_sources")?.toList() ?: emptyList(), MAX_ITEMS_HINT, doSorting = false)) {
+        if (RssLoader.load(items, settings.getStrings("feed:rss_sources")?.toList() ?: emptyList(), MAX_ITEMS_HINT, doSorting = false).isNotEmpty()) {
             return emptyList()
         }
         return items.map {
