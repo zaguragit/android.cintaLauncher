@@ -22,6 +22,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"/>
-    <include layout="@layout/activity_launcher_search_bar"/>
     <include layout="@layout/app_drawer"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:gravity="end">
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back_button_container"
+            style="@style/Theme.CintaLauncher.SearchBar.Container"
+            android:visibility="gone">
+            <ImageView
+                style="@style/Theme.CintaLauncher.SearchBar.Icon"
+                android:id="@+id/back_button"
+                android:layout_width="@dimen/search_bar_height"
+                android:layout_height="@dimen/search_bar_height"
+                android:src="@drawable/ic_cross"
+                android:background="@drawable/ripple"/>
+        </androidx.cardview.widget.CardView>
+        <include layout="@layout/activity_launcher_search_bar"/>
+    </LinearLayout>
 </FrameLayout>

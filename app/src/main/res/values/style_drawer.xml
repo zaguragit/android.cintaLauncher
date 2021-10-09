@@ -28,34 +28,40 @@
         <item name="android:elevation">@dimen/item_card_elevation</item>
     </style>
 
+    <style name="Theme.CintaLauncher.Drawer.Item.Icon" parent="Theme.CintaLauncher">
+        <item name="android:paddingHorizontal">8dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+
+    <style name="Theme.CintaLauncher.Drawer.Item.SmallIcon" parent="Theme.CintaLauncher">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginEnd">6dp</item>
+    </style>
+
     <style name="Theme.CintaLauncher.Drawer.Item.Label" parent="Theme.CintaLauncher">
         <item name="android:textSize">14sp</item>
         <item name="android:padding">8dp</item>
         <item name="android:textColor">@color/feed_card_text_light_title</item>
     </style>
 
-    <style name="Theme.CintaLauncher.Drawer.Item.Icon" parent="Theme.CintaLauncher">
-        <item name="android:padding">8dp</item>
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-    </style>
-
-    <style name="Theme.CintaLauncher.Drawer.Item.Notifications" parent="Theme.CintaLauncher">
-        <item name="android:paddingTop">8dp</item>
+    <style name="Theme.CintaLauncher.Drawer.Item.Extra.Line.Title" parent="Theme.CintaLauncher">
         <item name="android:paddingStart">8dp</item>
         <item name="android:paddingEnd">6dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">2</item>
-        <item name="android:textColor">@color/feed_card_text_light_description</item>
+        <item name="android:maxLines">1</item>
     </style>
 
-    <style name="Theme.CintaLauncher.Drawer.Item.SmallIcon" parent="Theme.CintaLauncher">
-        <item name="android:layout_width">16dp</item>
-        <item name="android:layout_height">16dp</item>
-        <item name="android:layout_marginEnd">6dp</item>
+    <style name="Theme.CintaLauncher.Drawer.Item.Extra.Line.Description" parent="Theme.CintaLauncher">
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">6dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="Theme.CintaLauncher.Drawer.SectionHeader" parent="Theme.CintaLauncher">

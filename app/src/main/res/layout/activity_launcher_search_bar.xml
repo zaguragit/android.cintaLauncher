@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
     android:id="@+id/search_bar_container"
     style="@style/Theme.CintaLauncher.SearchBar.Container">
     <io.posidon.android.cintalauncher.ui.view.SeeThoughView
@@ -23,24 +22,11 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/search_bar_height"
         android:layout_gravity="center_horizontal"/>
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarIconView
+        style="@style/Theme.CintaLauncher.SearchBar.Icon"
+        android:id="@+id/app_drawer_icon"
+        android:layout_width="@dimen/search_bar_height"
         android:layout_height="@dimen/search_bar_height"
-        android:layout_gravity="end">
-        <ImageView
-            style="@style/Theme.CintaLauncher.SearchBar.Icon"
-            android:id="@+id/back_button"
-            android:layout_width="@dimen/search_bar_height"
-            android:layout_height="@dimen/search_bar_height"
-            android:src="@drawable/ic_swipe_up"
-            android:scaleY="-1"
-            android:padding="10dp"
-            android:visibility="gone"/>
-        <io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarIconView
-            style="@style/Theme.CintaLauncher.SearchBar.Icon"
-            android:id="@+id/app_drawer_icon"
-            android:layout_width="@dimen/search_bar_height"
-            android:layout_height="@dimen/search_bar_height"
-            android:src="@drawable/ic_drawer_scroll"/>
-    </LinearLayout>
+        android:layout_gravity="end"
+        android:src="@drawable/ic_drawer_scroll"/>
 </androidx.cardview.widget.CardView>

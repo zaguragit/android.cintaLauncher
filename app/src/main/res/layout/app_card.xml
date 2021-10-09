@@ -5,45 +5,65 @@
     android:layout_height="wrap_content"
     android:id="@+id/card"
     style="@style/Theme.CintaLauncher.Drawer.Item.Container">
-    <io.posidon.android.cintalauncher.ui.view.SeeThoughView
-        android:id="@+id/blur_bg"
+    <io.posidon.android.cintalauncher.ui.view.HorizontalAspectRatioLayout
+        android:id="@+id/aspect"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.3"/>
-    <io.posidon.android.cintalauncher.ui.view.BackdropImageView
-        android:id="@+id/background_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:alpha="0.1"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <ImageView
-            style="@style/Theme.CintaLauncher.Drawer.Item.Icon"
-            android:id="@+id/icon_image"/>
-        <TextView
-            style="@style/Theme.CintaLauncher.Drawer.Item.Notifications"
-            android:id="@+id/icon_notifications"
-            android:visibility="gone"/>
+        android:layout_height="wrap_content">
+        <io.posidon.android.cintalauncher.ui.view.BackdropImageView
+            android:id="@+id/background_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:alpha="0.1"/>
+        <io.posidon.android.cintalauncher.ui.view.SeeThoughView
+            android:id="@+id/blur_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.18"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            style="@style/Theme.CintaLauncher.Drawer.Item.Label">
+            android:orientation="vertical"
+            android:gravity="bottom">
             <ImageView
-                style="@style/Theme.CintaLauncher.Drawer.Item.SmallIcon"
-                android:visibility="gone"
-                android:id="@+id/icon_image_small"/>
-            <TextView
-                android:id="@+id/icon_text"
+                style="@style/Theme.CintaLauncher.Drawer.Item.Icon"
+                android:id="@+id/icon_image"
+                android:cropToPadding="false"/>
+            <View
+                android:id="@+id/spacer"
                 android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:includeFontPadding="false"
-                android:singleLine="true"
-                android:maxLines="1"/>
+                android:gravity="center_vertical"
+                style="@style/Theme.CintaLauncher.Drawer.Item.Label">
+                <ImageView
+                    style="@style/Theme.CintaLauncher.Drawer.Item.SmallIcon"
+                    android:visibility="gone"
+                    android:id="@+id/icon_image_small"/>
+                <TextView
+                    android:id="@+id/icon_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:includeFontPadding="false"
+                    android:singleLine="true"
+                    android:maxLines="1"/>
+            </LinearLayout>
+            <TextView
+                style="@style/Theme.CintaLauncher.Drawer.Item.Extra.Line.Title"
+                android:id="@+id/line_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+            <TextView
+                style="@style/Theme.CintaLauncher.Drawer.Item.Extra.Line.Description"
+                android:id="@+id/line_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
         </LinearLayout>
-    </LinearLayout>
+    </io.posidon.android.cintalauncher.ui.view.HorizontalAspectRatioLayout>
 </androidx.cardview.widget.CardView>

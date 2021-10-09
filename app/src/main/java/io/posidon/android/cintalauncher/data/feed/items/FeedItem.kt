@@ -4,7 +4,6 @@ import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.view.View
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.data.items.App
 import java.time.Instant
 
 interface FeedItem {
@@ -48,18 +47,6 @@ fun String.longHash(): Long {
         h = 31 * h + this[i].code.toLong()
     }
     return h
-}
-
-fun FeedItem.formatForAppCard(item: App): String {
-    return buildString {
-        if (item.label != title) {
-            append(title)
-            append('\n')
-        }
-        if (description != null) {
-            append(description)
-        }
-    }
 }
 
 fun FeedItem.formatTimeAgo(resources: Resources): String {

@@ -11,7 +11,6 @@ import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.drawer.viewHolders.*
 import io.posidon.android.cintalauncher.ui.view.recycler.HighlightSectionIndexer
 import io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarController
-import posidon.android.conveniencelib.getNavigationBarHeight
 import java.util.*
 
 class AppDrawerAdapter(
@@ -54,7 +53,7 @@ class AppDrawerAdapter(
                 holder as AppViewHolder,
                 (item as AppItem).item,
                 indexer?.isDimmed(item.item) ?: false,
-                launcherActivity.getNavigationBarHeight(),
+                launcherActivity,
             )
         }
     }

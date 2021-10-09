@@ -1,10 +1,12 @@
 package io.posidon.android.cintalauncher.providers.app
 
 import android.content.Context
+import android.graphics.*
 import android.graphics.drawable.*
 import android.graphics.drawable.shapes.RectShape
 import android.os.UserHandle
 import androidx.core.graphics.ColorUtils
+import androidx.core.graphics.toXfermode
 import androidx.palette.graphics.Palette
 import io.posidon.android.cintalauncher.BuildConfig
 import io.posidon.android.cintalauncher.data.items.App
@@ -144,8 +146,7 @@ class AppCollection(
                 profile,
                 label,
                 icon,
-                extra.extraIconData.background ?: extra.banner,
-                if (extra.extraIconData.background != null) .7f else .1f,
+                extra.extraIconData.background,
                 extra.extraIconData.hsl,
                 extra.extraIconData.color
             )
@@ -164,51 +165,63 @@ class AppCollection(
         private fun reshapeAdaptiveIcon(icon: AdaptiveIconDrawable): Triple<Drawable, Drawable?, Int> {
             var color = 0
             val b = icon.background
+            val isForegroundDangerous = run {
+                val fg = icon.foreground.toBitmap(32, 32)
+                val width = fg.width
+                val height = fg.height
+                val canvas = Canvas(fg)
+                canvas.drawRect(6f, 6f, width - 6f, height - 6f, Paint().apply {
+                    xfermode = PorterDuff.Mode.CLEAR.toXfermode()
+                })
+                val pixels = IntArray(width * height)
+                fg.getPixels(pixels, 0, width, 0, 0, width, height)
+                for (pixel in pixels) {
+                    if (Color.alpha(pixel) != 0) {
+                        return@run true
+                    }
+                }
+                false
+            }
             val (foreground, background) = when (b) {
                 is ColorDrawable -> {
                     color = b.color
-                    scale(icon.foreground) to b
+                    (if (isForegroundDangerous) icon else scale(icon.foreground)) to b
                 }
                 is ShapeDrawable -> {
                     color = b.paint.color
-                    scale(icon.foreground) to b.apply {
+                    (if (isForegroundDangerous) icon else scale(icon.foreground)) to b.apply {
                         shape = RectShape()
                     }
                 }
                 is GradientDrawable -> {
                     color = b.color?.defaultColor ?: Palette.from(b.toBitmap(8, 8)).generate().getDominantColor(0)
-                    scale(icon.foreground) to b.apply {
+                    (if (isForegroundDangerous) icon else scale(icon.foreground)) to b.apply {
                         cornerRadius = 0f
                     }
                 }
-                else -> {
-                    if (b != null) {
-                        val bitmap = b.toBitmap(32, 32)
-                        val px = b.toBitmap(1, 1).getPixel(0, 0)
-                        val width = bitmap.width
-                        val height = bitmap.height
-                        val pixels = IntArray(width * height)
-                        bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
-                        var isOneColor = true
-                        for (pixel in pixels) {
-                            if (pixel != px) {
-                                isOneColor = false
-                                break
-                            }
+                else -> if (b != null) {
+                    val bitmap = b.toBitmap(32, 32)
+                    val px = b.toBitmap(1, 1).getPixel(0, 0)
+                    val width = bitmap.width
+                    val height = bitmap.height
+                    val pixels = IntArray(width * height)
+                    bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+                    var isOneColor = true
+                    for (pixel in pixels) {
+                        if (pixel != px) {
+                            isOneColor = false
+                            break
                         }
-                        if (isOneColor) {
-                            color = px
-                            scale(icon.foreground) to b
-                        } else {
-                            val palette = Palette.from(bitmap).generate()
-                            val d = palette.dominantSwatch
-                            color = run {
-                                d?.rgb ?: 0
-                            }
-                            icon to null
-                        }
-                    } else icon to null
-                }
+                    }
+                    if (isOneColor) {
+                        color = px
+                        (if (isForegroundDangerous) icon else scale(icon.foreground)) to b
+                    } else {
+                        val palette = Palette.from(bitmap).generate()
+                        color = palette.vibrantSwatch?.rgb ?: palette.dominantSwatch?.rgb ?: 0
+                        icon to null
+                    }
+                } else icon to null
             }
 
             return Triple(foreground, background, color)

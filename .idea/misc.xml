@@ -43,6 +43,8 @@
         <entry key="app/src/main/res/layout/activity_search_search_bar.xml" value="0.302536231884058" />
         <entry key="app/src/main/res/layout/activity_settings_feed_chooser.xml" value="0.5" />
         <entry key="app/src/main/res/layout/app_card.xml" value="0.3578125" />
+        <entry key="app/src/main/res/layout/app_card_extra.xml" value="0.3578125" />
+        <entry key="app/src/main/res/layout/app_card_plain.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/app_drawer.xml" value="0.11296859169199595" />
         <entry key="app/src/main/res/layout/app_drawer_item.xml" value="0.21041666666666667" />
         <entry key="app/src/main/res/layout/dock.xml" value="0.3578125" />

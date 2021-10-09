@@ -11,7 +11,6 @@ import android.os.Process
 import android.os.UserHandle
 import android.view.View
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
-import io.posidon.android.cintalauncher.data.feed.items.formatForAppCard
 import io.posidon.android.cintalauncher.providers.feed.FeedSorter
 import io.posidon.android.cintalauncher.providers.feed.notification.NotificationService
 import posidon.android.conveniencelib.isInstalled
@@ -24,7 +23,6 @@ class App(
     override val label: String,
     override val icon: Drawable,
     val background: Drawable?,
-    val bgOpacity: Float,
     val hsl: FloatArray,
     private val _color: Int,
 ) : LauncherItem {
@@ -34,20 +32,30 @@ class App(
         val mediaItem = NotificationService.mediaItem
         if (background == null && notifications.isEmpty() && mediaItem == null) return null
         if (mediaItem != null && mediaItem.meta?.sourcePackageName == packageName) return Banner(
-            mediaItem.title + '\n' + mediaItem.description,
+            mediaItem.title,
+            mediaItem.description,
             mediaItem.image,
             .4f
         )
         val notification = FeedSorter.getMostRelevant(notifications)
-        val image = (notification as? FeedItemWithBigImage)?.image ?: background
-        return Banner(
-            notification?.formatForAppCard(this),
+        val image = (notification as? FeedItemWithBigImage)?.image
+        if (image != null) return Banner(
+            notification.title.takeIf { label != it },
+            notification.description,
             image,
-            bgOpacity
+            .4f
+        )
+
+        return Banner(
+            notification?.title.takeIf { label != it },
+            notification?.description,
+            background,
+            1f
         )
     }
 
     class Banner(
+        val title: String?,
         val text: String?,
         val background: Any?,
         val bgOpacity: Float,

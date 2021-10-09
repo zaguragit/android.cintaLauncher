@@ -30,6 +30,6 @@ class FeedDiffCallback(val old: List<FeedItem>, val new: List<FeedItem>) : DiffU
             && o.instant == n.instant
             && o.isDismissible == n.isDismissible
             && (oldI == oldListSize - 1) == (newI == newListSize - 1)
-            && (o as? FeedItemSuggestedApps)?.apps == (n as? FeedItemSuggestedApps)?.apps
+            && (o as? FeedItemSuggestedApps)?.apps.isNullOrEmpty() && (n as? FeedItemSuggestedApps)?.apps.isNullOrEmpty()
     }
 }

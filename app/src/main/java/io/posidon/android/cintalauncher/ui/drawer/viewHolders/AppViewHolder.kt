@@ -1,7 +1,9 @@
 package io.posidon.android.cintalauncher.ui.drawer.viewHolders
 
+import android.app.Activity
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -21,11 +23,15 @@ import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.acrylicBlur
+import io.posidon.android.cintalauncher.ui.drawer.AppDrawer.Companion.WIDTH_TO_HEIGHT
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter.Companion.APP_ITEM
+import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.applyIfNotNull
 import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
+import io.posidon.android.cintalauncher.ui.view.HorizontalAspectRatioLayout
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import posidon.android.conveniencelib.Colors
+import posidon.android.conveniencelib.getNavigationBarHeight
 import posidon.android.conveniencelib.toBitmap
 
 class AppViewHolder(
@@ -35,10 +41,19 @@ class AppViewHolder(
     val label = itemView.findViewById<TextView>(R.id.icon_text)!!
 
     val iconSmall = itemView.findViewById<ImageView>(R.id.icon_image_small)!!
-    val notificationView = itemView.findViewById<TextView>(R.id.icon_notifications)!!
+
+    val spacer = itemView.findViewById<View>(R.id.spacer)!!
+
+    val lineTitle = itemView.findViewById<TextView>(R.id.line_title)!!
+    val lineDescription = itemView.findViewById<TextView>(R.id.line_description)!!
+
     val imageView = itemView.findViewById<ImageView>(R.id.background_image)!!
 
     val blurBG = itemView.findViewById<SeeThoughView>(R.id.blur_bg)!!
+
+    val aspect = itemView.findViewById<HorizontalAspectRatioLayout>(R.id.aspect)!!.apply {
+        widthToHeight = WIDTH_TO_HEIGHT
+    }
 
     val requestOptions = RequestOptions()
         .downsample(DownsampleStrategy.AT_MOST)
@@ -67,7 +82,8 @@ class AppViewHolder(
 
             holder.card.setCardBackgroundColor(backgroundColor)
             holder.label.setTextColor(ColorTheme.titleColorForBG(holder.itemView.context, actuallyBackgroundColor))
-            holder.notificationView.setTextColor(ColorTheme.textColorForBG(holder.itemView.context, actuallyBackgroundColor))
+            holder.lineTitle.setTextColor(ColorTheme.titleColorForBG(holder.itemView.context, actuallyBackgroundColor))
+            holder.lineDescription.setTextColor(ColorTheme.textColorForBG(holder.itemView.context, actuallyBackgroundColor))
 
             target.onResourceReady(resource, null)
             return true
@@ -85,7 +101,7 @@ fun bindAppViewHolder(
     holder: AppViewHolder,
     item: LauncherItem,
     isDimmed: Boolean,
-    navbarHeight: Int,
+    activity: Activity,
 ) {
     holder.blurBG.drawable = BitmapDrawable(holder.itemView.resources, acrylicBlur?.insaneBlur)
 
@@ -94,21 +110,23 @@ fun bindAppViewHolder(
     holder.card.alpha = if (isDimmed) .3f else 1f
     holder.label.text = item.label
     holder.label.setTextColor(ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor))
-    holder.notificationView.setTextColor(ColorTheme.textColorForBG(holder.itemView.context, backgroundColor))
+    holder.lineTitle.setTextColor(ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor))
+    holder.lineDescription.setTextColor(ColorTheme.textColorForBG(holder.itemView.context, backgroundColor))
 
     val banner = (item as? App)?.getBanner()
-    if (banner?.text == null) {
+    if (banner?.text == null && banner?.title == null) {
         holder.iconSmall.isVisible = false
-        holder.notificationView.isVisible = false
+        holder.spacer.isVisible = true
         holder.icon.isVisible = true
         holder.icon.setImageDrawable(item.icon)
     } else {
         holder.iconSmall.isVisible = true
-        holder.notificationView.isVisible = true
+        holder.spacer.isVisible = false
         holder.icon.isVisible = false
         holder.iconSmall.setImageDrawable(item.icon)
-        holder.notificationView.text = banner.text
     }
+    applyIfNotNull(holder.lineTitle, banner?.title, TextView::setText)
+    applyIfNotNull(holder.lineDescription, banner?.text, TextView::setText)
     if (banner?.background == null) {
         holder.imageView.isVisible = false
     } else {
@@ -132,7 +150,7 @@ fun bindAppViewHolder(
             backgroundColor,
             ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor),
             item,
-            navbarHeight,
+            activity.getNavigationBarHeight(),
         )
         true
     }

@@ -29,6 +29,11 @@ class AppDrawer(
     val activity: LauncherActivity
 ) {
 
+    companion object {
+        const val COLUMNS = 3
+        const val WIDTH_TO_HEIGHT = 5f / 4f
+    }
+
     val view = activity.findViewById<View>(R.id.app_drawer_container)!!
 
     private val adapter = AppDrawerAdapter(activity)
@@ -39,12 +44,12 @@ class AppDrawer(
     private var popupY = 0f
     @SuppressLint("ClickableViewAccessibility")
     fun init() {
-        recycler.layoutManager = GridLayoutManager(view.context, 3, RecyclerView.VERTICAL, false).apply {
+        recycler.layoutManager = GridLayoutManager(view.context, COLUMNS, RecyclerView.VERTICAL, false).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(i: Int): Int {
                     return when (adapter.getItemViewType(i)) {
                         AppDrawerAdapter.APP_ITEM -> 1
-                        AppDrawerAdapter.SECTION_HEADER -> 3
+                        AppDrawerAdapter.SECTION_HEADER -> COLUMNS
                         else -> -1
                     }
                 }
@@ -106,7 +111,7 @@ class AppDrawer(
     private var currentValueAnimator: ValueAnimator? = null
 
     fun open(v: View) {
-        activity.bottomBar.appDrawerCloseIcon.isVisible = true
+        activity.bottomBar.appDrawerCloseIconContainer.isVisible = true
         if (isOpen) return
         ItemLongPress.currentPopup?.dismiss()
         val sbh = v.context.getStatusBarHeight()
@@ -153,7 +158,7 @@ class AppDrawer(
     }
 
     fun close(v: View? = null) {
-        activity.bottomBar.appDrawerCloseIcon.isVisible = false
+        activity.bottomBar.appDrawerCloseIconContainer.isVisible = false
         if (!isOpen) return
         ItemLongPress.currentPopup?.dismiss()
         activity.feedFilterRecycler.isVisible = true

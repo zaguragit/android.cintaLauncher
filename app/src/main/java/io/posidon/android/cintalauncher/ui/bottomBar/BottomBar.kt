@@ -40,8 +40,9 @@ class BottomBar(val activity: LauncherActivity) {
     val appDrawerIcon = view.findViewById<ScrollbarIconView>(R.id.app_drawer_icon)!!.apply {
         appDrawer = activity.appDrawer
     }
+    val appDrawerCloseIconContainer = activity.findViewById<CardView>(R.id.back_button_container)!!
     @SuppressLint("ClickableViewAccessibility")
-    val appDrawerCloseIcon = view.findViewById<ImageView>(R.id.back_button)!!.apply {
+    val appDrawerCloseIcon = appDrawerCloseIconContainer.findViewById<ImageView>(R.id.back_button)!!.apply {
         setOnClickListener(activity.appDrawer::close)
     }
     val blurBG = view.findViewById<SeeThoughView>(R.id.search_bar_blur_bg)!!
@@ -54,6 +55,7 @@ class BottomBar(val activity: LauncherActivity) {
 
     fun updateColorTheme() {
         view.setCardBackgroundColor(ColorTheme.searchBarBG)
+        appDrawerCloseIconContainer.setCardBackgroundColor(ColorTheme.searchBarBG)
         searchIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
         appDrawerCloseIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
         appDrawerIcon.imageTintList = ColorStateList.valueOf(ColorTheme.searchBarFG)
