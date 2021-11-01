@@ -68,7 +68,7 @@ fun FeedItem.formatTimeAgo(resources: Resources): String {
 }
 
 fun FeedItem.isToday(): Boolean {
-    if (instant == Instant.MAX) return false
+    if (instant == Instant.MAX) return true
     val now = System.currentTimeMillis()
     val passed = now - instant.toEpochMilli()
     val seconds = passed / 1000

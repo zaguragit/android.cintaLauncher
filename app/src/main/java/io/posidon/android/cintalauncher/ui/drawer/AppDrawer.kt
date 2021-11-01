@@ -118,7 +118,7 @@ class AppDrawer(
         recycler.setPadding(recycler.paddingLeft, sbh, recycler.paddingRight, activity.bottomBar.view.measuredHeight + activity.bottomBar.view.marginBottom + activity.bottomBar.view.marginTop)
         view.isVisible = true
         activity.feedRecycler.stopScroll()
-        activity.feedFilterRecycler.animate()
+        activity.feedProfiles.feedFilterRecycler.animate()
             .alpha(0f)
             .setDuration(100)
             .setInterpolator(DecelerateInterpolator())
@@ -161,8 +161,8 @@ class AppDrawer(
         activity.bottomBar.appDrawerCloseIconContainer.isVisible = false
         if (!isOpen) return
         ItemLongPress.currentPopup?.dismiss()
-        activity.feedFilterRecycler.isVisible = true
-        activity.feedFilterRecycler.animate()
+        activity.feedProfiles.feedFilterRecycler.isVisible = true
+        activity.feedProfiles.feedFilterRecycler.animate()
             .alpha(1f)
             .setDuration(100)
             .setInterpolator(DecelerateInterpolator())

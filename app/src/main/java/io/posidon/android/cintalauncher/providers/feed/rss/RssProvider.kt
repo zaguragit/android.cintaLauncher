@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
+import io.posidon.android.cintalauncher.data.feed.items.FeedItemMeta
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
 import io.posidon.android.cintalauncher.data.feed.items.longHash
 import io.posidon.android.cintalauncher.providers.feed.AsyncFeedItemProvider
@@ -43,6 +44,10 @@ object RssProvider : AsyncFeedItemProvider() {
         }
         return items.map {
             val id = it.link.longHash()
+            val meta = FeedItemMeta(
+                sourceUrl = it.source.url
+            )
+            println(it.title)
             if (it.img == null) {
                 object : FeedItem {
                     override val color = if (it.source.accentColor == 0) 0 else it.source.accentColor or 0xff000000.toInt()
@@ -58,6 +63,7 @@ object RssProvider : AsyncFeedItemProvider() {
                     override val shouldTintIcon = false
                     override val uid = it.link.trim { it <= ' ' }
                     override val id = id
+                    override val meta = meta
                 }
             } else {
                 object : FeedItemWithBigImage {
@@ -75,6 +81,7 @@ object RssProvider : AsyncFeedItemProvider() {
                     override val shouldTintIcon = false
                     override val uid = it.link.trim { it <= ' ' }
                     override val id = id
+                    override val meta = meta
                 }
             }
         }

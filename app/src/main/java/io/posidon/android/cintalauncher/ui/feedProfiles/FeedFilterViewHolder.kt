@@ -1,4 +1,4 @@
-package io.posidon.android.cintalauncher.ui.feed.filters
+package io.posidon.android.cintalauncher.ui.feedProfiles
 
 import android.view.View
 import android.widget.ImageView

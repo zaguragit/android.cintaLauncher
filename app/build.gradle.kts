@@ -30,11 +30,11 @@ dependencies {
     implementation("com.willowtreeapps:fuzzywuzzy-kotlin-jvm:0.9.0")
     implementation("com.github.bumptech.glide:glide:4.12.0")
 
-    implementation("io.posidon:android.launcherUtils:master-SNAPSHOT")
+    implementation("io.posidon:android.launcherUtils:30aa020c1a")
     implementation("io.posidon:android.loader:master-SNAPSHOT")
     implementation("io.posidon:android.convenienceLib:master-SNAPSHOT")
 
-    implementation("androidx.core:core-ktx:1.6.0")
+    implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.palette:palette-ktx:1.0.0")
 
     implementation("com.google.android.material:material:1.4.0")

@@ -1,6 +1,7 @@
 package io.posidon.android.cintalauncher.providers.feed
 
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
+import io.posidon.android.cintalauncher.data.feed.profiles.FeedProfile
 import io.posidon.android.cintalauncher.storage.Settings
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
@@ -8,7 +9,7 @@ import kotlin.concurrent.withLock
 
 class Feed {
 
-    private var filters = emptyList<FeedFilter>()
+    private var profile: FeedProfile? = null
     private var onUpdate: (List<FeedItem>) -> Unit = {}
     private lateinit var providers: Array<out FeedItemProvider>
     lateinit var settings: Settings
@@ -31,18 +32,12 @@ class Feed {
     }
 
     private fun List<FeedItem>.filtered(): List<FeedItem> {
-        return if (filters.isEmpty()) this else filter {
-            filters.forEach { f ->
-                if (!f.filter(it))
-                    return@filter false
-            }
-            true
-        }
+        return profile?.let { filter(it::filter) } ?: this
     }
 
-    fun updateFilters(filters: List<FeedFilter>) {
-        if (this.filters == filters) return
-        this.filters = filters
+    fun setProfile(profile: FeedProfile) {
+        if (this.profile == profile) return
+        this.profile = profile
         itemCache?.filtered()?.also(onUpdate) ?: update()
     }
 

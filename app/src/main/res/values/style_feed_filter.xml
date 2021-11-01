@@ -11,19 +11,18 @@
     </style>
 
     <style name="Theme.CintaLauncher.FeedFilter.Container" parent="Theme.CintaLauncher">
-        <item name="android:paddingHorizontal">12dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
         <item name="android:background">@drawable/ripple</item>
         <item name="android:minHeight">@dimen/feed_filter_height</item>
     </style>
 
     <style name="Theme.CintaLauncher.FeedFilter.Text" parent="Theme.CintaLauncher">
-        <item name="android:paddingHorizontal">12dp</item>
+        <item name="android:paddingHorizontal">8dp</item>
         <item name="android:textSize">14sp</item>
     </style>
 
     <style name="Theme.CintaLauncher.FeedFilter.Icon" parent="Theme.CintaLauncher">
-        <item name="android:padding">6dp</item>
-        <item name="android:layout_width">28dp</item>
-        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
     </style>
 </resources>

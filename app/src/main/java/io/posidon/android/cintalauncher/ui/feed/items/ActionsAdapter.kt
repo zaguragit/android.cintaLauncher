@@ -9,12 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemAction
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.applyIfNotNull
-import io.posidon.android.cintalauncher.ui.view.SwipeableLayout
 
 class ActionsAdapter(
     private var actions: Array<FeedItemAction>,
-    private var actionButtonTextColor: Int,
-    private val swipeableLayout: SwipeableLayout
+    private var actionButtonTextColor: Int
 ) : RecyclerView.Adapter<ActionsAdapter.ActionViewHolder>() {
 
     override fun getItemCount(): Int = actions.size
@@ -28,12 +26,7 @@ class ActionsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActionViewHolder {
         return ActionViewHolder(actionButtonTextColor, LayoutInflater.from(parent.context)
-            .inflate(R.layout.feed_item_action, parent, false)).apply {
-            itemView.setOnTouchListener { _, _ ->
-                swipeableLayout.requestDisallowInterceptTouchEvent(true)
-                false
-            }
-        }
+            .inflate(R.layout.feed_item_action, parent, false))
     }
 
     override fun onBindViewHolder(holder: ActionViewHolder, i: Int) {

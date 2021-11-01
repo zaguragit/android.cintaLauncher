@@ -8,6 +8,7 @@ import io.posidon.android.cintalauncher.providers.feed.Feed
 import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.launcherutils.AppLoader
+import io.posidon.android.launcherutils.IconConfig
 
 class LauncherContext {
 
@@ -22,14 +23,17 @@ class LauncherContext {
         val pinnedItems: List<LauncherItem> get() = _pinnedItems
 
         fun <T : Context> loadApps(context: T, onEnd: T.(apps: AppCollection) -> Unit) {
-            appLoader.async(
-                context,
-                settings.getStrings("icon_packs") ?: emptyArray()
-            ) { apps: AppCollection ->
-                appsByName = apps.byName
+            val iconConfig = IconConfig(
+                size = (context.resources.displayMetrics.density * 128f).toInt(),
+                density = context.resources.configuration.densityDpi,
+                packPackages = settings.getStrings("icon_packs") ?: emptyArray(),
+            )
+
+            appLoader.async(context, iconConfig) {
+                appsByName = it.byName
                 _pinnedItems = settings.getStrings(PINNED_KEY)?.mapNotNull { LauncherItem.parse(it, appsByName) }?.toMutableList() ?: ArrayList()
                 SuggestionsManager.onAppsLoaded(this, context, settings)
-                onEnd(context, apps)
+                onEnd(context, it)
             }
         }
 

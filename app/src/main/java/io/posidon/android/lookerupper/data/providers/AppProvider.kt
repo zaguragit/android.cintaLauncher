@@ -11,6 +11,7 @@ import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.launcherutils.AppLoader
+import io.posidon.android.launcherutils.IconConfig
 import io.posidon.android.lookerupper.data.SearchQuery
 import io.posidon.android.lookerupper.data.Searcher
 import io.posidon.android.lookerupper.data.results.*
@@ -89,7 +90,13 @@ class AppProvider(
     var dynamicShortcuts = emptyList<ShortcutResult>()
 
     override fun Activity.onCreate() {
-        appLoader.async(this, searcher.settings.getStrings("icon_packs") ?: emptyArray()) {
+        val iconConfig = IconConfig(
+            size = (resources.displayMetrics.density * 128f).toInt(),
+            density = resources.configuration.densityDpi,
+            packPackages = searcher.settings.getStrings("icon_packs") ?: emptyArray(),
+        )
+
+        appLoader.async(this, iconConfig) {
             apps = it.list
             staticShortcuts = it.staticShortcuts
             dynamicShortcuts = it.dynamicShortcuts

@@ -61,7 +61,7 @@ open class FeedItemViewHolder(itemView: View) : FeedViewHolder(SwipeableLayout(i
             val bg = ColorTheme.actionButtonBG(item.color.let { if (it == 0) ColorTheme.accentColor else it })
             actionsContainer.setCardBackgroundColor(bg)
             val fg = ColorTheme.titleColorForBG(itemView.context, bg)
-            actions.adapter = ActionsAdapter(item.actions, fg, swipeableLayout)
+            actions.adapter = ActionsAdapter(item.actions, fg)
             separatorDrawable.setColor(ColorTheme.hintColorForBG(itemView.context, bg))
         }
         if (item.instant == Instant.MAX) {

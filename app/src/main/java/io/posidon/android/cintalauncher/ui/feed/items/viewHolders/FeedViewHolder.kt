@@ -4,9 +4,8 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
-import io.posidon.android.cintalauncher.ui.view.SwipeableLayout
 
-abstract class FeedViewHolder(itemView: View) : RecyclerView.ViewHolder(SwipeableLayout(itemView)) {
+abstract class FeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     abstract fun onBind(
         item: FeedItem,
         color: Int

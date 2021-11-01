@@ -25,10 +25,8 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.color.ColorTheme
 import io.posidon.android.cintalauncher.color.ColorThemeOptions
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
-import io.posidon.android.cintalauncher.data.feed.items.isToday
 import io.posidon.android.cintalauncher.providers.app.AppCallback
 import io.posidon.android.cintalauncher.providers.app.AppCollection
-import io.posidon.android.cintalauncher.providers.feed.FeedFilter
 import io.posidon.android.cintalauncher.providers.feed.notification.MediaProvider
 import io.posidon.android.cintalauncher.providers.feed.notification.NotificationProvider
 import io.posidon.android.cintalauncher.providers.feed.rss.RssProvider
@@ -40,7 +38,7 @@ import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
 import io.posidon.android.cintalauncher.ui.bottomBar.BottomBar
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
 import io.posidon.android.cintalauncher.ui.feed.FeedAdapter
-import io.posidon.android.cintalauncher.ui.feed.filters.FeedFilterAdapter
+import io.posidon.android.cintalauncher.ui.feedProfiles.FeedProfiles
 import io.posidon.android.cintalauncher.ui.popup.PopupUtils
 import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.util.StackTraceActivity
@@ -65,15 +63,14 @@ class LauncherActivity : FragmentActivity() {
 
     val homeContainer by lazy { findViewById<View>(R.id.home_container) }
     val feedRecycler by lazy { findViewById<RecyclerView>(R.id.feed_recycler)!! }
-    val feedFilterRecycler by lazy { findViewById<RecyclerView>(R.id.feed_filters_recycler)!! }
 
     val blurBG by lazy { findViewById<View>(R.id.blur_bg)!! }
 
     val appDrawer by lazy { AppDrawer(this) }
     val bottomBar by lazy { BottomBar(this) }
+    val feedProfiles by lazy { FeedProfiles(this) }
 
     lateinit var feedAdapter: FeedAdapter
-    lateinit var feedFilterAdapter: FeedFilterAdapter
 
     private lateinit var wallpaperManager: WallpaperManager
 
@@ -94,19 +91,6 @@ class LauncherActivity : FragmentActivity() {
         feedAdapter.setHasStableIds(true)
         feedRecycler.setItemViewCacheSize(20)
         feedRecycler.adapter = feedAdapter
-
-        feedFilterAdapter = FeedFilterAdapter(launcherContext)
-        feedFilterRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        feedFilterRecycler.adapter = feedFilterAdapter
-        feedFilterAdapter.updateItems(
-            FeedFilter(getString(R.string.today), filter = FeedItem::isToday),
-            FeedFilter(getString(R.string.news)) {
-                it.meta?.isNotification != true
-            },
-            FeedFilter(getString(R.string.notifications)) {
-                it.meta?.isNotification == true
-            },
-        )
 
         launcherContext.feed.init(settings, notificationProvider, RssProvider, mediaProvider, suggestedAppsProvider, onUpdate = this::loadFeed) {
             runOnUiThread {
@@ -256,7 +240,7 @@ class LauncherActivity : FragmentActivity() {
     private fun updateColorTheme() {
         feedAdapter.updateColorTheme()
         feedRecycler.setBackgroundColor(ColorTheme.uiBG)
-        feedFilterAdapter.updateColorTheme()
+        feedProfiles.updateColorTheme()
         updateBlur()
         appDrawer.updateColorTheme()
         bottomBar.updateColorTheme()
@@ -332,7 +316,7 @@ class LauncherActivity : FragmentActivity() {
             bottomMargin = searchBarY
         }
 
-        feedFilterRecycler.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+        feedProfiles.feedFilterRecycler.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             bottomMargin = feedFilterY
         }
     }

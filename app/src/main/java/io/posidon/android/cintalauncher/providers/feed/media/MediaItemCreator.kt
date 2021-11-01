@@ -21,10 +21,12 @@ object MediaItemCreator {
 
         val title = mediaMetadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE)
             ?: mediaMetadata.getString(MediaMetadata.METADATA_KEY_TITLE)
+            ?: null
         val subtitle = mediaMetadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE)
             ?: mediaMetadata.getString(MediaMetadata.METADATA_KEY_ARTIST)
             ?: mediaMetadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST)
             ?: mediaMetadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_DESCRIPTION)
+            ?: null
 
         val coverBmp = mediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)
             ?: mediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_ART)
@@ -64,7 +66,7 @@ object MediaItemCreator {
 
             override val sourceIcon = sourceIcon
             override val shouldTintIcon = false
-            override val description = subtitle?.toString()
+            override val description = subtitle
             override val source = label.toString()
             override val instant = Instant.MAX
             override fun onTap(view: View) {
