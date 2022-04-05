@@ -7,8 +7,8 @@ import android.view.View
 import android.widget.ImageView
 import androidx.fragment.app.FragmentActivity
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.color.ColorThemeOptions
+import io.posidon.android.cintalauncher.providers.color.ColorThemeOptions
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import java.util.*
 
 class IntroActivity : FragmentActivity() {
@@ -33,7 +33,6 @@ class IntroActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
-        ColorTheme.onCreate(ColorThemeOptions(ColorThemeOptions.DayNight.AUTO), this)
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -43,7 +42,6 @@ class IntroActivity : FragmentActivity() {
         }
 
         updateColorTheme()
-        ColorTheme.loadWallColorTheme(this, ColorThemeOptions(ColorThemeOptions.DayNight.AUTO), IntroActivity::updateColorTheme)
     }
 
     override fun onResume() {
@@ -71,8 +69,8 @@ class IntroActivity : FragmentActivity() {
 
     fun updateColorTheme() {
         findViewById<ImageView>(R.id.button_next)!!.run {
-            backgroundTintList = ColorStateList.valueOf(ColorTheme.accentColor)
-            imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(this@IntroActivity, ColorTheme.accentColor))
+            backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColorCallToAction)
+            imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(ColorTheme.buttonColorCallToAction))
         }
         window.decorView.setBackgroundColor(ColorTheme.uiBG)
     }

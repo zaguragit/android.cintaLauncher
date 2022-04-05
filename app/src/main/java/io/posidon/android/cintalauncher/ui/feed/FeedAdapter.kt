@@ -8,14 +8,14 @@ import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.*
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.*
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.home.HomeViewHolder
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.home.bindHomeViewHolder
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.suggestions.SuggestedViewHolder
-import posidon.android.conveniencelib.toBitmap
+import io.posidon.android.conveniencelib.drawable.toBitmap
 
 class FeedAdapter(
     val activity: LauncherActivity

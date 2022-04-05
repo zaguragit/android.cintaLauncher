@@ -3,7 +3,7 @@ package io.posidon.android.cintalauncher.ui.pinned.viewHolders
 import android.content.res.ColorStateList
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 
 class DropTargetViewHolder(
     val icon: ImageView,

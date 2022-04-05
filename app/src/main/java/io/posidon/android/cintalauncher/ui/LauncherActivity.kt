@@ -22,11 +22,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.LauncherContext
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.color.ColorThemeOptions
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.ColorThemeOptions
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.providers.app.AppCallback
 import io.posidon.android.cintalauncher.providers.app.AppCollection
+import io.posidon.android.cintalauncher.providers.color.pallete.ColorPalette
 import io.posidon.android.cintalauncher.providers.feed.notification.MediaProvider
 import io.posidon.android.cintalauncher.providers.feed.notification.NotificationProvider
 import io.posidon.android.cintalauncher.providers.feed.rss.RssProvider
@@ -34,7 +35,7 @@ import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestedApps
 import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.storage.*
 import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
-import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
+import io.posidon.android.cintalauncher.storage.ColorExtractorSetting.colorTheme
 import io.posidon.android.cintalauncher.ui.bottomBar.BottomBar
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
 import io.posidon.android.cintalauncher.ui.feed.FeedAdapter
@@ -44,7 +45,7 @@ import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.util.StackTraceActivity
 import io.posidon.android.cintalauncher.util.blur.AcrylicBlur
 import io.posidon.android.launcherutils.LiveWallpaper
-import posidon.android.conveniencelib.*
+import io.posidon.android.conveniencelib.*
 import kotlin.concurrent.thread
 import kotlin.math.abs
 
@@ -83,7 +84,6 @@ class LauncherActivity : FragmentActivity() {
         configureWindow()
         settings.init(applicationContext)
         colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
-        ColorTheme.onCreate(colorThemeOptions, this)
         wallpaperManager = WallpaperManager.getInstance(this)
 
         feedRecycler.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -137,12 +137,11 @@ class LauncherActivity : FragmentActivity() {
         launcherApps.registerCallback(AppCallback(::loadApps))
 
         loadApps()
-        updateColorTheme()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             wallpaperManager.addOnColorsChangedListener(::onColorsChangedListener, feedRecycler.handler)
             thread(name = "onCreate color update", isDaemon = true) {
-                ColorTheme.onColorsChanged(this, settings.colorTheme, colorThemeOptions, LauncherActivity::updateColorTheme) {
+                ColorPalette.onColorsChanged(this, settings.colorTheme, LauncherActivity::updateColorTheme) {
                     wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
                 }
             }
@@ -168,10 +167,9 @@ class LauncherActivity : FragmentActivity() {
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             thread (isDaemon = true) {
-                ColorTheme.onResumePreOMR1(
+                ColorPalette.onResumePreOMR1(
                     this,
                     settings.colorTheme,
-                    colorThemeOptions,
                     LauncherActivity::updateColorTheme
                 )
                 onWallpaperChanged()
@@ -227,7 +225,7 @@ class LauncherActivity : FragmentActivity() {
                 },
             ))
         }
-        bottomBar.blurBG.drawable = acrylicBlur?.insaneBlur?.let { BitmapDrawable(resources, it) }
+        bottomBar.blurBG.drawable = acrylicBlur?.smoothBlur?.let { BitmapDrawable(resources, it) }
         homeContainer.background = acrylicBlur?.let { b ->
             LayerDrawable(arrayOf(
                 BitmapDrawable(resources, b.smoothBlur).also {
@@ -237,13 +235,17 @@ class LauncherActivity : FragmentActivity() {
         }
     }
 
-    private fun updateColorTheme() {
-        feedAdapter.updateColorTheme()
-        feedRecycler.setBackgroundColor(ColorTheme.uiBG)
-        feedProfiles.updateColorTheme()
-        updateBlur()
-        appDrawer.updateColorTheme()
-        bottomBar.updateColorTheme()
+    private fun updateColorTheme(colorPalette: ColorPalette) {
+        colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
+        ColorTheme.updateColorTheme(colorThemeOptions.createColorTheme(colorPalette))
+        runOnUiThread {
+            feedAdapter.updateColorTheme()
+            feedRecycler.setBackgroundColor(ColorTheme.uiBG and 0xffffff or 0xbb000000.toInt())
+            feedProfiles.updateColorTheme()
+            updateBlur()
+            appDrawer.updateColorTheme()
+            bottomBar.updateColorTheme()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O_MR1)
@@ -253,17 +255,17 @@ class LauncherActivity : FragmentActivity() {
     ) {
         if (which and WallpaperManager.FLAG_SYSTEM != 0) {
             onWallpaperChanged()
-            ColorTheme.onColorsChanged(this, settings.colorTheme, colorThemeOptions, LauncherActivity::updateColorTheme) { colors }
+            ColorPalette.onColorsChanged(this, settings.colorTheme, LauncherActivity::updateColorTheme) { colors }
         }
     }
 
     fun reloadColorThemeSync() {
         colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            ColorTheme.onColorsChanged(this, settings.colorTheme, colorThemeOptions, LauncherActivity::updateColorTheme) {
+            ColorPalette.onColorsChanged(this, settings.colorTheme, LauncherActivity::updateColorTheme) {
                 wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
             }
-        } else ColorTheme.onResumePreOMR1(this, settings.colorTheme, colorThemeOptions, LauncherActivity::updateColorTheme)
+        } else ColorPalette.onResumePreOMR1(this, settings.colorTheme, LauncherActivity::updateColorTheme)
     }
 
     private fun onWallpaperChanged() {

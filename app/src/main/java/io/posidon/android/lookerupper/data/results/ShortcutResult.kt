@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.palette.graphics.Palette
-import posidon.android.conveniencelib.toBitmap
+import io.posidon.android.conveniencelib.drawable.toBitmap
 
 class ShortcutResult(
     val shortcutInfo: ShortcutInfo,

@@ -4,7 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemSuggestedApps
 import io.posidon.android.cintalauncher.ui.LauncherActivity

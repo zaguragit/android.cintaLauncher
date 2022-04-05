@@ -3,10 +3,10 @@ package io.posidon.android.lookerupper.data.results
 import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.view.View
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
-import posidon.android.conveniencelib.getNavigationBarHeight
+import io.posidon.android.conveniencelib.getNavigationBarHeight
 
 class CompactAppResult(
     val app: App
@@ -21,11 +21,11 @@ class CompactAppResult(
 
     override var relevance = Relevance(0f)
     override val onLongPress = { v: View, activity: Activity ->
-        val backgroundColor = ColorTheme.tintAppDrawerItem(getColor())
+        val backgroundColor = ColorTheme.tintWithColor(ColorTheme.cardBG, getColor())
         ItemLongPress.onItemLongPress(
             v,
             backgroundColor,
-            ColorTheme.titleColorForBG(v.context, backgroundColor),
+            ColorTheme.titleColorForBG(backgroundColor),
             app,
             activity.getNavigationBarHeight(),
         )

@@ -13,8 +13,8 @@ import io.posidon.android.cintalauncher.providers.feed.AsyncFeedItemProvider
 import io.posidon.android.cintalauncher.providers.feed.Feed.Companion.MAX_ITEMS_HINT
 import io.posidon.android.cintalauncher.util.AsyncLoadDrawable
 import io.posidon.android.cintalauncher.util.ImageLoader
-import posidon.android.loader.rss.RssItem
-import posidon.android.loader.rss.RssLoader
+import io.posidon.android.rsslib.RssItem
+import io.posidon.android.rsslib.RSS
 
 object RssProvider : AsyncFeedItemProvider() {
 
@@ -39,9 +39,10 @@ object RssProvider : AsyncFeedItemProvider() {
 
     override fun loadItems(): List<FeedItem> {
         val items = ArrayList<RssItem>()
-        if (RssLoader.load(items, settings.getStrings("feed:rss_sources")?.toList() ?: emptyList(), MAX_ITEMS_HINT, doSorting = false).isNotEmpty()) {
+        if (RSS.load(items, settings.getStrings("feed:rss_sources")?.toList() ?: emptyList(), MAX_ITEMS_HINT).isNotEmpty()) {
             return emptyList()
         }
+        items.sort()
         return items.map {
             val id = it.link.longHash()
             val meta = FeedItemMeta(
@@ -50,7 +51,7 @@ object RssProvider : AsyncFeedItemProvider() {
             println(it.title)
             if (it.img == null) {
                 object : FeedItem {
-                    override val color = if (it.source.accentColor == 0) 0 else it.source.accentColor or 0xff000000.toInt()
+                    override val color = if (it.source.accentColor == 0) 0 else (it.source.accentColor ?: 0) or 0xff000000.toInt()
                     override val title = it.title
                     override val sourceIcon = it.source.iconUrl?.let(RssProvider::loadBitmap)
                     override val description = null
@@ -68,7 +69,7 @@ object RssProvider : AsyncFeedItemProvider() {
             } else {
                 object : FeedItemWithBigImage {
                     override val image = it.img!!
-                    override val color = if (it.source.accentColor == 0) 0 else it.source.accentColor or 0xff000000.toInt()
+                    override val color = if (it.source.accentColor == 0) 0 else (it.source.accentColor ?: 0) or 0xff000000.toInt()
                     override val title = it.title
                     override val sourceIcon = it.source.iconUrl?.let(RssProvider::loadBitmap)
                     override val description = null

@@ -14,7 +14,7 @@ import io.posidon.android.cintalauncher.ui.pinned.viewHolders.DropTargetViewHold
 import io.posidon.android.cintalauncher.ui.pinned.viewHolders.PinnedViewHolder
 import io.posidon.android.cintalauncher.ui.pinned.viewHolders.bindDropTargetViewHolder
 import io.posidon.android.cintalauncher.ui.pinned.viewHolders.bindPinnedViewHolder
-import posidon.android.conveniencelib.getNavigationBarHeight
+import io.posidon.android.conveniencelib.getNavigationBarHeight
 
 class PinnedItemsAdapter(
     launcherActivity: Activity,

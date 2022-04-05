@@ -14,15 +14,15 @@ import androidx.core.view.marginTop
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.popup.drawer.DrawerLongPressPopup
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
-import posidon.android.conveniencelib.getNavigationBarHeight
-import posidon.android.conveniencelib.getStatusBarHeight
-import posidon.android.conveniencelib.onEnd
+import io.posidon.android.conveniencelib.getNavigationBarHeight
+import io.posidon.android.conveniencelib.getStatusBarHeight
+import io.posidon.android.conveniencelib.onEnd
 import kotlin.math.abs
 
 class AppDrawer(
@@ -102,7 +102,7 @@ class AppDrawer(
     }
 
     fun updateColorTheme() {
-        view.background = ColorDrawable(ColorTheme.appDrawerColor and 0xffffff or 0xaa000000.toInt())
+        view.background = ColorDrawable(ColorTheme.uiBG and 0xffffff or 0xbb000000.toInt())
         adapter.notifyItemRangeChanged(0, adapter.itemCount)
     }
 

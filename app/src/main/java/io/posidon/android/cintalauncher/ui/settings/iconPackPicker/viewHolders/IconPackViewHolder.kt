@@ -5,7 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.ui.settings.iconPackPicker.IconPackPickerActivity
 
 class IconPackViewHolder(itemView: View, val type: Int) : RecyclerView.ViewHolder(itemView) {

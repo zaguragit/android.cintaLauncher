@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.storage.DoReshapeAdaptiveIconsSetting.doReshapeAdaptiveIcons
 import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.scrollbarController
 import io.posidon.android.cintalauncher.storage.Settings
@@ -24,7 +24,7 @@ import io.posidon.android.cintalauncher.ui.popup.listPopup.ListPopupAdapter
 import io.posidon.android.cintalauncher.ui.popup.listPopup.ListPopupItem
 import io.posidon.android.cintalauncher.ui.settings.iconPackPicker.IconPackPickerActivity
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
-import posidon.android.conveniencelib.Device
+import io.posidon.android.conveniencelib.Device
 
 object DrawerLongPressPopup {
 

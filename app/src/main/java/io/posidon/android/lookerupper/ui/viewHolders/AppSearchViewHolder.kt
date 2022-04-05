@@ -7,14 +7,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import io.posidon.android.lookerupper.data.results.AppResult
 import io.posidon.android.lookerupper.data.results.SearchResult
-import posidon.android.conveniencelib.getNavigationBarHeight
+import io.posidon.android.conveniencelib.getNavigationBarHeight
 
 class AppSearchViewHolder(
     itemView: View,
@@ -31,10 +31,10 @@ class AppSearchViewHolder(
 
         blurBG.drawable = BitmapDrawable(itemView.resources, acrylicBlur?.insaneBlur)
 
-        val backgroundColor = ColorTheme.tintAppDrawerItem(result.getColor())
+        val backgroundColor = ColorTheme.tintWithColor(ColorTheme.cardBG, result.getColor())
         card.setCardBackgroundColor(backgroundColor)
         label.text = result.title
-        label.setTextColor(ColorTheme.titleColorForBG(itemView.context, backgroundColor))
+        label.setTextColor(ColorTheme.titleColorForBG(backgroundColor))
         icon.setImageDrawable(result.icon)
 
         itemView.setOnClickListener {
@@ -45,7 +45,7 @@ class AppSearchViewHolder(
             ItemLongPress.onItemLongPress(
                 it,
                 backgroundColor,
-                ColorTheme.titleColorForBG(itemView.context, backgroundColor),
+                ColorTheme.titleColorForBG(backgroundColor),
                 result.app,
                 activity.getNavigationBarHeight(),
             )

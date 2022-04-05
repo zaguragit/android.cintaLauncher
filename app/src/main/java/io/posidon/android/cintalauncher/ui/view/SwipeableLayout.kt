@@ -13,9 +13,11 @@ import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import posidon.android.conveniencelib.SpringInterpolator
-import posidon.android.conveniencelib.dp
-import posidon.android.conveniencelib.onEnd
+import io.posidon.android.conveniencelib.AnimUtils
+import io.posidon.android.conveniencelib.onEnd
+import io.posidon.android.conveniencelib.units.dp
+import io.posidon.android.conveniencelib.units.toFloatPixels
+import io.posidon.android.conveniencelib.units.toPixels
 import kotlin.math.abs
 
 class SwipeableLayout(
@@ -52,8 +54,8 @@ class SwipeableLayout(
         addView(frontView)
         layoutParams = frontView.layoutParams
         closeIcon.run {
-            layoutParams.width = dp(32).toInt()
-            layoutParams.height = dp(32).toInt()
+            layoutParams.width = 32.dp.toPixels(context)
+            layoutParams.height = 32.dp.toPixels(context)
         }
     }
 
@@ -107,7 +109,7 @@ class SwipeableLayout(
                 frontView.translationX = f
                 state!!.xOffset = f
             }
-            interpolator = SpringInterpolator()
+            setInterpolator(AnimUtils::springInterpolate)
             duration = 420L
             onEnd {
                 backView.clipBounds = Rect(0, 0, 0, 0)
@@ -148,13 +150,13 @@ class SwipeableLayout(
                 frontView.translationX = state!!.xOffset
                 backView.clipBounds =
                     if (state!!.xOffset > 0) {
-                        closeIcon.translationX = dp(18)
-                        closeIcon.translationY = (measuredHeight - dp(32)) / 2
+                        closeIcon.translationX = 18.dp.toFloatPixels(this)
+                        closeIcon.translationY = (measuredHeight - 32.dp.toFloatPixels(this)) / 2
                         Rect(0, 0, state!!.xOffset.toInt() + cornerRadiusCompensation.toInt(), measuredHeight)
                     }
                     else {
-                        closeIcon.translationX = measuredWidth - dp(50)
-                        closeIcon.translationY = (measuredHeight - dp(32)) / 2
+                        closeIcon.translationX = measuredWidth - 50.dp.toFloatPixels(this)
+                        closeIcon.translationY = (measuredHeight - 32.dp.toFloatPixels(this)) / 2
                         Rect(measuredWidth + state!!.xOffset.toInt() - cornerRadiusCompensation.toInt(), 0, measuredWidth, measuredHeight)
                     }
                 backView.visibility = VISIBLE
@@ -163,12 +165,12 @@ class SwipeableLayout(
             MotionEvent.ACTION_UP -> {
                 when {
                     state!!.xOffset > measuredWidth/7*3 ||
-                            state!!.xOffset > dp(64) && ev.eventTime - ev.downTime < 160 -> {
+                            state!!.xOffset > 64.dp.toFloatPixels(this) && ev.eventTime - ev.downTime < 160 -> {
                         if (isSwipeable) sashayAway(1)
                         else bounceBack()
                     }
                     state!!.xOffset < -measuredWidth/7*3 ||
-                    state!!.xOffset < -dp((64)) && ev.eventTime - ev.downTime < 160 -> {
+                    state!!.xOffset < -(64.dp.toFloatPixels(this)) && ev.eventTime - ev.downTime < 160 -> {
                         if (isSwipeable) sashayAway(-1)
                         else bounceBack()
                     }
@@ -189,13 +191,13 @@ class SwipeableLayout(
             state!!.xOffset = ev.x - state!!.initX
             val absYOffset = abs(ev.y - state!!.initY)
             val absXOffset = abs(state!!.xOffset)
-            if (abs(absXOffset - absYOffset) > context.dp(2) && absXOffset > absYOffset && !(frontView is ViewGroup && checkForHorizontalScroll(ev, frontView))) {
+            if (abs(absXOffset - absYOffset) > 2.dp.toFloatPixels(this) && absXOffset > absYOffset && !(frontView is ViewGroup && checkForHorizontalScroll(ev, frontView))) {
                 true
             } else {
                 super.onInterceptTouchEvent(ev)
             }
         }
-        MotionEvent.ACTION_UP -> if (abs(state!!.xOffset) < context.dp(12) || frontView is ViewGroup && checkForHorizontalScroll(ev, frontView)) {
+        MotionEvent.ACTION_UP -> if (abs(state!!.xOffset) < 12.dp.toFloatPixels(this) || frontView is ViewGroup && checkForHorizontalScroll(ev, frontView)) {
             super.onInterceptTouchEvent(ev)
         } else true
         else -> {

@@ -15,10 +15,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
-import posidon.android.conveniencelib.dp
+import io.posidon.android.conveniencelib.units.dp
+import io.posidon.android.conveniencelib.units.toFloatPixels
 
 open class FeedItemImageViewHolder(itemView: View) : FeedItemViewHolder(itemView) {
     val image = itemView.findViewById<ImageView>(R.id.image)!!
@@ -47,7 +48,7 @@ open class FeedItemImageViewHolder(itemView: View) : FeedItemViewHolder(itemView
             val imageView = target.view as ImageView
             imageView.updateLayoutParams {
                 this.width = (this.height * resource.intrinsicWidth / resource.intrinsicHeight)
-                val max = imageView.dp(156)
+                val max = 156.dp.toFloatPixels(imageView)
                 if (width > max) {
                     val m = max / width
                     width = (width * m).toInt()

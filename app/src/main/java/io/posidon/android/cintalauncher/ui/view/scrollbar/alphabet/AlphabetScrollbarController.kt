@@ -2,14 +2,15 @@ package io.posidon.android.cintalauncher.ui.view.scrollbar.alphabet
 
 import android.content.Context
 import android.graphics.Canvas
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.viewHolders.SectionHeaderItem
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
 import io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarController
-import posidon.android.conveniencelib.dp
+import io.posidon.android.conveniencelib.units.dp
+import io.posidon.android.conveniencelib.units.toFloatPixels
 import java.util.*
 
 class AlphabetScrollbarController(
@@ -59,7 +60,7 @@ class AlphabetScrollbarController(
 
     override fun updateTheme(context: Context) {
         paint.apply {
-            textSize = context.dp(16)
+            textSize = 16.dp.toFloatPixels(scrollbar)
         }
         highlightColor = ColorTheme.accentColor
         scrollbar.invalidate()

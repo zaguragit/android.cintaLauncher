@@ -5,8 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.TextView
-import io.posidon.android.cintalauncher.color.ColorTheme
-import posidon.android.conveniencelib.dp
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
+import io.posidon.android.conveniencelib.units.dp
+import io.posidon.android.conveniencelib.units.toPixels
 
 class SuggestionsAdapter(
     val suggestions: Suggestions
@@ -22,10 +23,10 @@ class SuggestionsAdapter(
 
     override fun getGroupView(topicI: Int, p1: Boolean, cv: View?, parent: ViewGroup): View {
         val convertView = (cv ?: TextView(parent.context).apply {
-            val h = dp(16).toInt()
-            val v = dp(8).toInt()
-            setPadding(h, v + dp(8).toInt(), h, v)
-            val textColor = ColorTheme.textColorForBG(context, ColorTheme.appDrawerColor)
+            val h = 16.dp.toPixels(this)
+            val v = 8.dp.toPixels(this)
+            setPadding(h, v + 8.dp.toPixels(this), h, v)
+            val textColor = ColorTheme.uiDescription
             setTextColor(textColor)
             textSize = 20f
         }) as TextView
@@ -36,9 +37,9 @@ class SuggestionsAdapter(
     @SuppressLint("ClickableViewAccessibility")
     override fun getChildView(topicI: Int, sourceI: Int, isLast: Boolean, cv: View?, parent: ViewGroup): View {
         val convertView = (cv ?: TextView(parent.context).apply {
-            val h = dp(16).toInt()
-            setPadding(h + dp(16).toInt(), dp(2).toInt(), h, dp(8).toInt())
-            val textColor = ColorTheme.textColorForBG(context, ColorTheme.appDrawerColor)
+            val h = 16.dp.toPixels(this)
+            setPadding(h + 16.dp.toPixels(this), 2.dp.toPixels(this), h, 8.dp.toPixels(this))
+            val textColor = ColorTheme.uiDescription
             setTextColor(textColor)
             textSize = 16f
         }) as TextView

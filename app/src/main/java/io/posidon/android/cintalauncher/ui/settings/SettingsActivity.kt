@@ -7,9 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.fragment.app.FragmentActivity
-import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.color.ColorThemeOptions
-import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 
@@ -19,7 +17,6 @@ abstract class SettingsActivity : FragmentActivity() {
 
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ColorTheme.onCreate(ColorThemeOptions(settings.colorThemeDayNight), this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) window.setDecorFitsSystemWindows(false)
         else window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)

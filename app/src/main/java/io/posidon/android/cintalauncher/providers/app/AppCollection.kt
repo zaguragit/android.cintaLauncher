@@ -14,7 +14,7 @@ import io.posidon.android.cintalauncher.storage.DoReshapeAdaptiveIconsSetting.do
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.launcherutils.AppLoader
-import posidon.android.conveniencelib.toBitmap
+import io.posidon.android.conveniencelib.drawable.toBitmap
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap

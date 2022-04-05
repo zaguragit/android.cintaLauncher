@@ -3,7 +3,7 @@ package io.posidon.android.cintalauncher.ui.pinned.viewHolders
 import android.view.View
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
@@ -26,11 +26,11 @@ fun bindPinnedViewHolder(
         item.open(it.context.applicationContext, it)
     }
     holder.itemView.setOnLongClickListener {
-        val backgroundColor = ColorTheme.tintAppDrawerItem(item.getColor())
+        val backgroundColor = ColorTheme.tintWithColor(ColorTheme.cardBG, item.getColor())
         ItemLongPress.onItemLongPress(
             it,
             backgroundColor,
-            ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor),
+            ColorTheme.titleColorForBG(backgroundColor),
             item,
             navbarHeight,
         )

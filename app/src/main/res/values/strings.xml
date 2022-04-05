@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Cinta</string>
-
     <string name="cinta_launcher_crashed">Cinta launcher crashed</string>
     <string name="send_bug_report">Send bug report</string>
 

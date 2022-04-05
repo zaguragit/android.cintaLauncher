@@ -5,13 +5,13 @@ import android.graphics.*
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.widget.ImageView
+import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.applyCanvas
 import androidx.core.graphics.toXfermode
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithMedia
-import posidon.android.conveniencelib.Colors
 
 class FeedItemMediaViewHolder(
     itemView: View
@@ -80,7 +80,7 @@ class FeedItemMediaViewHolder(
         title.setOnClickListener(item::onTap)
         description.setOnClickListener(item::onTap)
 
-        val titleColor = Colors.blend(ColorTheme.adjustColorForContrast(ColorTheme.uiBG, item.color), ColorTheme.uiTitle, .3f)
+        val titleColor = ColorUtils.blendARGB(ColorTheme.adjustColorForContrast(ColorTheme.uiBG, item.color), ColorTheme.uiTitle, .7f)
         val titleTintList = ColorStateList.valueOf(titleColor)
 
         previous.imageTintList = titleTintList

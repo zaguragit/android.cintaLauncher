@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
 import io.posidon.android.lookerupper.data.results.InstantAnswerResult
@@ -49,9 +49,9 @@ class AnswerSearchViewHolder(
         description.text = result.description
         sourceAction.text = itemView.context.getString(R.string.read_more_at_source, result.sourceName)
 
-        val bg = ColorTheme.actionButtonBG(ColorTheme.accentColor)
-        val fg = ColorTheme.titleColorForBG(itemView.context, bg)
-        val hint = ColorTheme.hintColorForBG(itemView.context, bg)
+        val bg = ColorTheme.buttonColor
+        val fg = ColorTheme.titleColorForBG(bg)
+        val hint = ColorTheme.hintColorForBG(bg)
         actionsContainer.setCardBackgroundColor(bg)
         sourceAction.setTextColor(fg)
         searchAction.setTextColor(fg)

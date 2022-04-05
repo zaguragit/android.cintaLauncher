@@ -5,7 +5,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
-import posidon.android.conveniencelib.Device
+import io.posidon.android.conveniencelib.Device
 
 class SeeThoughView : View {
     constructor(c: Context) : super(c)

@@ -9,7 +9,7 @@
         android:id="@+id/search_bar_blur_bg"
         android:layout_width="match_parent"
         android:layout_height="@dimen/search_bar_height"
-        android:alpha="0.5"/>
+        android:alpha="0.2"/>
     <ImageView
         style="@style/Theme.CintaLauncher.SearchBar.Icon"
         android:id="@+id/search_bar_icon"

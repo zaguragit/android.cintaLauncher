@@ -12,16 +12,19 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import androidx.core.content.res.ResourcesCompat
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.pallete.ColorPalette
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting
 import io.posidon.android.cintalauncher.storage.ScrollbarControllerSetting.scrollbarController
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawer
 import io.posidon.android.cintalauncher.ui.view.scrollbar.alphabet.AlphabetScrollbarController
 import io.posidon.android.cintalauncher.ui.view.scrollbar.hue.HueScrollbarController
-import posidon.android.conveniencelib.Device
-import posidon.android.conveniencelib.dp
-import posidon.android.conveniencelib.getNavigationBarHeight
+import io.posidon.android.conveniencelib.Device
+import io.posidon.android.conveniencelib.units.dp
+import io.posidon.android.conveniencelib.getNavigationBarHeight
+import io.posidon.android.conveniencelib.units.toFloatPixels
+import io.posidon.android.conveniencelib.units.toPixels
 import kotlin.math.abs
 
 @SuppressLint("AppCompatCustomView")
@@ -85,9 +88,9 @@ class ScrollbarIconView @JvmOverloads constructor(
         scrollBar.controller.updateTheme(context)
         scrollBar.background = ShapeDrawable(RoundRectShape(
             FloatArray(8) { resources.getDimension(R.dimen.search_bar_radius) }, null, null)).apply {
-            paint.color = ColorTheme.scrollBarBG
+            paint.color = ColorPalette.getCurrent().neutralVeryDark
         }
-        val p = dp(24).toInt()
+        val p = 24.dp.toPixels(this)
         when (orientation) {
             Scrollbar.HORIZONTAL -> scrollBar.setPadding(p, 0, p, 0)
             Scrollbar.VERTICAL -> scrollBar.setPadding(0, p, 0, p)

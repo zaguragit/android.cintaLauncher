@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.items.FeedItem
 import io.posidon.android.cintalauncher.data.feed.items.formatTimeAgo
 import io.posidon.android.cintalauncher.ui.feed.items.ActionsAdapter
 import io.posidon.android.cintalauncher.ui.view.SwipeableLayout
 import io.posidon.android.cintalauncher.ui.view.recycler.DividerItemDecorator
-import posidon.android.conveniencelib.dp
+import io.posidon.android.conveniencelib.units.dp
+import io.posidon.android.conveniencelib.units.toPixels
 import java.time.Instant
 
 open class FeedItemViewHolder(itemView: View) : FeedViewHolder(SwipeableLayout(itemView)) {
@@ -32,7 +33,7 @@ open class FeedItemViewHolder(itemView: View) : FeedViewHolder(SwipeableLayout(i
     val actionsContainer = itemView.findViewById<CardView>(R.id.actions_container)!!
     val separatorDrawable = GradientDrawable().apply {
         shape = GradientDrawable.RECTANGLE
-        setSize(itemView.dp(1).toInt(), 0)
+        setSize(1.dp.toPixels(itemView), 0)
     }
     val actions = actionsContainer.findViewById<RecyclerView>(R.id.actions_recycler)!!.apply {
         layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
@@ -58,11 +59,11 @@ open class FeedItemViewHolder(itemView: View) : FeedViewHolder(SwipeableLayout(i
             actionsContainer.isVisible = false
         } else {
             actionsContainer.isVisible = true
-            val bg = ColorTheme.actionButtonBG(item.color.let { if (it == 0) ColorTheme.accentColor else it })
+            val bg = ColorTheme.buttonColor
             actionsContainer.setCardBackgroundColor(bg)
-            val fg = ColorTheme.titleColorForBG(itemView.context, bg)
+            val fg = ColorTheme.titleColorForBG(bg)
             actions.adapter = ActionsAdapter(item.actions, fg)
-            separatorDrawable.setColor(ColorTheme.hintColorForBG(itemView.context, bg))
+            separatorDrawable.setColor(ColorTheme.hintColorForBG(bg))
         }
         if (item.instant == Instant.MAX) {
             time.isVisible = false
@@ -78,7 +79,7 @@ open class FeedItemViewHolder(itemView: View) : FeedViewHolder(SwipeableLayout(i
         time.setTextColor(ColorTheme.uiDescription)
         val bg = (ColorTheme.uiBG and 0xff000000.toInt()) or (ColorTheme.accentColor and 0x00ffffff)
         swipeableLayout.setSwipeColor(bg)
-        swipeableLayout.setIconColor(ColorTheme.titleColorForBG(itemView.context, bg))
+        swipeableLayout.setIconColor(ColorTheme.titleColorForBG(bg))
         separator.setBackgroundColor(ColorTheme.uiHint and 0x00ffffff or 0x24ffffff)
     }
 }

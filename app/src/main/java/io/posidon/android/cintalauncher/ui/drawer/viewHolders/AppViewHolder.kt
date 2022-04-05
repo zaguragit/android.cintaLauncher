@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.isVisible
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +19,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
@@ -30,9 +31,8 @@ import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.applyIfNotNull
 import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
 import io.posidon.android.cintalauncher.ui.view.HorizontalAspectRatioLayout
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
-import posidon.android.conveniencelib.Colors
-import posidon.android.conveniencelib.getNavigationBarHeight
-import posidon.android.conveniencelib.toBitmap
+import io.posidon.android.conveniencelib.getNavigationBarHeight
+import io.posidon.android.conveniencelib.drawable.toBitmap
 
 class AppViewHolder(
     val card: CardView
@@ -77,13 +77,13 @@ class AppViewHolder(
             isFirstResource: Boolean
         ): Boolean {
             val palette = Palette.from(resource.toBitmap(32, 32)).generate()
-            val backgroundColor = ColorTheme.tintAppDrawerItem(palette.getDominantColor(color))
-            val actuallyBackgroundColor = Colors.blend(color, backgroundColor, holder.imageView.alpha)
+            val backgroundColor = ColorTheme.tintWithColor(ColorTheme.cardBG, palette.getDominantColor(color))
+            val actuallyBackgroundColor = ColorUtils.blendARGB(backgroundColor, color, holder.imageView.alpha)
 
             holder.card.setCardBackgroundColor(backgroundColor)
-            holder.label.setTextColor(ColorTheme.titleColorForBG(holder.itemView.context, actuallyBackgroundColor))
-            holder.lineTitle.setTextColor(ColorTheme.titleColorForBG(holder.itemView.context, actuallyBackgroundColor))
-            holder.lineDescription.setTextColor(ColorTheme.textColorForBG(holder.itemView.context, actuallyBackgroundColor))
+            holder.label.setTextColor(ColorTheme.titleColorForBG(actuallyBackgroundColor))
+            holder.lineTitle.setTextColor(ColorTheme.titleColorForBG(actuallyBackgroundColor))
+            holder.lineDescription.setTextColor(ColorTheme.textColorForBG(actuallyBackgroundColor))
 
             target.onResourceReady(resource, null)
             return true
@@ -105,13 +105,13 @@ fun bindAppViewHolder(
 ) {
     holder.blurBG.drawable = BitmapDrawable(holder.itemView.resources, acrylicBlur?.insaneBlur)
 
-    val backgroundColor = ColorTheme.tintAppDrawerItem(item.getColor())
+    val backgroundColor = ColorTheme.tintWithColor(ColorTheme.cardBG, item.getColor())
     holder.card.setCardBackgroundColor(backgroundColor)
     holder.card.alpha = if (isDimmed) .3f else 1f
     holder.label.text = item.label
-    holder.label.setTextColor(ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor))
-    holder.lineTitle.setTextColor(ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor))
-    holder.lineDescription.setTextColor(ColorTheme.textColorForBG(holder.itemView.context, backgroundColor))
+    holder.label.setTextColor(ColorTheme.titleColorForBG(backgroundColor))
+    holder.lineTitle.setTextColor(ColorTheme.titleColorForBG(backgroundColor))
+    holder.lineDescription.setTextColor(ColorTheme.textColorForBG(backgroundColor))
 
     val banner = (item as? App)?.getBanner()
     if (banner?.text == null && banner?.title == null) {
@@ -148,7 +148,7 @@ fun bindAppViewHolder(
         ItemLongPress.onItemLongPress(
             it,
             backgroundColor,
-            ColorTheme.titleColorForBG(holder.itemView.context, backgroundColor),
+            ColorTheme.titleColorForBG(backgroundColor),
             item,
             activity.getNavigationBarHeight(),
         )

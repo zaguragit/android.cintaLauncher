@@ -14,10 +14,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
 import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.setColorThemeDayNight
-import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
+import io.posidon.android.cintalauncher.storage.ColorExtractorSetting.colorTheme
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.popup.PopupUtils
@@ -26,7 +26,7 @@ import io.posidon.android.cintalauncher.ui.popup.listPopup.ListPopupItem
 import io.posidon.android.cintalauncher.ui.settings.feedChooser.FeedSourcesChooserActivity
 import io.posidon.android.cintalauncher.ui.settings.iconPackPicker.IconPackPickerActivity
 import io.posidon.android.cintalauncher.ui.view.SeeThoughView
-import posidon.android.conveniencelib.Device
+import io.posidon.android.conveniencelib.Device
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
 import kotlin.concurrent.withLock

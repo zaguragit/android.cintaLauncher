@@ -20,7 +20,7 @@ import io.posidon.android.cintalauncher.data.items.App
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.data.items.showProperties
 import io.posidon.android.cintalauncher.ui.popup.PopupUtils
-import posidon.android.conveniencelib.vibrate
+import io.posidon.android.conveniencelib.vibrate
 
 object ItemLongPress {
 

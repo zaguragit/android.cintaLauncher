@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.items.LauncherItem
 import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.acrylicBlur
@@ -26,10 +26,10 @@ class SuggestionViewHolder(
     ) {
         blurBG.drawable = BitmapDrawable(itemView.resources, acrylicBlur?.insaneBlur)
 
-        val backgroundColor = ColorTheme.tintAppDrawerItem(item.getColor())
+        val backgroundColor = ColorTheme.tintWithColor(ColorTheme.cardBG, item.getColor())
         card.setCardBackgroundColor(backgroundColor)
         label.text = item.label
-        label.setTextColor(ColorTheme.titleColorForBG(itemView.context, backgroundColor))
+        label.setTextColor(ColorTheme.titleColorForBG(backgroundColor))
         icon.setImageDrawable(item.icon)
 
         itemView.setOnClickListener {
@@ -40,7 +40,7 @@ class SuggestionViewHolder(
             ItemLongPress.onItemLongPress(
                 it,
                 backgroundColor,
-                ColorTheme.titleColorForBG(itemView.context, backgroundColor),
+                ColorTheme.titleColorForBG(backgroundColor),
                 item,
                 navbarHeight,
             )

@@ -6,13 +6,13 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter.Companion.SECTION_HEADER
 import io.posidon.android.cintalauncher.ui.popup.drawer.DrawerLongPressPopup
 import io.posidon.android.cintalauncher.ui.view.recycler.HighlightSectionIndexer
-import posidon.android.conveniencelib.getNavigationBarHeight
+import io.posidon.android.conveniencelib.getNavigationBarHeight
 
 class SectionHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -37,7 +37,7 @@ fun bindSectionHeaderViewHolder(
 ) {
     holder.itemView.background = if (isHighlighted) holder.highlightDrawable else null
     holder.textView.text = item.label
-    holder.textView.setTextColor(ColorTheme.appDrawerSectionColor)
+    holder.textView.setTextColor(ColorTheme.cardTitle)
     holder.highlightDrawable.paint.color = ColorTheme.accentColor and 0xffffff or 0x55000000
 
     var x = 0f

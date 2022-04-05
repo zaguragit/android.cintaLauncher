@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.LauncherContext
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.providers.feed.notification.NotificationService
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.popup.home.HomeLongPressPopup
-import posidon.android.conveniencelib.getNavigationBarHeight
-import posidon.android.conveniencelib.getStatusBarHeight
+import io.posidon.android.conveniencelib.getNavigationBarHeight
+import io.posidon.android.conveniencelib.getStatusBarHeight
 
 class HomeViewHolder(
     val launcherActivity: LauncherActivity,

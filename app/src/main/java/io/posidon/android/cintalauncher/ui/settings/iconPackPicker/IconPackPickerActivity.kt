@@ -12,8 +12,8 @@ import io.posidon.android.cintalauncher.R
 import io.posidon.android.cintalauncher.ui.settings.SettingsActivity
 import io.posidon.android.cintalauncher.ui.settings.iconPackPicker.viewHolders.IconPackViewHolder
 import io.posidon.android.launcherutils.IconTheming
-import posidon.android.conveniencelib.getNavigationBarHeight
-import posidon.android.conveniencelib.getStatusBarHeight
+import io.posidon.android.conveniencelib.getNavigationBarHeight
+import io.posidon.android.conveniencelib.getStatusBarHeight
 import java.util.*
 
 class IconPackPickerActivity : SettingsActivity() {

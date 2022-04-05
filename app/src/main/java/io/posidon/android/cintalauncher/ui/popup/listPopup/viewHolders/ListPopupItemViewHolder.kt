@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.applyIfNotNull
 import io.posidon.android.cintalauncher.ui.popup.listPopup.ListPopupItem
 

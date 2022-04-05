@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.LauncherContext
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.data.feed.profiles.FeedProfile
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.applyIfNotNull
 
@@ -41,7 +41,7 @@ class FeedProfileAdapter(
         applyIfNotNull(holder.text, item.name, TextView::setText)
         applyIfNotNull(holder.icon, item.icon, ImageView::setImageDrawable)
         val bgColor = if (selection == i) ColorTheme.accentColor else ColorTheme.searchBarBG
-        val fgColor = ColorTheme.textColorForBG(holder.itemView.context, bgColor)
+        val fgColor = ColorTheme.textColorForBG(bgColor)
         holder.card.setCardBackgroundColor(bgColor)
         holder.text.setTextColor(fgColor)
         holder.icon.imageTintList = ColorStateList.valueOf(fgColor)

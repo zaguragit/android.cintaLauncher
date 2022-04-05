@@ -14,8 +14,9 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.color.ColorThemeOptions
+import io.posidon.android.cintalauncher.providers.color.ColorThemeOptions
+import io.posidon.android.cintalauncher.providers.color.pallete.ColorPalette
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.providers.feed.suggestions.SuggestionsManager
 import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.util.FakeLauncherActivity
@@ -45,7 +46,8 @@ class PermissionsFragment : FragmentWithNext(R.layout.intro_permissions) {
         ) {
             findViewById<View>(R.id.button_storage)!!.isVisible = false
             tickStorage.isVisible = true
-            ColorTheme.loadWallColorTheme(requireActivity() as IntroActivity, ColorThemeOptions(ColorThemeOptions.DayNight.AUTO)) { a ->
+            ColorPalette.loadWallColorTheme(requireActivity() as IntroActivity) { a, palette ->
+                ColorTheme.updateColorTheme(ColorThemeOptions(ColorThemeOptions.DayNight.AUTO).createColorTheme(palette))
                 val tl = ColorStateList.valueOf(ColorTheme.accentColor)
                 tickStorage.imageTintList = tl
                 tickContacts.imageTintList = tl

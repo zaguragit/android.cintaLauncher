@@ -2,8 +2,8 @@ package io.posidon.android.cintalauncher.ui.settings.feedChooser
 
 import android.content.Context
 import org.json.JSONArray
-import posidon.android.conveniencelib.loadRaw
-import posidon.android.loader.rss.RssSource
+import io.posidon.android.conveniencelib.loadRaw
+import io.posidon.android.rsslib.RssSource
 
 class Topic (
     val context: Context,

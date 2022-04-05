@@ -22,11 +22,13 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
-import io.posidon.android.cintalauncher.color.ColorThemeOptions
+import io.posidon.android.cintalauncher.providers.color.ColorThemeOptions
+import io.posidon.android.cintalauncher.providers.color.pallete.ColorPalette
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.storage.ColorThemeDayNightSetting.colorThemeDayNight
-import io.posidon.android.cintalauncher.storage.ColorThemeSetting.colorTheme
+import io.posidon.android.cintalauncher.storage.ColorExtractorSetting.colorTheme
 import io.posidon.android.cintalauncher.storage.Settings
+import io.posidon.android.cintalauncher.ui.LauncherActivity
 import io.posidon.android.cintalauncher.ui.LauncherActivity.Companion.loadBlur
 import io.posidon.android.cintalauncher.ui.acrylicBlur
 import io.posidon.android.cintalauncher.ui.popup.appItem.ItemLongPress
@@ -36,6 +38,7 @@ import io.posidon.android.lookerupper.data.providers.AppProvider
 import io.posidon.android.lookerupper.data.providers.ContactProvider
 import io.posidon.android.lookerupper.data.providers.DuckDuckGoProvider
 import io.posidon.android.lookerupper.data.results.SearchResult
+import kotlin.concurrent.thread
 import kotlin.math.abs
 
 class SearchActivity : FragmentActivity() {
@@ -58,7 +61,6 @@ class SearchActivity : FragmentActivity() {
     val searchBar by lazy { findViewById<View>(R.id.search_bar)!! }
     val blurBG by lazy { findViewById<SeeThoughView>(R.id.blur_bg)!! }
 
-    val colorThemeOptions by lazy { ColorThemeOptions(settings.colorThemeDayNight) }
     val wallpaperManager by lazy { getSystemService(WallpaperManager::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,11 +68,14 @@ class SearchActivity : FragmentActivity() {
         setContentView(R.layout.activity_search)
         settings.init(this)
         searcher.onCreate(this)
-        ColorTheme.onCreate(colorThemeOptions, this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             wallpaperManager.addOnColorsChangedListener(::onColorsChangedListener, container.handler)
+            thread(name = "onCreate color update", isDaemon = true) {
+                ColorPalette.onColorsChanged(this, settings.colorTheme, SearchActivity::loadColors) {
+                    wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
+                }
+            }
         }
-        loadColors()
         val recyclerView = findViewById<RecyclerView>(R.id.recycler)!!
         adapter = SearchAdapter(this, recyclerView, false)
         recyclerView.run {
@@ -151,11 +156,13 @@ class SearchActivity : FragmentActivity() {
     ) {
         if (which and WallpaperManager.FLAG_SYSTEM != 0) {
             loadBlur(wallpaperManager, ::updateBlur)
-            ColorTheme.onColorsChanged(this, settings.colorTheme, colorThemeOptions, SearchActivity::loadColors) { colors }
+            ColorPalette.onColorsChanged(this, settings.colorTheme, SearchActivity::loadColors) { colors }
         }
     }
 
-    private fun loadColors() {
+    private fun loadColors(palette: ColorPalette) {
+        val colorThemeOptions = ColorThemeOptions(settings.colorThemeDayNight)
+        ColorTheme.updateColorTheme(colorThemeOptions.createColorTheme(palette))
         window.decorView.background = LayerDrawable(arrayOf(
             BitmapDrawable(resources, acrylicBlur?.partialBlurSmall),
             BitmapDrawable(resources, acrylicBlur?.insaneBlur).also {

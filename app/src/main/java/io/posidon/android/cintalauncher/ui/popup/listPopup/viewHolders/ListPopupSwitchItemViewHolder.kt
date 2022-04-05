@@ -9,10 +9,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.ui.feed.items.viewHolders.applyIfNotNull
 import io.posidon.android.cintalauncher.ui.popup.listPopup.ListPopupItem
-import posidon.android.conveniencelib.dp
+import io.posidon.android.conveniencelib.units.dp
+import io.posidon.android.conveniencelib.units.toPixels
 
 class ListPopupSwitchItemViewHolder(itemView: View) : ListPopupViewHolder(itemView) {
 
@@ -70,8 +71,8 @@ class ListPopupSwitchItemViewHolder(itemView: View) : ListPopupViewHolder(itemVi
     }
 
     fun generateCircle(context: Context, color: Int): Drawable {
-        val r = context.dp(18).toInt()
-        val inset = context.dp(4).toInt()
+        val r = 18.dp.toPixels(context)
+        val inset = 4.dp.toPixels(context)
         return LayerDrawable(arrayOf(
             GradientDrawable().apply {
                 shape = GradientDrawable.OVAL

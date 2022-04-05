@@ -12,10 +12,13 @@ import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.posidon.android.cintalauncher.R
-import io.posidon.android.cintalauncher.color.ColorTheme
+import io.posidon.android.cintalauncher.providers.color.theme.ColorTheme
 import io.posidon.android.cintalauncher.storage.Settings
 import io.posidon.android.cintalauncher.ui.settings.SettingsActivity
-import posidon.android.conveniencelib.*
+import io.posidon.android.conveniencelib.*
+import io.posidon.android.conveniencelib.units.dp
+import io.posidon.android.conveniencelib.units.toFloatPixels
+import io.posidon.android.conveniencelib.units.toPixels
 
 class FeedSourcesChooserActivity : SettingsActivity() {
 
@@ -24,7 +27,7 @@ class FeedSourcesChooserActivity : SettingsActivity() {
 
         val grid = findViewById<RecyclerView>(R.id.recycler)
         grid.layoutManager = GridLayoutManager(this, 2)
-        val padding = dp(4).toInt()
+        val padding = 4.dp.toPixels(this)
         grid.setPadding(padding, getStatusBarHeight(), padding, getNavigationBarHeight() + padding)
 
         val feedUrls = settings.getStrings("feed:rss_sources")?.let { arrayListOf(*it) } ?: arrayListOf()
@@ -32,11 +35,11 @@ class FeedSourcesChooserActivity : SettingsActivity() {
         grid.adapter = FeedChooserAdapter(settings, feedUrls)
         val fab = findViewById<ImageView>(R.id.add_button)
         fab.backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
-        fab.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(this, ColorTheme.buttonColor))
+        fab.imageTintList = ColorStateList.valueOf(ColorTheme.titleColorForBG(ColorTheme.buttonColor))
         fab.setOnClickListener {
             sourceEditPopup(it, settings, feedUrls, grid.adapter!!)
         }
-        (fab.layoutParams as FrameLayout.LayoutParams).bottomMargin = dp(20).toInt() + getNavigationBarHeight()
+        (fab.layoutParams as FrameLayout.LayoutParams).bottomMargin = 20.dp.toPixels(this) + getNavigationBarHeight()
     }
 
     companion object {
@@ -54,18 +57,18 @@ class FeedSourcesChooserActivity : SettingsActivity() {
 
             content.run {
                 setBackgroundResource(R.drawable.card)
-                backgroundTintList = ColorStateList.valueOf(ColorTheme.appDrawerColor)
+                backgroundTintList = ColorStateList.valueOf(ColorTheme.cardBG)
             }
 
-            val textColor = ColorTheme.textColorForBG(context, ColorTheme.appDrawerColor)
-            val hintColor = ColorTheme.hintColorForBG(context, ColorTheme.appDrawerColor)
+            val textColor = ColorTheme.cardDescription
+            val hintColor = ColorTheme.cardHint
             val input = content.findViewById<EditText>(R.id.title)!!
             input.setTextColor(textColor)
             input.setHintTextColor(hintColor)
 
             content.findViewById<TextView>(R.id.done)!!.run {
-                setTextColor(ColorTheme.titleColorForBG(context, ColorTheme.buttonColor))
-                backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColor)
+                setTextColor(ColorTheme.titleColorForBG(ColorTheme.buttonColorCallToAction))
+                backgroundTintList = ColorStateList.valueOf(ColorTheme.buttonColorCallToAction)
                 setOnClickListener {
                     dialog.dismiss()
 
@@ -103,7 +106,7 @@ class FeedSourcesChooserActivity : SettingsActivity() {
                     hsl[1] = hsl[1].coerceAtLeast(0.3f)
                     val bg = ColorUtils.HSLToColor(hsl)
                     backgroundTintList = ColorStateList.valueOf(bg)
-                    setTextColor(ColorTheme.titleColorForBG(context, bg))
+                    setTextColor(ColorTheme.titleColorForBG(bg))
                     setOnClickListener {
                         dialog.dismiss()
                         feedUrls.remove(url)

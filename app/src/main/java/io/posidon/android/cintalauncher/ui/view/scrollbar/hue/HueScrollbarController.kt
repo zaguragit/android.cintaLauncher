@@ -8,7 +8,8 @@ import io.posidon.android.cintalauncher.providers.app.AppCollection
 import io.posidon.android.cintalauncher.ui.drawer.AppDrawerAdapter
 import io.posidon.android.cintalauncher.ui.view.scrollbar.Scrollbar
 import io.posidon.android.cintalauncher.ui.view.scrollbar.ScrollbarController
-import posidon.android.conveniencelib.dp
+import io.posidon.android.conveniencelib.units.dp
+import io.posidon.android.conveniencelib.units.toFloatPixels
 import java.util.*
 
 class HueScrollbarController(
@@ -43,8 +44,8 @@ class HueScrollbarController(
     }
 
     override fun updateTheme(context: Context) {
-        dotRadius = scrollbar.dp(4)
-        activeDotRadius = scrollbar.dp(8)
+        dotRadius = 4.dp.toFloatPixels(scrollbar)
+        activeDotRadius = 8.dp.toFloatPixels(scrollbar)
         scrollbar.invalidate()
     }
 

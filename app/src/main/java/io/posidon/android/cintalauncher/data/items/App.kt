@@ -13,7 +13,7 @@ import android.view.View
 import io.posidon.android.cintalauncher.data.feed.items.FeedItemWithBigImage
 import io.posidon.android.cintalauncher.providers.feed.FeedSorter
 import io.posidon.android.cintalauncher.providers.feed.notification.NotificationService
-import posidon.android.conveniencelib.isInstalled
+import io.posidon.android.conveniencelib.isInstalled
 import java.util.*
 
 class App(
